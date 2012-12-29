@@ -4,7 +4,8 @@ class LessonsController < ApplicationController
 
   def show
     # TODO: sanitize paths
-    @contents = File.read Pathname.new('/tmp/genie/compiled') + params[:user] + params[:project] + 'index.inc'
+    contents = File.read Pathname.new('/tmp/genie/compiled') + params[:user] + params[:project] + 'index.inc'
+    @contents = contents.html_safe
   end
 
   def new

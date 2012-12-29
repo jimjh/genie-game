@@ -16,8 +16,11 @@
   = csrf_meta_tags
 
 %body
-  != yield
+  = yield
   = javascript_include_tag 'application'
+
+  -# mathjax
+  %script{src: 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
 
 :plain
   </html>
