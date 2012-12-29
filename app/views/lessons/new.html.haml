@@ -1,0 +1,14 @@
+.row
+  .six.columns
+    = form_tag({controller: 'lessons', action: 'create'}) do
+      %fieldset
+        %legend New Lesson
+
+        %label Git URL
+        %input{type: 'text', name: 'url', placeholder: 'git@github.com:jimjh/floating-point-lesson.git'}
+
+        %label Name
+        %input{type: 'text', name: 'name', placeholder: 'jimjh/floating-point-lesson'}
+
+        %input.button.small{type: 'submit', value: 'Create', name: 'commit'}
+
