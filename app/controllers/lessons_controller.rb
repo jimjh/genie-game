@@ -1,11 +1,16 @@
 class LessonsController < ApplicationController
 
-  # TODO: hacky hacky hacky
-
   def show
-    # TODO: sanitize paths
-    contents = File.read Pathname.new('/tmp/genie/compiled') + params[:user] + params[:project] + 'index.inc'
-    @contents = contents.html_safe
+    # TODO: sanitize params
+    # TODO: allow configuration
+    path = Pathname.new('/tmp/genie/compiled') + params[:path]
+    if params[:format]
+      file = path.to_s + '.' + params[:format]
+      send_file file, disposition: 'inline'
+    else
+      path += 'index.inc' if path.directory?
+      @contents = File.read(path).html_safe
+    end
   end
 
   def new
