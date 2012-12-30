@@ -23,4 +23,5 @@ group :test do
 end
 
 gem 'jquery-rails'
+gem 'thin', '~> 1.5.0'
 gem 'lamp', git: 'git@github.com:jimjh/genie-worker.git', branch: 'master'
