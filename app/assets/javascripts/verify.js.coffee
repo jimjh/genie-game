@@ -6,7 +6,6 @@ Copyright (c) 2012 Jiunn Haur Lim, Carnegie Mellon University
 License: https://raw.github.com/jimjh/genie-game/master/LICENSE
 ###
 
-# TODO: refactor
 genie = exports? and @ or @genie = {}
 
 class Problem
@@ -16,16 +15,19 @@ class Problem
   # Adds click listeners to the submit buttons.
   observe: ->
     @button.click (e) =>
-      form = @button.parents 'form'
-      id = form.find('input.q-id').val();
-      $.ajax
-        type: 'POST'
-        url: "verify/quiz/#{id}"
-        data: form.serialize()
-        success: this.update form
+      this.submit @button.parents 'form'
       false
 
+  # Submits form for verification
+  submit: (form) ->
+    $.ajax
+      type: 'POST'
+      url: form.attr 'action'
+      data: form.serialize()
+      success: this.update form
+
   # Shows results of last submission at the given button and form.
+  # TODO: refactor
   update: (form) ->
     (result) =>
       switch result
