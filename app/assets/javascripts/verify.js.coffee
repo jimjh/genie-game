@@ -51,7 +51,7 @@ init = ->
 @genie.launch = ->
   init()
   $.ajaxSetup beforeSend: (xhr) ->
-      token = $('meta[name="csrf-token"]').attr 'content' ;
-      xhr.setRequestHeader 'X-CSRF-Token', token ;
+      token = $('meta[name="csrf-token"]').attr 'content'
+      xhr.setRequestHeader 'X-CSRF-Token', token
 
 $ @genie.launch
