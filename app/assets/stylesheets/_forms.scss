@@ -1,0 +1,9 @@
+@import "settings";
+
+/* Successes */
+.success input, input.success, .success textarea, textarea.success { border-color: $successColor; background-color: rgba($successColor, 0.1); }
+.success label, label.success { color: $successColor; }
+.success small, small.success { display: block; padding: 6px 4px; margin-top: -($formSpacing) - 1; margin-bottom: $formSpacing; background: $successColor; color: #fff; font-size: ms(0) - 2; font-weight: bold; @include border-corner-radius(bottom, $defaultFloat, $inputBorderRadius); @include border-corner-radius(bottom, $defaultOpposite, $inputBorderRadius); }
+.success textarea, textarea.success {
+  &:focus { background: darken($white, 2%); border-color: darken($white, 30%); }
+}
