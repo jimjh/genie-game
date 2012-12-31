@@ -27,7 +27,7 @@ class LessonsController < ApplicationController
 
   def create
     # TODO: use models for validation
-    %x{lamp create #{params[:url]} #{params[:name]}}
+    system 'lamp', 'create', params[:url], params[:name]
     render action: 'new'
   end
 

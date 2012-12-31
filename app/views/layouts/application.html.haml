@@ -19,10 +19,19 @@
   = csrf_meta_tags
 
 %body
+
+  .row
+    .twelve.columns
+      - flash.each do |name, msg|
+        - if msg.is_a?(String)
+          %div{:class => "alert-box alert-#{name == :notice ? 'success' : 'alert'}"}
+            = content_tag :div, msg, :id => "flash_#{name}"
+            %a.close &times;
+
   %section{role: 'lesson'}
     = yield
-  = javascript_include_tag 'application'
 
+  = javascript_include_tag 'application'
   -# mathjax
   %script{src: 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
 

@@ -10,8 +10,8 @@ gem 'haml', '~> 3.1.7'
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
-  gem 'compass-rails'
-  gem 'zurb-foundation'
+  gem 'compass-rails', '~> 1.0.3'
+  gem 'zurb-foundation', '~> 3.2.3'
 end
 
 group :development do
@@ -22,6 +22,8 @@ end
 group :test do
 end
 
-gem 'jquery-rails'
+gem 'jquery-rails', '~> 2.1.4'
 gem 'thin', '~> 1.5.0'
+gem 'devise', '~> 2.1.2'
+
 gem 'lamp', git: 'git@github.com:jimjh/genie-worker.git', branch: 'master'
