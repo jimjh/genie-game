@@ -1,1 +1,75 @@
-@import "foundation"
+@import "settings";
+@import "foundation";
+
+/* settings */
+$borderWidth: 2px;
+
+.highlight {
+  @import "pygment";
+  @import "github";
+}
+
+@import "mathjax";
+@import "forms";
+
+body {
+  padding: 0 $columnGutter/2;
+}
+
+/* Meta panel */
+div.meta.panel {
+  border-top: $borderWidth solid $darkEdge;
+}
+
+/* Lesson graphic */
+a.hero img {
+  width: 100%;
+}
+
+/* Floating navigation bar */
+#sections {
+  background: darken($white, 5%);
+  padding-top: 10px;
+  width: $rowWidth + 18;
+  border-bottom: $borderWidth solid $darkEdge;
+  z-index: 3;
+}
+
+/* Progress bar */
+#footer .meter {
+  color: $white;
+  font-weight: 800;
+  text-align: right;
+  padding: 2px 2px 0 0;
+}
+
+/* Styling within lesson */
+section[role='lesson'] {
+
+  .block-image {
+    text-align: center;
+  }
+
+  ul {
+    margin-left: 17px;
+  }
+
+  #{nest(headings(), 'a.anchor')} {
+    position: absolute;
+    padding-left: 60px;
+    margin-left: -60px;
+    display: block;
+  }
+
+  #{nest(headings(), 'a.anchor i')} {
+    display: none;
+    width: 16px;
+    font-size: 16px;
+  }
+
+  #{nest(append-selector(headings(), ':hover'), 'a.anchor i')} {
+    display: inline-block;
+    margin-left: -1.5em;
+  }
+
+}
