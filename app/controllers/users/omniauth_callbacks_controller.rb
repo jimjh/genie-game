@@ -26,10 +26,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def find_for_oauth(provider, access_token, resource=nil)
 
-    uid, auth_attr, name = nil, { provider: provider }, access_token['info']['name']
+    uid, auth_attr, name = access_token['uid'], { provider: provider }, access_token['info']['name']
     case provider
     when 'GitHub'
-      uid = access_token['uid']
       auth_attr.merge! uid: uid,
         token:  access_token['credentials']['token'],
         name:   name,
