@@ -29,6 +29,7 @@ class LessonsController < ApplicationController
 
   def create
     # TODO: use models for validation
+    # TODO: test that I cannot be made to execute arbitrary commands
     system 'lamp', 'create', params[:url], params[:name]
     render action: 'new'
   end
