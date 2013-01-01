@@ -3,8 +3,6 @@ source 'https://rubygems.org'
 gem 'rails', '~> 3.2.9'
 gem 'sqlite3'
 
-gem 'haml', '~> 3.1.7'
-
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -14,16 +12,20 @@ group :assets do
   gem 'zurb-foundation', '~> 3.2.3'
 end
 
-group :development do
+group :development, :test do
+  gem 'rspec-rails', '~> 2.0'
   gem 'debugger-pry'
   gem 'hirb'
 end
 
-group :test do
-end
-
 gem 'jquery-rails', '~> 2.1.4'
 gem 'thin', '~> 1.5.0'
+gem 'haml', '~> 3.1.7'
+
+# Authentication
 gem 'devise', '~> 2.1.2'
+gem 'omniauth', '~> 1.1.1'
+gem 'omniauth-github', '~> 1.0.3'
+gem 'uuidtools', '~> 2.1.3'
 
 gem 'lamp', git: 'git@github.com:jimjh/genie-worker.git', branch: 'master'

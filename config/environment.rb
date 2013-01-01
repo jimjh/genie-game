@@ -1,7 +1,7 @@
 # Load the rails application
 require File.expand_path('../application', __FILE__)
 
-if $0 == 'irb'
+if %w(irb script/rails).include? $0
   require 'hirb'
   Hirb.enable
 end

@@ -1,6 +1,8 @@
 Genie::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
+  # TODO: https://gist.github.com/993566
+
   # Code is not reloaded between requests
   config.cache_classes = true
 

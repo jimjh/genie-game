@@ -3,6 +3,8 @@ require 'aladdin/support/weak_comparator'
 class LessonsController < ApplicationController
   include Aladdin::Support::WeakComparator
 
+  before_filter :authenticate_user!
+
   # TODO: configure
   COMPILED_PATH = Pathname.new '/tmp/genie/compiled'
   SOLUTION_PATH = Pathname.new '/tmp/genie/solution'

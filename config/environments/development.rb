@@ -13,8 +13,21 @@ Genie::Application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
-  # Don't care if the mailer can't send
-  config.action_mailer.raise_delivery_errors = false
+  # ActionMailer
+  HOST = 'localhost:3000'
+  ADMIN_EMAIL_FROM  = ''
+  PHONY_VIA_OPTIONS = {
+    address: 'smtp.gmail.com',
+    port: '587',
+    enable_starttls_auto: true,
+    user_name: '',
+    password: '',
+    authentication: :plain,
+    domain: 'localhost.localdomain'
+  }
+  config.action_mailer.perform_delivery      = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_url_options   = { host: HOST }
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
