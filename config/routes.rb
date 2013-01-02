@@ -11,7 +11,7 @@ Genie::Application.routes.draw do
   match ':user/:lesson/verify/:type/:problem' => 'lessons#verify'
   match ':user/:lesson(/*path)' => 'lessons#show', as: 'lesson'
 
-  resources :lessons, except: :new
+  resources :lessons, except: [:new, :show]
 
   root :to => 'home#index'
 
