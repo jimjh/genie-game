@@ -10,6 +10,9 @@ class LessonsController < ApplicationController
   SOLUTION_PATH = Pathname.new '/tmp/genie/solution'
   SOLUTION_EXT  = '.sol'
 
+  def index
+  end
+
   def show
     # TODO: sanitize and validate params
     params[:path] ||= ''
@@ -24,14 +27,21 @@ class LessonsController < ApplicationController
   end
 
   def new
-    # TODO: form needs to be rewritten to use a Lesson model.
+    @lesson = Lesson.new
   end
 
   def create
     # TODO: use models for validation
     # TODO: test that I cannot be made to execute arbitrary commands
-    system 'lamp', 'create', params[:url], params[:name]
-    render action: 'new'
+    @lesson = Lesson.new params[:lesson]
+    if @lesson.save
+      # TODO: validate outcome
+      system 'lamp', 'create', params[:url], params[:name]
+      flash[:notice] = 'XXX' # TODO: strings
+      redirect_to @lesson
+    else
+      render action: 'new'
+    end
   end
 
   def verify

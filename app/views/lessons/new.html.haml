@@ -1,14 +1,11 @@
 .row
   .six.columns
-    = form_tag({controller: 'lessons', action: 'create'}) do
+    = simple_form_for @lesson do |f|
       %fieldset
         %legend New Lesson
 
-        %label Git URL
-        %input{type: 'text', name: 'url', placeholder: 'git@github.com:jimjh/floating-point-lesson.git'}
-
-        %label Name
-        %input{type: 'text', name: 'name', placeholder: 'jimjh/floating-point-lesson'}
+        = f.input :url, placeholder: 'git@github.com:jimjh/x.git'
+        = f.input :name, placeholder: 'Floating Point'
 
         %input.button.small{type: 'submit', value: 'Create', name: 'commit'}
 
