@@ -5,7 +5,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   rescue_from ActiveRecord::RecordInvalid do |invalid|
     logger.warn invalid.record.errors
-    # TODO
+    # TODO: redirect to 500?
   end
 
   # GET /users/auth/github/callbacks

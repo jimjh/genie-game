@@ -4,10 +4,12 @@ class User < ActiveRecord::Base
 
   attr_accessible :remember_me, :name, :nickname
 
-  has_many :authorizations, :dependent => :destroy
-  has_many :lessons, :dependent => :destroy
+  # relationships ------------------------------------------------------------
+  has_many :authorizations, dependent: :destroy
+  has_many :lessons, dependent: :destroy
 
-  # TODO: validations
+  # validations --------------------------------------------------------------
+  validates_presence_of :name, :nickname
 
   # Creates a new user with the given name and nickname.
   # @param [String] name
