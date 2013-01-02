@@ -1,6 +1,8 @@
 require 'uuidtools'
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
+  # TODO: I18n strings
+
   rescue_from ActiveRecord::RecordInvalid do |invalid|
     logger.warn invalid.record.errors
     # TODO
@@ -36,7 +38,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     else raise "Provider #{provider} not handled."
     end
 
-    user = resource || find_by_uid(provider, uid) || register(name)
+    nickname = access_token['info']['nickname']
+
+    user = resource || find_by_uid(provider, uid) || register(name, nickname)
     auth = user.authorizations.find_by_provider(provider) || user.authorizations.build(auth_attr)
     auth.update_attributes! auth_attr
 
@@ -52,8 +56,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   # Registers new user.
   # @return [User] user
-  def register(name)
-    user = User.new(name: name)
+  def register(name, nickname)
+    user = User.new name: name, nickname: nickname
     user.save!
     user
   end
