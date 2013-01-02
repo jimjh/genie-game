@@ -4,4 +4,8 @@ class User < ActiveRecord::Base
   attr_accessible :remember_me, :name, :nickname
   has_many :authorizations, :dependent => :destroy
 
+  def to_param
+    nickname.parameterize
+  end
+
 end

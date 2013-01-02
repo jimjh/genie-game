@@ -18,6 +18,10 @@ class Lesson < ActiveRecord::Base
     Pathname.new(self.user.nickname.parameterize) + self.name.parameterize
   end
 
+  def to_param
+    name.parameterize
+  end
+
   private
 
   def user_must_exist
