@@ -17,6 +17,7 @@ group :development, :test do
   gem 'shoulda',            '~> 3.3.2'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'mocha',              '~> 0.10', :require => false
+  gem 'faker',              '~> 1.1.2'
   gem 'debugger-pry'
   gem 'hirb'
 end

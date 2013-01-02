@@ -2,8 +2,8 @@
 FactoryGirl.define do
 
   factory :user do
-    name      'Chuck Norris'
-    nickname  'cnorries'
+    name      { Faker::Name.name }
+    nickname  { Faker::Name.first_name }
   end
 
 end

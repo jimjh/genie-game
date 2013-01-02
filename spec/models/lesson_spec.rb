@@ -46,8 +46,8 @@ describe Lesson do
     end
 
     it 'should return a clean path' do
-      FactoryGirl.build(:lesson).path.to_s.should eq 'cnorries/xyz'
-      FactoryGirl.build(:lesson, name: 'ha ha').path.to_s.should eq 'cnorries/ha-ha'
+      FactoryGirl.build(:lesson, user: @user).path.to_s.should eq @user.nickname.parameterize+'/xyz'
+      FactoryGirl.build(:lesson, user: @user, name: 'ha ha').path.to_s.should eq @user.nickname.parameterize+'/ha-ha'
     end
 
     it 'should use parameterized lesson name for to_param' do

@@ -96,6 +96,8 @@ GEM
     factory_girl_rails (4.1.0)
       factory_girl (~> 4.1.0)
       railties (>= 3.0.0)
+    faker (1.1.2)
+      i18n (~> 0.5)
     faraday (0.8.4)
       multipart-post (~> 1.1)
     fssm (0.2.9)
@@ -251,6 +253,7 @@ DEPENDENCIES
   debugger-pry
   devise (~> 2.1.2)
   factory_girl_rails (~> 4.0)
+  faker (~> 1.1.2)
   haml (~> 3.1.7)
   hirb
   jquery-rails (~> 2.1.4)
