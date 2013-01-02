@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121231231220) do
+ActiveRecord::Schema.define(:version => 20130101201353) do
 
   create_table "authorizations", :force => true do |t|
     t.string   "provider"
@@ -27,6 +27,16 @@ ActiveRecord::Schema.define(:version => 20121231231220) do
 
   add_index "authorizations", ["user_id"], :name => "index_authorizations_on_user_id"
 
+  create_table "lessons", :force => true do |t|
+    t.string   "name"
+    t.integer  "user_id"
+    t.string   "url"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "lessons", ["user_id"], :name => "index_lessons_on_user_id"
+
   create_table "users", :force => true do |t|
     t.datetime "remember_created_at"
     t.integer  "sign_in_count",        :default => 0
@@ -38,6 +48,7 @@ ActiveRecord::Schema.define(:version => 20121231231220) do
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.string   "name"
+    t.string   "nickname"
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true

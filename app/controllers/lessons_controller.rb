@@ -10,10 +10,14 @@ class LessonsController < ApplicationController
   SOLUTION_PATH = Pathname.new '/tmp/genie/solution'
   SOLUTION_EXT  = '.sol'
 
+  def index
+    redirect_to Lesson.first
+  end
+
   def show
     # TODO: sanitize and validate params
     params[:path] ||= ''
-    path = COMPILED_PATH + params[:user] + params[:project] + params[:path]
+    path = COMPILED_PATH + params[:user] + params[:lesson] + params[:path]
     if params[:format]
       file = path.to_s + '.' + params[:format]
       send_file file, disposition: 'inline'
@@ -24,23 +28,37 @@ class LessonsController < ApplicationController
   end
 
   def new
-    # TODO: form needs to be rewritten to use a Lesson model.
+    @lesson = Lesson.new
   end
 
   def create
-    # TODO: use models for validation
-    system 'lamp', 'create', params[:url], params[:name]
-    render action: 'new'
+    # TODO: test that I cannot be made to execute arbitrary commands
+    @lesson = Lesson.new params[:lesson]
+    @lesson.user = current_user
+    if @lesson.save
+      # TODO: validate outcome and handle errors
+      system 'lamp', 'create', @lesson.url, @lesson.path.to_s
+      flash[:notice] = 'XXX' # TODO: strings
+      redirect_to @lesson
+    else
+      render action: 'new'
+    end
   end
 
   def verify
     # TODO: sanitize and validate params
     solution  = params[:problem] + SOLUTION_EXT
-    path      = SOLUTION_PATH + params[:user] + params[:project] + solution
+    path      = SOLUTION_PATH + params[:user] + params[:lesson] + solution
     result    = File.open(path, 'rb') do |f|
       same? params[:answer], Marshal.restore(f)
     end
     render json: result
   end
+
+  alias :original_lesson_url :lesson_url
+  def lesson_url(lesson, options={})
+    original_lesson_url options.merge(user: lesson.user, lesson: lesson)
+  end
+  helper_method :lesson_url
 
 end

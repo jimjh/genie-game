@@ -6,14 +6,17 @@ gem 'sqlite3'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-  gem 'compass-rails', '~> 1.0.3'
-  gem 'zurb-foundation', '~> 3.2.3'
+  gem 'sass-rails',       '~> 3.2.3'
+  gem 'coffee-rails',     '~> 3.2.1'
+  gem 'compass-rails',    '~> 1.0.3'
+  gem 'zurb-foundation',  '~> 3.2.3'
 end
 
 group :development, :test do
-  gem 'rspec-rails', '~> 2.0'
+  gem 'rspec-rails',        '~> 2.0'
+  gem 'shoulda',            '~> 3.3.2'
+  gem 'factory_girl_rails', '~> 4.0'
+  gem 'mocha',              '~> 0.10', :require => false
   gem 'debugger-pry'
   gem 'hirb'
 end
@@ -23,9 +26,10 @@ gem 'thin', '~> 1.5.0'
 gem 'haml', '~> 3.1.7'
 
 # Authentication
-gem 'devise', '~> 2.1.2'
-gem 'omniauth', '~> 1.1.1'
-gem 'omniauth-github', '~> 1.0.3'
-gem 'uuidtools', '~> 2.1.3'
+gem 'devise',           '~> 2.1.2'
+gem 'omniauth',         '~> 1.1.1'
+gem 'omniauth-github',  '~> 1.0.3'
+gem 'uuidtools',        '~> 2.1.3'
+gem 'simple_form',      '~> 2.0.4'
 
 gem 'lamp', git: 'git@github.com:jimjh/genie-worker.git', branch: 'master'
