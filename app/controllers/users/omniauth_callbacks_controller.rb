@@ -14,6 +14,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def passthru
+    # TODO: what does this do?
     render file: "#{Rails.root}/public/404.html", status: 404, layout: false
   end
 
@@ -28,7 +29,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def find_for_oauth(provider, access_token, resource=nil)
 
-    uid, auth_attr, name = access_token['uid'], { provider: provider }, access_token['info']['name']
+    uid, auth_attr = access_token['uid'], { provider: provider }
+    name, nickname = access_token['info']['name'], access_token['info']['nickname']
     case provider
     when 'GitHub'
       auth_attr.merge! uid: uid,
@@ -38,9 +40,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     else raise "Provider #{provider} not handled."
     end
 
-    nickname = access_token['info']['nickname']
-
-    user = resource || find_by_uid(provider, uid) || register(name, nickname)
+    user = resource || find_by_uid(provider, uid) || User.register!(name, nickname)
     auth = user.authorizations.find_by_provider(provider) || user.authorizations.build(auth_attr)
     auth.update_attributes! auth_attr
 
@@ -49,17 +49,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   # Looks for a user with the given provider and provider's user ID.
-  # @return [User] user
+  # @param  [String] provider             OAuth provider
+  # @param  [String] uid                  provider's user ID
+  # @return [User]   user
   def find_by_uid(provider, uid)
-    user = Authorization.find_by_provider_and_uid(provider, uid.to_s).try(:user)
-  end
-
-  # Registers new user.
-  # @return [User] user
-  def register(name, nickname)
-    user = User.new name: name, nickname: nickname
-    user.save!
-    user
+    Authorization.find_by_provider_and_uid(provider, uid.to_s).try(:user)
   end
 
 end

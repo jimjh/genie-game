@@ -15,9 +15,10 @@ class Lesson < ActiveRecord::Base
 
   # @return [Pathname] path that is suitable for use as lesson path
   def path
-    Pathname.new(self.user.nickname.parameterize) + self.name.parameterize
+    Pathname.new(user.nickname.parameterize) + name.parameterize
   end
 
+  # Use lesson name for constructing URLs instead of lesson ID.
   def to_param
     name.parameterize
   end

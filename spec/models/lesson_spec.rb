@@ -33,11 +33,11 @@ describe Lesson do
   context 'Creating a user' do
 
     before :each do
-      @user = FactoryGirl.create :user
+      @user   = FactoryGirl.create :user
     end
 
     after :each do
-      @user.destroy
+      [@user].map(&:destroy)
     end
 
     it 'should ensure that user exists' do
@@ -48,6 +48,11 @@ describe Lesson do
     it 'should return a clean path' do
       FactoryGirl.build(:lesson).path.to_s.should eq 'cnorries/xyz'
       FactoryGirl.build(:lesson, name: 'ha ha').path.to_s.should eq 'cnorries/ha-ha'
+    end
+
+    it 'should use parameterized lesson name for to_param' do
+      l = FactoryGirl.build(:lesson, name: 'here is some t/xt')
+      l.to_param.should eq 'here-is-some-t-xt'
     end
 
   end
