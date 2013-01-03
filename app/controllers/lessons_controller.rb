@@ -20,9 +20,11 @@ class LessonsController < ApplicationController
     path = COMPILED_PATH + params[:user] + params[:lesson] + params[:path]
     if params[:format]
       file = path.to_s + '.' + params[:format]
+      not_found unless file.exist?
       send_file file, disposition: 'inline'
     else
       path += 'index.inc' if path.directory?
+      not_found unless path.exist?
       @contents = File.read(path).html_safe
     end
   end
