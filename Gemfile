@@ -34,4 +34,7 @@ gem 'uuidtools',        '~> 2.1.3'
 gem 'simple_form',      '~> 2.0.4'
 gem 'friendly_id',      '~> 4.0.1'
 
+# GitHub Adapter
+gem 'github_api',       '~> 0.8.6'
+
 gem 'lamp', git: 'git@github.com:jimjh/genie-worker.git', branch: 'master'

@@ -1,0 +1,7 @@
+.row
+  .eight.columns
+    %table
+      %tbody
+        - @repos.each do |repo|
+          %tr
+            %td= repo.full_name
