@@ -41,23 +41,33 @@ describe Lesson do
       [@user].map(&:destroy)
     end
 
-    it 'should ensure that user exists' do
+    it 'ensures that user exists' do
       FactoryGirl.build(:lesson, user_id: @user.id + 1).should_not be_valid
       FactoryGirl.build(:lesson, user_id: @user.id).should be_valid
     end
 
-    it 'should return a clean path' do
-      l = FactoryGirl.create(:lesson, user: @user)
-      l.path.to_s.should eq @user.nickname.parameterize+'/xyz'
-      l.destroy
-      l = FactoryGirl.create(:lesson, user: @user, name: 'ha ha')
-      l.path.to_s.should eq @user.nickname.parameterize+'/ha-ha'
+    context '#path' do
+      it 'returns a clean path' do
+        l = FactoryGirl.create(:lesson, user: @user)
+        l.path.to_s.should eq @user.nickname.parameterize+'/xyz'
+        l.destroy
+        l = FactoryGirl.create(:lesson, user: @user, name: 'ha ha')
+        l.path.to_s.should eq @user.nickname.parameterize+'/ha-ha'
+        l.destroy
+      end
+    end
+
+    it 'uses parameterized lesson name for to_param' do
+      l = FactoryGirl.create(:lesson, name: 'here is some t/xt')
+      l.to_param.should eq 'here-is-some-t-xt'
       l.destroy
     end
 
-    it 'should use parameterized lesson name for to_param' do
-      l = FactoryGirl.create(:lesson, name: 'here is some t/xt')
-      l.to_param.should eq 'here-is-some-t-xt'
+    it 'defaults lesson name to basename of URL' do
+      l = FactoryGirl.create(:lesson, user: @user, name: nil)
+      l.should_not be_nil
+      l.should be_valid
+      l.name.should eq File.basename l.url, '.git'
       l.destroy
     end
 
