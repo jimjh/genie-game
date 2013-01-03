@@ -32,5 +32,6 @@ gem 'omniauth',         '~> 1.1.1'
 gem 'omniauth-github',  '~> 1.0.3'
 gem 'uuidtools',        '~> 2.1.3'
 gem 'simple_form',      '~> 2.0.4'
+gem 'friendly_id', '~> 4.0.1'
 
 gem 'lamp', git: 'git@github.com:jimjh/genie-worker.git', branch: 'master'

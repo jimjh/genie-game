@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130101201353) do
+ActiveRecord::Schema.define(:version => 20130103033857) do
 
   create_table "authorizations", :force => true do |t|
     t.string   "provider"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(:version => 20130101201353) do
     t.string   "link"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "nickname"
   end
 
   add_index "authorizations", ["user_id"], :name => "index_authorizations_on_user_id"
@@ -33,8 +34,10 @@ ActiveRecord::Schema.define(:version => 20130101201353) do
     t.string   "url"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "slug"
   end
 
+  add_index "lessons", ["slug"], :name => "index_lessons_on_slug", :unique => true
   add_index "lessons", ["user_id"], :name => "index_lessons_on_user_id"
 
   create_table "users", :force => true do |t|
@@ -47,10 +50,10 @@ ActiveRecord::Schema.define(:version => 20130101201353) do
     t.string   "authentication_token"
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
-    t.string   "name"
-    t.string   "nickname"
+    t.string   "slug"
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true
+  add_index "users", ["slug"], :name => "index_users_on_slug", :unique => true
 
 end

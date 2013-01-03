@@ -6,6 +6,7 @@ describe Lesson do
   it { should respond_to(:name) }
   it { should respond_to(:url) }
   it { should respond_to(:path) }
+  it { should respond_to(:slug) }
 
   it { should belong_to(:user) }
 
@@ -46,13 +47,18 @@ describe Lesson do
     end
 
     it 'should return a clean path' do
-      FactoryGirl.build(:lesson, user: @user).path.to_s.should eq @user.nickname.parameterize+'/xyz'
-      FactoryGirl.build(:lesson, user: @user, name: 'ha ha').path.to_s.should eq @user.nickname.parameterize+'/ha-ha'
+      l = FactoryGirl.create(:lesson, user: @user)
+      l.path.to_s.should eq @user.nickname.parameterize+'/xyz'
+      l.destroy
+      l = FactoryGirl.create(:lesson, user: @user, name: 'ha ha')
+      l.path.to_s.should eq @user.nickname.parameterize+'/ha-ha'
+      l.destroy
     end
 
     it 'should use parameterized lesson name for to_param' do
-      l = FactoryGirl.build(:lesson, name: 'here is some t/xt')
+      l = FactoryGirl.create(:lesson, name: 'here is some t/xt')
       l.to_param.should eq 'here-is-some-t-xt'
+      l.destroy
     end
 
   end
