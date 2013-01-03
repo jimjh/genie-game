@@ -2,8 +2,9 @@ Genie::Application.routes.draw do
 
   devise_for :users, :controllers => { :omniauth_callbacks => 'users/omniauth_callbacks' }
 
-  match 'new' => 'lessons#new', as: 'new_lesson', via: :get
-  resources :lessons, except: [:new, :show]
+  resources :lessons, except: [:show, :index, :edit, :update]
+
+  match 'settings' => 'settings#index'
 
   # constraints :user => /(?!new|users|devise)/ do
     # add trailing slashes to lessons/jimjh/floating-point so that relative

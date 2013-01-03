@@ -18,10 +18,10 @@
             %a{href: '#'}= current_user.name
             %ul.dropdown
               -# TODO
-              %li= link_to 'Settings', root_path
+              %li= link_to 'Settings', settings_path
               %li.divider
               %li= link_to 'Sign Out →', destroy_user_session_path, method: :delete
         - else
           %li.has-button
-            = link_to 'Sign In', omniauth_authorize_path('user', 'github'),
+            = link_to 'Sign In', user_omniauth_authorize_path(:github),
               class: 'button small'
