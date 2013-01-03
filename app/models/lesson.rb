@@ -2,9 +2,9 @@ class Lesson < ActiveRecord::Base
   extend FriendlyId
 
   # TODO: strings and messages
+  before_validation :default_values
   friendly_id :name, use: :slugged
 
-  before_validation :default_values
   attr_accessible   :name, :url
 
   # relationships ------------------------------------------------------------
@@ -18,7 +18,7 @@ class Lesson < ActiveRecord::Base
 
   # @return [Pathname] path that is suitable for use as lesson path
   def path
-    Pathname.new(user.slug) + slug
+    Pathname.new(user.slug) + self.slug
   end
 
   private

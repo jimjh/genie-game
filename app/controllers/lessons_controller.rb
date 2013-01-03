@@ -25,22 +25,12 @@ class LessonsController < ApplicationController
     end
   end
 
-  def new
-    @lesson = Lesson.new
-  end
-
   def create
     # TODO: test that I cannot be made to execute arbitrary commands
     @lesson = Lesson.new params[:lesson]
     @lesson.user = current_user
-    if @lesson.save
-      # TODO: validate outcome and handle errors
-      system 'lamp', 'create', @lesson.url, @lesson.path.to_s
-      flash[:notice] = 'XXX' # TODO: strings
-      redirect_to @lesson
-    else
-      render action: 'new'
-    end
+    @lesson.save!  # TODO: validate outcome and handle errors
+    system 'lamp', 'create', @lesson.url, @lesson.path.to_s # TODO: errors
   end
 
   def verify
