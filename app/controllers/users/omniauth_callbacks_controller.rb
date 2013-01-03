@@ -22,26 +22,26 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   # @note This should be refactored at some point for better error handling and
-  #   validation of the +access_token+ parameter. At this point, if certain
+  #   validation of the +auth+ parameter. At this point, if certain
   #   crucial fields don't exist, it will either raise some error regarding
   #   nils or {ActiveRecord::RecordInvalid}. Either case should redirect the
   #   user to a 500 page.
-  def find_for_oauth(provider, access_token, resource=nil)
+  def find_for_oauth(provider, auth, resource=nil)
 
-    uid, auth_attr = access_token.uid, { provider: provider }
-    name, nickname = access_token.info.name, access_token.info.nickname
+    uid, auth_attr = auth.uid, { provider: provider }
+    name, nickname = auth.info.name, auth.info.nickname
+    token          = auth.credentials.token
+
     case provider
     when 'github'
-      auth_attr.merge! uid: uid,
-        token:  access_token.credentials.token,
-        name:   name,
-        link:   access_token.extra.raw_info.html_url
+      auth_attr.merge! uid: uid, token: token, name: name, nickname: nickname,
+        link: auth.extra.raw_info.html_url
     else raise "Provider #{provider} not handled."
     end
 
-    user = resource || find_by_uid(provider, uid) || User.register!(name, nickname)
-    auth = user.authorizations.find_by_provider(provider) || user.authorizations.build(auth_attr)
-    auth.update_attributes! auth_attr
+    user = resource || find_by_uid(provider, uid) || User.register!(nickname)
+    authorization = user.authorizations.find_by_provider(provider) || user.authorizations.build(auth_attr)
+    authorization.update_attributes! auth_attr
 
     user
 

@@ -2,7 +2,6 @@
 FactoryGirl.define do
 
   factory :user do
-    name      { Faker::Name.name }
     nickname  { Faker::Name.first_name }
     ignore do
       authorizations_count 1

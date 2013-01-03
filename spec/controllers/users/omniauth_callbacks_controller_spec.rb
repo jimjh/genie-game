@@ -71,7 +71,7 @@ describe Users::OmniauthCallbacksController do
     context 'with invalid attributes' do
 
       it 'raises an ActiveRecord::RecordInvalid error' do
-        info = FactoryGirl.build :auth_hash_info, name: ''
+        info = FactoryGirl.build :auth_hash_info, nickname: ''
         OmniAuth.config.add_mock :github, FactoryGirl.build(:auth_hash, info: info)
         request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:github]
         expect { get :github }.to raise_error(ActiveRecord::RecordInvalid)
