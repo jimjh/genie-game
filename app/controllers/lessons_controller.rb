@@ -3,16 +3,12 @@ require 'aladdin/support/weak_comparator'
 class LessonsController < ApplicationController
   include Aladdin::Support::WeakComparator
 
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, except: [:show, :verify]
 
   # TODO: configure
   COMPILED_PATH = Pathname.new '/tmp/genie/compiled'
   SOLUTION_PATH = Pathname.new '/tmp/genie/solution'
   SOLUTION_EXT  = '.sol'
-
-  def index
-    redirect_to Lesson.first
-  end
 
   def show
     # TODO: sanitize and validate params
@@ -20,7 +16,7 @@ class LessonsController < ApplicationController
     path = COMPILED_PATH + params[:user] + params[:lesson] + params[:path]
     if params[:format]
       file = path.to_s + '.' + params[:format]
-      not_found unless file.exist?
+      not_found unless File.exist?(file)
       send_file file, disposition: 'inline'
     else
       path += 'index.inc' if path.directory?
