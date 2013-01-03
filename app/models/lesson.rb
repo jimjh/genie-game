@@ -1,6 +1,8 @@
 class Lesson < ActiveRecord::Base
+  extend FriendlyId
 
   # TODO: strings and messages
+  friendly_id :name, use: :slugged
 
   attr_accessible :name, :url
 
@@ -15,12 +17,7 @@ class Lesson < ActiveRecord::Base
 
   # @return [Pathname] path that is suitable for use as lesson path
   def path
-    Pathname.new(user.nickname.parameterize) + name.parameterize
-  end
-
-  # Use lesson name for constructing URLs instead of lesson ID.
-  def to_param
-    name.parameterize
+    Pathname.new(user.slug) + slug
   end
 
   private

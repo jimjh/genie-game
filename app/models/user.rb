@@ -1,29 +1,29 @@
 class User < ActiveRecord::Base
+  extend FriendlyId
 
   devise :rememberable, :trackable, :token_authenticatable, :omniauthable
+  friendly_id :nickname, use: :slugged
 
-  attr_accessible :remember_me, :name, :nickname
+  attr_accessible :remember_me, :nickname
+  attr_accessor   :nickname
 
   # relationships ------------------------------------------------------------
   has_many :authorizations, dependent: :destroy
   has_many :lessons, dependent: :destroy
 
   # validations --------------------------------------------------------------
-  validates_presence_of :name, :nickname
+  validates_presence_of   :nickname
 
-  # Creates a new user with the given name and nickname.
-  # @param [String] name
+  # NOTE: this is not necessary, because FriendlyId will ensure uniqueness
+  #   validates_uniqueness_of :slug
+
+  # Creates a new user with the given nickname.
   # @param [String] nickname
   # @return [User]  user
-  def self.register!(name, nickname)
-    user = new name: name, nickname: nickname
+  def self.register!(nickname)
+    user = new nickname: nickname
     user.save!
     user
-  end
-
-  # Use nickname for constructing URLs instead of user ID.
-  def to_param
-    nickname.parameterize
   end
 
 end
