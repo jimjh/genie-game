@@ -26,4 +26,9 @@ class User < ActiveRecord::Base
     user
   end
 
+  # @return [String] user's full name, as obtained from OAuth provider
+  def name
+    authorizations.first.try(:name) || 'Account'
+  end
+
 end

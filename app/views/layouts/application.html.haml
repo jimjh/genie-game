@@ -8,25 +8,24 @@
 <!--[if (gte IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
 
 %head
+
   %meta{charset: 'utf-8'}
   %meta{name: 'viewport', content: 'width=device-width, initial-scale=1.0'}
 
-  %title= content_for?(:title) ? yield(:title) : 'Untitled'
+  %title= content_for?(:title) ? yield(:title) + '⋅ Genie' : 'Genie'
+
+  -# icons
   %link{rel: 'stylesheet', href: '/assets/general_foundicons.css'}
   /[if lt IE8]
     %link{rel: 'stylesheet', href: '/assets/general_foundicons_ie7.css'}
+
   = stylesheet_link_tag 'application'
   = csrf_meta_tags
 
 %body
 
-  .row
-    .twelve.columns
-      - flash.each do |name, msg|
-        - if msg.is_a?(String)
-          %div{:class => "alert-box #{name == :notice ? 'success' : 'alert'}"}
-            = content_tag :div, msg, :id => "flash_#{name}"
-            %a.close &times;
+  = render partial: 'layouts/nav_bar'
+  = render partial: 'layouts/flash', locals: { flash: flash }
 
   %section{role: 'lesson'}
     = yield
