@@ -3,7 +3,7 @@
 # We treate {#create_hook} as more important than {#delete_hook}. If
 # {#create_hook} fails, the system is inconsistent and we can't receive
 # updates. However, if {#delete_hook} fails, GitHub may either have duplicate
-# hooks or hooks for non-existent repos. That is fine as long as we ignore
+# hooks or hooks for non-existent lessons. That is fine as long as we ignore
 # these in the listeners.
 #
 # @todo TODO updates should also update hooks if the URL changed
@@ -43,6 +43,9 @@ class LessonObserver < ActiveRecord::Observer
 
   private
 
+  # Reads the user's authorization (from omniauth) and creates a Github client.
+  # @param [Lesson] lesson
+  # @return [Authorization, Github] authorization and github client
   def github(lesson)
     auth = lesson.user.authorizations.find_by_provider! 'github'
     return auth, Github.new(oauth_token: auth.token)
