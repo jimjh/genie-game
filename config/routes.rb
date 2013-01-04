@@ -2,7 +2,9 @@ Genie::Application.routes.draw do
 
   devise_for :users, :controllers => { :omniauth_callbacks => 'users/omniauth_callbacks' }
 
-  resources :lessons, except: [:new, :show, :index, :edit, :update]
+  resources :lessons, except: [:new, :show, :index, :edit, :update] do
+    post :push, on: :collection
+  end
 
   match 'settings' => 'settings#index'
 

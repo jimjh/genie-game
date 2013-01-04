@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130103033857) do
+ActiveRecord::Schema.define(:version => 20130104195048) do
 
   create_table "authorizations", :force => true do |t|
     t.string   "provider"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(:version => 20130103033857) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.string   "slug"
+    t.string   "hook"
   end
 
   add_index "lessons", ["slug"], :name => "index_lessons_on_slug", :unique => true

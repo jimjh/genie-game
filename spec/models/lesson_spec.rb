@@ -49,7 +49,7 @@ describe Lesson do
     context '#path' do
       it 'returns a clean path' do
         l = FactoryGirl.create(:lesson, user: @user)
-        l.path.to_s.should eq @user.nickname.parameterize+'/xyz'
+        l.path.to_s.should eq @user.nickname.parameterize+'/'+l.name.parameterize
         l.destroy
         l = FactoryGirl.create(:lesson, user: @user, name: 'ha ha')
         l.path.to_s.should eq @user.nickname.parameterize+'/ha-ha'
@@ -64,7 +64,7 @@ describe Lesson do
     end
 
     it 'defaults lesson name to basename of URL' do
-      l = FactoryGirl.create(:lesson, user: @user, name: nil)
+      l = FactoryGirl.create(:lesson, user: @user, name: nil, repo: 'x')
       l.should_not be_nil
       l.should be_valid
       l.name.should eq File.basename l.url, '.git'

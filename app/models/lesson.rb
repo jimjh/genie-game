@@ -2,16 +2,18 @@ class Lesson < ActiveRecord::Base
   extend FriendlyId
 
   # TODO: strings and messages
+  # callbacks ----------------------------------------------------------------
   before_validation :default_values
-  friendly_id :name, use: :slugged
+  friendly_id       :name, use: :slugged
 
-  attr_accessible   :name, :url
+  attr_accessible   :name, :url, :repo
+  attr_accessor     :repo # full name of repo, used by {LessonObserver}
 
   # relationships ------------------------------------------------------------
   belongs_to :user
 
   # validations --------------------------------------------------------------
-  validates_presence_of   :name, :url, :user_id
+  validates_presence_of   :name, :url, :user_id, :repo
   validate                :user_must_exist
   validate                :url_must_be_valid
   validates_uniqueness_of :name, scope: :user_id
@@ -24,7 +26,7 @@ class Lesson < ActiveRecord::Base
   private
 
   def user_must_exist
-    user_id.nil? || User.find(user_id)
+    user_id.present? && User.find(user_id)
   rescue ActiveRecord::RecordNotFound
     errors.add :user, 'is not a registered user.'
   end
@@ -35,8 +37,9 @@ class Lesson < ActiveRecord::Base
   #   crafted string to trick us into cloning a local repository.
   # @see http://www.kernel.org/pub/software/scm/git/docs/git-clone.html
   def url_must_be_valid
-    return if url.nil? or (url_is_remote? and url_has_suffix? and url_matches?)
-    errors.add :url, 'is not a valid git URL.'
+    url.blank? ||
+      (url_is_remote? and url_has_suffix? and url_matches?) ||
+      errors.add(:url, 'is not a valid git URL.')
   end
 
   GIT_SCHEMES = %w(ssh git http https ftp ftps rsync)

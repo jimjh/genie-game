@@ -8,11 +8,9 @@ class SettingsController < ApplicationController
   # FIXME:  refactor into adapters for other git hosting services
 
   def index
-    auth = current_user.authorizations.find_by_provider 'github'
-    not_found if auth.nil?
+    auth = current_user.authorizations.find_by_provider('github') || not_found
     # FIXME:  pagination, error handling
-    @lesson    = Lesson.new
-    @repos     = Github.new.repos.list user: 'jimjh'
+    @repos     = Github.new.repos.list user: auth.nickname
     @published = current_user.lessons.map(&:url)
   end
 
