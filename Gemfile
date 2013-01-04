@@ -18,6 +18,7 @@ group :development, :test do
   gem 'factory_girl_rails', '~> 4.0'
   gem 'mocha',              '~> 0.10', :require => false
   gem 'faker',              '~> 1.1.2'
+  gem 'no_peeping_toms',    '~> 2.1.3'
   gem 'debugger-pry'
   gem 'hirb'
 end

@@ -2,8 +2,9 @@
 FactoryGirl.define do
 
   factory :lesson do
-    name      'xyz'
+    name      { Faker::Company.name }
     url       'git@github.com:jimjh/xyz.git'
+    repo      { name.parameterize }
     user
   end
 

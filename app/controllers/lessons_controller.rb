@@ -18,10 +18,11 @@ class LessonsController < ApplicationController
   # @note It's important to use +attachment+ for send_file, because the user
   #   could have supplied a javascript-laden HTML file as a static file.
   #   Without the attachment disposition, the browser could choose to render
-  #   it and execute malicious code
+  #   it and execute malicious code.
   def show
 
     # TODO cache static assets, so that they don't have to pass through here
+    #   be careful of HTML and JS assets.
     validate_params! :user, :lesson
     lesson_dir = sanitize_path! COMPILED_PATH, params[:user], params[:lesson]
     path       = sanitize_path! lesson_dir, params[:path]
@@ -39,7 +40,7 @@ class LessonsController < ApplicationController
   def create
     @lesson      = Lesson.new params[:lesson]
     @lesson.user = current_user
-    @lesson.save!  # TODO: errors
+    @lesson.save!                                           # TODO: errors
     system 'lamp', 'create', @lesson.url, @lesson.path.to_s # TODO: errors
   end
 
