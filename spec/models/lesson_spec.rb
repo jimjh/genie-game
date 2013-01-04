@@ -64,7 +64,7 @@ describe Lesson do
     end
 
     it 'defaults lesson name to basename of URL' do
-      l = FactoryGirl.create(:lesson, user: @user, name: nil, repo: 'x')
+      l = FactoryGirl.create(:lesson, user: @user, name: nil)
       l.should_not be_nil
       l.should be_valid
       l.name.should eq File.basename l.url, '.git'
