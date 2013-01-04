@@ -135,7 +135,7 @@ GEM
     mime-types (1.19)
     mocha (0.10.5)
       metaclass (~> 0.0.1)
-    modular-scale (1.0.3)
+    modular-scale (1.0.4)
       compass (>= 0.11.5)
       sassy-math (>= 1.2)
     multi_json (1.5.0)
