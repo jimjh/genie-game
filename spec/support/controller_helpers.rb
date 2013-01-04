@@ -1,5 +1,6 @@
 # ~*~ encoding: utf-8 ~*~
 module ControllerHelpers
+
   def sign_in(user=double('user'))
     if user.nil?
       request.env['warden'].stubs(:authenticate!).throws(:warden, scope: :user)
@@ -9,4 +10,11 @@ module ControllerHelpers
       controller.stubs current_user: user
     end
   end
+
+  def random_file(path)
+    rand = SecureRandom.uuid
+    IO.write path, ( block_given? ? yield(rand) : rand )
+    rand
+  end
+
 end

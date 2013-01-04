@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:jimjh/genie-worker.git
-  revision: 50b023ed151968bf980eb9475d3317d2dc059dc7
+  revision: 98f7ea275bf17bc3c5a460a80c83c9dd06067f7e
   branch: master
   specs:
     lamp (0.0.1)

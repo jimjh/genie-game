@@ -6,4 +6,8 @@ class ApplicationController < ActionController::Base
     raise ActionController::RoutingError.new('Not Found')
   end
 
+  def bad_request
+    head :bad_request
+  end
+
 end
