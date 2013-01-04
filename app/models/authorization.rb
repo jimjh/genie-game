@@ -12,7 +12,7 @@ class Authorization < ActiveRecord::Base
   private
 
   def user_must_exist
-    user_id.nil? || User.find(user_id)
+    user_id.present? && User.find(user_id)
   rescue ActiveRecord::RecordNotFound
     errors.add :user, 'is not a registered user.'
   end
