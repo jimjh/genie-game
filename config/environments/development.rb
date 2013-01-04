@@ -13,6 +13,9 @@ Genie::Application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
+  # Used to construct a web hook for GitHub
+  Rails.application.routes.default_url_options[:host] = 'localhost:3000'
+
   # ActionMailer
   HOST = 'localhost:3000'
   ADMIN_EMAIL_FROM  = ''

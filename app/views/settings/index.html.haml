@@ -11,5 +11,5 @@
               - else
                 %form{action: lessons_path, method: :post, 'data-remote' => true}
                   %input{type: 'hidden', name: 'lesson[url]', value: repo.clone_url}
-                  %input{type: 'hidden', name: 'lesson[repo]', value: repo.full_name}
+                  %input{type: 'hidden', name: 'lesson[repo]', value: repo.name}
                   %input.button.small{type: 'submit', value: 'Publish', 'data-disable-with' => 'Publishing'}

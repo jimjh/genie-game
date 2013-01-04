@@ -23,3 +23,4 @@ RSpec.configure do |config|
 end
 
 OmniAuth.config.test_mode = true
+ActiveRecord::Observer.disable_observers

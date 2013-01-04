@@ -4,11 +4,10 @@ class Lesson < ActiveRecord::Base
   # TODO: strings and messages
   # callbacks ----------------------------------------------------------------
   before_validation :default_values
-  # before_create     :add_webhook
   friendly_id       :name, use: :slugged
 
   attr_accessible   :name, :url, :repo
-  attr_accessor     :repo # full name of repo, used by {#add_webhook}
+  attr_accessor     :repo # full name of repo, used by {LessonObserver}
 
   # relationships ------------------------------------------------------------
   belongs_to :user
@@ -66,14 +65,6 @@ class Lesson < ActiveRecord::Base
   # Sets default values.
   def default_values
     self.name ||= File.basename(url || '', GIT_SUFFIX)
-  end
-
-  # Adds a webhook to the GitHub repository. If the operation failed, the
-  # +github_api+ gem should raise an exception and stop the chain.
-  def add_webhook
-    auth   = user.authorizations.find_by_provider('github') or raise 'wtf.'
-    github = Github.new oauth_token: user.token
-    github.repos.hooks.create auth.nickname, repo, name: 'web', active: true
   end
 
 end
