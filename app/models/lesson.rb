@@ -6,14 +6,14 @@ class Lesson < ActiveRecord::Base
   before_validation :default_values
   friendly_id       :name, use: :slugged
 
-  attr_accessible   :name, :url, :repo
-  attr_accessor     :repo # full name of repo, used by {LessonObserver}
+  attr_accessible   :name, :url
+  attr_accessor     :action         # transaction action, used by {LessonObserver}
 
   # relationships ------------------------------------------------------------
   belongs_to :user
 
   # validations --------------------------------------------------------------
-  validates_presence_of   :name, :url, :user_id, :repo
+  validates_presence_of   :name, :url, :user_id
   validate                :user_must_exist
   validate                :url_must_be_valid
   validates_uniqueness_of :name, scope: :user_id
