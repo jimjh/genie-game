@@ -42,7 +42,7 @@ class LessonsController < ApplicationController
     @lesson.user = current_user
     @lesson.save!                                           # TODO: errors
     system 'lamp', 'create', @lesson.url, @lesson.path.to_s # TODO: errors
-    render :nothing => true, :status => 200
+    render nothing: true, status: 200
   end
 
   def verify
