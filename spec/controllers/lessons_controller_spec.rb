@@ -99,5 +99,9 @@ describe LessonsController do
     pending 'error handling'
   end
 
+  describe 'POST #push' do
+    it 'updates the lesson'
+  end
+
 end
 

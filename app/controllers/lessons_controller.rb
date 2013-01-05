@@ -5,7 +5,8 @@ class LessonsController < ApplicationController
 
   class InvalidParameters < StandardError; end
 
-  before_filter :authenticate_user!, except: [:show, :verify]
+  protect_from_forgery except: :push
+  before_filter :authenticate_user!, except: [:show, :verify, :push]
   rescue_from InvalidParameters do |e| bad_request end
 
   # TODO: configure
@@ -43,6 +44,18 @@ class LessonsController < ApplicationController
     @lesson.save!                                           # TODO: errors
     system 'lamp', 'create', @lesson.url, @lesson.path.to_s # TODO: errors
     render nothing: true, status: 200
+  end
+
+  # Webhook that is registered with GitHub.
+  # POST /lessons/push
+  def push
+    payload = JSON.parse params[:payload] rescue raise InvalidParameters.new('Missing payload.')
+    auth    = Authorization.find_by_provider_and_nickname! 'github', payload['repository']['owner']['name']
+    lesson  = Lesson.find_by_user_id_and_name! auth.user.id, payload['repository']['name']
+    system 'lamp', 'create', lesson.url, lesson.path.to_s
+    render nothing: true, status: 200
+  rescue NoMethodError
+    raise InvalidParameters.new 'Unexpected payload.'
   end
 
   def verify

@@ -67,4 +67,8 @@ Genie::Application.configure do
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
+
+  # GitHub's public IPs
+  config.github = { ips: %w(207.97.227.253 50.57.128.197 108.171.174.178) }
+
 end
