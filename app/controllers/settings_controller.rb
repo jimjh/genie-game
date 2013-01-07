@@ -11,7 +11,7 @@ class SettingsController < ApplicationController
     auth = current_user.authorizations.find_by_provider('github') || not_found
     # FIXME:  pagination, error handling
     @repos     = Github.new.repos.list user: auth.nickname
-    @published = current_user.lessons.map(&:url)
+    @published = current_user.lessons.pluck(:url)
   end
 
 end

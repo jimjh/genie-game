@@ -24,6 +24,7 @@ group :development, :test do
 end
 
 gem 'jquery-rails', '~> 2.1.4'
+gem 'ember-rails',  '~> 0.8.0'
 gem 'thin', '~> 1.5.0'
 gem 'haml', '~> 3.1.7'
 
