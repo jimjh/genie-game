@@ -93,7 +93,6 @@ describe LessonsController do
   end
 
   describe 'POST #create' do
-    it 'cannot be made to execute arbitrary commands'
     it 'clones and compiles a lesson at the given URL'
     pending 'rabbitmq'
     pending 'error handling'

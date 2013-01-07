@@ -8,12 +8,17 @@ class LessonsController < ApplicationController
   protect_from_forgery except: :push
   before_filter :authenticate_user!, except: [:show, :verify, :push]
   rescue_from InvalidParameters do |e| bad_request end
+  attr_reader :compiled_path, :solution_path
 
-  # TODO: configure
-  COMPILED_PATH = Pathname.new '/tmp/genie/compiled'
-  SOLUTION_PATH = Pathname.new '/tmp/genie/solution'
   SOLUTION_EXT  = '.sol'
-  INDEX_FILE    = 'index.inc'
+  PARTIAL_EXT   = '.inc'
+  INDEX_FILE    = Pathname.new(Aladdin::INDEX_MD).sub_ext(PARTIAL_EXT)
+
+  def initialize
+    @compiled_path = Rails.configuration.lamp[:compiled_path]
+    @solution_path = Rails.configuration.lamp[:solution_path]
+    super
+  end
 
   # Renders a single lesson page and its static assets.
   # @note It's important to use +attachment+ for send_file, because the user
@@ -25,7 +30,7 @@ class LessonsController < ApplicationController
     # TODO cache static assets, so that they don't have to pass through here
     #   be careful of HTML and JS assets.
     validate_params! :user, :lesson
-    lesson_dir = sanitize_path! COMPILED_PATH, params[:user], params[:lesson]
+    lesson_dir = sanitize_path! compiled_path, params[:user], params[:lesson]
     path       = sanitize_path! lesson_dir, params[:path]
 
     path  = path.sub_ext('.' + params[:format]) unless params[:format].blank?
@@ -41,9 +46,9 @@ class LessonsController < ApplicationController
   def create
     @lesson      = Lesson.new params[:lesson]
     @lesson.user = current_user
-    @lesson.save!                                           # TODO: errors
-    system 'lamp', 'create', @lesson.url, @lesson.path.to_s # TODO: errors
-    render nothing: true, status: 200
+    if @lesson.save then render json: @lesson
+    else render json: { errors: @lesson.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   # Webhook that is registered with GitHub.
@@ -61,12 +66,10 @@ class LessonsController < ApplicationController
   def verify
     # TODO: use judge service
     validate_params! :user, :lesson, :problem
-
     solution  = params[:problem] + SOLUTION_EXT
-    path      = sanitize_path!(SOLUTION_PATH, params[:user], params[:lesson], solution)
+    path      = sanitize_path!(solution_path, params[:user], params[:lesson], solution)
     not_found unless path.file?
     result    = File.open(path, 'rb') { |f| same? params[:answer], Marshal.restore(f) }
-
     render json: result
   end
 
@@ -81,7 +84,7 @@ class LessonsController < ApplicationController
   # Ensures that the arguments in +dangerous+ are not blank after
   #  parameterization.
   # @raise  [InvalidParameters] if the parameters are not valid.
-  # @return [Void]
+  # @return [void]
   def validate_params!(*dangerous)
     dangerous.each { |d| params[d] = params[d].try(:parameterize) }
     if dangerous.map { |d| params[d].blank? }.inject(:|)

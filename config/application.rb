@@ -60,5 +60,11 @@ module Genie
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
+    # Output paths for Lamp.
+    config.lamp = {
+      compiled_path: Pathname.new('/tmp/genie/compiled'),
+      solution_path: Pathname.new('/tmp/genie/solution')
+    }
+
   end
 end
