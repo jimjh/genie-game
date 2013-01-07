@@ -7,7 +7,7 @@ describe Authorization do
     it { should respond_to(attr) }
   end
 
-  [:provider, :uid, :user_id, :token].each do |attr|
+  [:provider, :uid, :user_id, :token, :nickname].each do |attr|
     it { should validate_presence_of(attr) }
   end
 
@@ -15,17 +15,20 @@ describe Authorization do
 
   describe '#user' do
 
-    before :each do
-      @user   = FactoryGirl.create :user
+    context 'given an existing user' do
+      before(:each) { @user   = FactoryGirl.create :user }
+      after(:each)  { [@user].map(&:destroy) }
+      it 'allows the authorization to be created' do
+        FactoryGirl.build(:authorization, user_id: @user.id).should be_valid
+      end
     end
 
-    after :each do
-      [@user].map(&:destroy)
-    end
-
-    it 'should ensure that user exists' do
-      FactoryGirl.build(:authorization, user_id: @user.id + 1).should_not be_valid
-      FactoryGirl.build(:authorization, user_id: @user.id).should be_valid
+    context 'given a non-existent user' do
+      it 'denys the authorization' do
+        ids = User.pluck :id
+        begin id = Random.rand(1000) end while ids.include?(id)
+        FactoryGirl.build(:authorization, user_id: id).should_not be_valid
+      end
     end
 
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130104195048) do
+ActiveRecord::Schema.define(:version => 20130107141724) do
 
   create_table "authorizations", :force => true do |t|
     t.string   "provider"
@@ -43,18 +43,16 @@ ActiveRecord::Schema.define(:version => 20130104195048) do
 
   create_table "users", :force => true do |t|
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",        :default => 0
+    t.integer  "sign_in_count",       :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.string   "authentication_token"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.string   "slug"
   end
 
-  add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true
   add_index "users", ["slug"], :name => "index_users_on_slug", :unique => true
 
 end
