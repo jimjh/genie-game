@@ -17,8 +17,9 @@ RSpec.configure do |config|
 
   config.order = 'random'
 
-  config.include Devise::TestHelpers, type: :controller
-  config.include ControllerHelpers,   type: :controller
+  config.include Devise::TestHelpers,       type: :controller
+  config.include Test::Matchers,            type: :model
+  config.include Test::ControllerHelpers,   type: :controller
 
 end
 

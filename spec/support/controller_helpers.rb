@@ -1,20 +1,22 @@
 # ~*~ encoding: utf-8 ~*~
-module ControllerHelpers
+module Test
+  module ControllerHelpers
 
-  def sign_in(user=double('user'))
-    if user.nil?
-      request.env['warden'].stubs(:authenticate!).throws(:warden, scope: :user)
-      controller.stubs current_user: nil
-    else
-      request.env['warden'].stubs authenticate!: user
-      controller.stubs current_user: user
+    def sign_in(user=double('user'))
+      if user.nil?
+        request.env['warden'].stubs(:authenticate!).throws(:warden, scope: :user)
+        controller.stubs current_user: nil
+      else
+        request.env['warden'].stubs authenticate!: user
+        controller.stubs current_user: user
+      end
     end
-  end
 
-  def random_file(path)
-    rand = SecureRandom.uuid
-    IO.write path, ( block_given? ? yield(rand) : rand )
-    rand
-  end
+    def random_file(path)
+      rand = SecureRandom.uuid
+      IO.write path, ( block_given? ? yield(rand) : rand )
+      rand
+    end
 
+  end
 end

@@ -14,18 +14,7 @@ describe Lesson do
   end
 
   it { should validate_uniqueness_of(:name).scoped_to(:user_id) }
-
-  def self.allow_scheme(s)
-    it { should allow_value("#{s}://host.xz/path/to/repo.git/").for(:url) }
-    it { should allow_value("#{s}://user@host.xz/path/to/repo.git/").for(:url) }
-    it { should allow_value("#{s}://user@host.xz:123/path/to/repo.git/").for(:url) }
-    it { should allow_value("#{s}://host.xz:123/path/to/repo.git/").for(:url) }
-  end
-  %w(ssh git http https ftp ftps rsync).each { |scheme| allow_scheme scheme }
-
-  # should allow scp style
-  it { should allow_value('host.xz:path/to/repo.git/').for(:url) }
-  it { should allow_value('user@host.xz:path/to/repo.git/').for(:url) }
+  it { should allow_git_urls.for(:url) }
 
   # should not allow local
   it { should_not allow_value('ftp://localhost/path/to/repo.git/').for(:url) }
