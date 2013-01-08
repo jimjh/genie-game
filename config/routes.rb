@@ -12,7 +12,9 @@ Genie::Application.routes.draw do
   end
 
   # Settings Controller ------------------------------------------------------
-  match 'settings' => 'settings#index'
+  scope path: 'settings', controller: :settings do
+    match '/' => :index
+  end
 
   root :to => 'home#index'
 
