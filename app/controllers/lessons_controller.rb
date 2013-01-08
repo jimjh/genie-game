@@ -73,12 +73,6 @@ class LessonsController < ApplicationController
     render json: result
   end
 
-  alias :original_lesson_url :lesson_url
-  def lesson_url(lesson, options={})
-    original_lesson_url options.merge(user: lesson.user, lesson: lesson)
-  end
-  helper_method :lesson_url
-
   private
 
   # Ensures that the arguments in +dangerous+ are not blank after

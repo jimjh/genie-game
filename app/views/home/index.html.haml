@@ -1,1 +1,10 @@
-Coming Soon.
+.row
+  .eight.columns
+    %table
+      %thead
+        %tr
+          %th Lessons
+      %tbody
+      - @lessons.each do |lesson|
+        %tr
+          %td= link_to lesson.name.titleize, lesson
