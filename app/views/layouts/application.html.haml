@@ -27,8 +27,7 @@
   = render partial: 'layouts/nav_bar'
   = render partial: 'layouts/flash', locals: { flash: flash }
 
-  %section{role: 'lesson'}
-    = yield
+  = yield
 
   = javascript_include_tag 'application'
   -# mathjax
