@@ -21,6 +21,8 @@ group :development, :test do
   gem 'no_peeping_toms',    '~> 2.1.3'
   gem 'debugger-pry'
   gem 'hirb'
+  gem 'rvm-capistrano'
+  gem 'capistrano'
 end
 
 group :production do

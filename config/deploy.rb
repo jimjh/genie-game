@@ -1,22 +1,23 @@
-require "bundler/capistrano"
+require 'rvm/capistrano'
+require 'bundler/capistrano'
 
-set :application, "genie-game"
-set :repository,  "git@github.com:jimjh/genie-game.git"
-set :user,        "passenger"
+set :application, 'genie-game'
+set :repository,  'git@github.com:jimjh/genie-game.git'
+set :user,        'passenger'
 
+# no idea what this does - could be wrong
 set :normalize_asset_timestamps, false
 
 set :scm, :git
 
-role :web, "ec2-54-245-18-137.us-west-2.compute.amazonaws.com"                   # Your HTTP server, Apache/etc
-role :app, "ec2-54-245-18-137.us-west-2.compute.amazonaws.com"                   # This may be the same as your `Web` server
-role :db,  "ec2-54-245-18-137.us-west-2.compute.amazonaws.com", :primary => true # This is where Rails migrations will run
+# force cap to use rvm
+set :rvm_ruby_string, '1.9.3'
 
-# if you want to clean up old releases on each deploy uncomment this:
-# after "deploy:restart", "deploy:cleanup"
+role :web, 'ec2-54-245-18-137.us-west-2.compute.amazonaws.com'                   # Your HTTP server, Apache/etc
+role :app, 'ec2-54-245-18-137.us-west-2.compute.amazonaws.com'                   # This may be the same as your `Web` server
+role :db,  'ec2-54-245-18-137.us-west-2.compute.amazonaws.com', :primary => true # This is where Rails migrations will run
 
-# if you're still using the script/reaper helper you will need
-# these http://github.com/rails/irs_process_scripts
+after 'deploy:restart', 'deploy:cleanup'
 
 # If you are using Passenger mod_rails uncomment this:
 namespace :deploy do
