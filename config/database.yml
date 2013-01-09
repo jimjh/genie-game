@@ -20,9 +20,9 @@ test:
 
 production:
   adapter: postgresql
+  encoding: unicode
   database: genie
   username: postgres
   password: <%= ENV['POSTGRES_PASSWORD'] %>
-  host: localhost
   pool: 5
   timeout: 5000
