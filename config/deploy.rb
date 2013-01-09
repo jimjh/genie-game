@@ -21,7 +21,7 @@ role :app, 'ec2-54-245-18-137.us-west-2.compute.amazonaws.com'                  
 role :db,  'ec2-54-245-18-137.us-west-2.compute.amazonaws.com', :primary => true # This is where Rails migrations will run
 
 after 'deploy:restart',  'deploy:cleanup'
-after 'deploy:update',   'deploy:migrate'
+# after 'deploy:update',   'deploy:migrate'
 
 # If you are using Passenger mod_rails uncomment this:
 namespace :deploy do
@@ -29,5 +29,8 @@ namespace :deploy do
   task :stop do ; end
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
+  end
+  task :load_schema do
+    run "cd #{current_path}; bundle exec rake RAILS_ENV=production db:schema:load"
   end
 end
