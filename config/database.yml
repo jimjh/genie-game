@@ -22,7 +22,7 @@ production:
   adapter: postgresql
   encoding: unicode
   database: genie
-  username: postgres
+  username: passenger
   password: <%= ENV['POSTGRES_PASSWORD'] %>
   pool: 5
   timeout: 5000
