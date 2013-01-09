@@ -1,8 +1,7 @@
 Genie::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
-  # TODO: https://gist.github.com/993566
-  # TODO: set default_url_host
+  Rails.application.routes.default_url_options[:host] = 'ec2-54-245-18-137.us-west-2.compute.amazonaws.com'
 
   # Code is not reloaded between requests
   config.cache_classes = true
