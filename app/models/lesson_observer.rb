@@ -92,6 +92,7 @@ class LessonObserver < ActiveRecord::Observer
   # @todo TODO add a build task and do this asynchronously
   # @return [void]
   def create_files(lesson)
+    Rails.logger.info ">> lamp create #{lesson.url} #{lesson.path.to_s}"
     return if system 'lamp', 'create', lesson.url, lesson.path.to_s
     lesson.errors.add(:lamp, 'was unable to create the lesson')
     raise ActiveRecord::RecordNotSaved, '`lamp create` failed'
