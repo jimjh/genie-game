@@ -13,7 +13,7 @@ set :deploy_via, :remote_cache # don't re-clone every time
 set :use_sudo,   false
 
 # force cap to use rvm
-set :rvm_ruby_string, 'ruby-1.9.3'
+set :rvm_ruby_string, 'ruby-1.9.3-p362'
 set :rvm_type,        :system
 
 role :web, 'ec2-54-245-18-137.us-west-2.compute.amazonaws.com'                   # Your HTTP server, Apache/etc
