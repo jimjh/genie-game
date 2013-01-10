@@ -2,11 +2,10 @@
 
 Deployment is done using [Capistrano][capistrano-guide]. A usual deployment workflow should be as follows:
 
-	```sh
-	$> git push origin master
-	$> cap deploy
-
-	```
+```sh
+$> git push origin master
+$> cap deploy
+```
 	
 `cap deploy` will clone the repository to `/u/apps/genie-game/releases/current`, execute `rake db:migrate`, and `rake assets:precompile`. The assets compilation step will take a while, but I am waiting on progress at [Pull Request #21][pull-21].
 
@@ -15,9 +14,9 @@ The current deployment server is `ec2-54-245-18-137.us-west-2.compute.amazonaws.
 
 The root user is `ubuntu`. To login as the root user,
 
-	```sh
-	$> ssh -i ~/.ssh/square.pem ubuntu@genie.ec2
-	```
+```sh
+$> ssh -i ~/.ssh/square.pem ubuntu@genie.ec2
+```
 	
 A safer, less powerful sudoer is `codex`. It's setup to allow passwordless login with my private  SSH key at `~/.ssh/id_rsa`.
 
@@ -28,18 +27,18 @@ We are using a Rails-Passenger-Nginx setup. Nginx is started using `start-stop-d
 
 To start, stop, restart, or reload nginx, use
 
-	```sh
-	$> sudo /etc/init.d/nginx <command>
-	```
+```sh
+$> sudo /etc/init.d/nginx <command>
+```
 
 ## Passenger
 To start, stop, or restart Passenger, execute the following from your local machine:
 
-	```sh
-	$> cap deploy:start
-	$> cap deploy:stop
-	$> cap deploy:restart
-	```
+```sh
+$> cap deploy:start
+$> cap deploy:stop
+$> cap deploy:restart
+```
 	
 ## RVM
 The server currently has a system-wide install of rvm using ruby 1.9.3
@@ -55,41 +54,41 @@ to
 	
 The root user is `postgres`. I don't remember the password, but you can login using
 
-	```sh
-	$> sudo -u postgres psql
-	```
+```sh
+$> sudo -u postgres psql
+```
 	
 from an appropriate sudoer.
 
 `production.yml` should look like the following:
 
-	```yml
-	production:
-		adapter: postgresql
-		encoding: unicode
-		database: genie
-		username: passenger
-		password: # read from /home/passenger/.secrets
-		pool: 5
-		timout: 500
-	```
+```yml
+production:
+	adapter: postgresql
+	encoding: unicode
+	database: genie
+	username: passenger
+	password: # read from /home/passenger/.secrets
+	pool: 5
+	timout: 500
+```
 	
 ## Installation
 These are the steps I took to set up the Ubuntu server.
 
 ### 1. UNIX
 
-	```sh
-	remote> sudo useradd -m passenger
-	remote> sudo usermod -s /bin/bash passenger
-	remote> sudo passwd passenger
-	```
+```sh
+remote> sudo useradd -m passenger
+remote> sudo usermod -s /bin/bash passenger
+remote> sudo passwd passenger
+```
 	
 Finally, setup passwordless login using public/private key exchange.
 
-	```sh
-	local> ssh-keygen -t rsa # output to ~/.ssh/genie_deploy
-	```
+```sh
+local> ssh-keygen -t rsa # output to ~/.ssh/genie_deploy
+```
 	
 ### 2. Ruby + RVM
 Follow instructions on [rvm.io](http://rvm.io/) to setup a system-wide install and add `www-data` and `passenger` to the `rvm` group. Logout, then login again.
@@ -98,19 +97,19 @@ Execute `sudo aptitude install` on the list of libraries required by rvm.
 
 Install Ruby as follows:
 
-	```sh
-	remote> sudo rvm install ruby-1.9.3-head
-	remote> sudo rvm use --default 1.9.3
-	remote> sudo aptitude install rubygems
-	remote> sudo gem install bundler
-	```
+```sh
+remote> sudo rvm install ruby-1.9.3-head
+remote> sudo rvm use --default 1.9.3
+remote> sudo aptitude install rubygems
+remote> sudo gem install bundler
+```
 
 ### 3. Passenger
 
-	```sh
-	remote> sudo gem install passenger
-	remote> rvmsudo passenger-install-nginx-module
-	```
+```sh
+remote> sudo gem install passenger
+remote> rvmsudo passenger-install-nginx-module
+```
 	
 Follow given instructions to configure nginx so that it points to `/u/apps/genie-game/current/public`.
 
@@ -118,10 +117,10 @@ Follow given instructions to configure nginx so that it points to `/u/apps/genie
 
 Setup `/usr/local/etc/genie/worker.yml` and create directory at `/mnt/genie`.
 
-	```sh
-	remote> chown passenger /mnt/genie
-	remote> chmod o-rx /mnt/genie
-	```
+```sh
+remote> chown passenger /mnt/genie
+remote> chmod o-rx /mnt/genie
+```
 	
 ### 5. Postgres
 
@@ -149,9 +148,9 @@ To do a fresh deploy, edit `config/deploy.rb` to disable `after deploy:update, d
 
 Finally, reenable `after deploy:update, deploy:migrate` and execute
 
-	```sh
-	$> cap deploy
-	```
+```sh
+$> cap deploy
+```
 
 ### Process Monitoring
 Further configuration is needed to leverage Upstart and Monit to monitor postgres, rails, passenger, and nginx.
