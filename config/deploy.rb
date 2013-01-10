@@ -37,6 +37,6 @@ namespace :deploy do
   end
   task :secrets do
     run "ln -nfs #{deploy_to}/shared/config/database.d #{release_path}/config/database.d"
-    run "ln -nfs #{deploy_to}/shared/config/initializers.d #{release_path}/config/initializers/initializers.d"
+    run "ln -nfs #{deploy_to}/shared/config/locals.d #{release_path}/config/initializers/locals.d"
   end
 end
