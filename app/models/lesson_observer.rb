@@ -93,7 +93,7 @@ class LessonObserver < ActiveRecord::Observer
   # @return [void]
   def create_files(lesson)
     Rails.logger.info ">> lamp create #{lesson.url} #{lesson.path.to_s}"
-    return if system 'lamp', 'create', lesson.url, lesson.path.to_s
+    return if system *%w(bundle exec lamp create), lesson.url, lesson.path.to_s
     lesson.errors.add(:lamp, 'was unable to create the lesson')
     raise ActiveRecord::RecordNotSaved, '`lamp create` failed'
   end
