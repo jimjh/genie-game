@@ -36,7 +36,7 @@ namespace :deploy do
     run "cd #{current_path}; bundle exec rake RAILS_ENV=production db:schema:load"
   end
   task :secrets do
-    run "ln -nfs #{deploy_to}/shared/config/production.yml #{release_path}/config/database.d/production.yml"
-    run "ln -nfs #{deploy_to}/shared/config/api_keys.rb #{release_path}/config/initializers/api_keys.rb"
+    run "ln -nfs #{deploy_to}/shared/config/database.d #{release_path}/config/database.d"
+    run "ln -nfs #{deploy_to}/shared/config/initializers.d #{release_path}/config/initializers/initializers.d"
   end
 end

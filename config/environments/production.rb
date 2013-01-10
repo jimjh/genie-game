@@ -70,4 +70,10 @@ Genie::Application.configure do
   # GitHub's public IPs
   config.github = { ips: %w(207.97.227.253 50.57.128.197 108.171.174.178) }
 
+  # Output paths for Lamp.
+  config.lamp = {
+    compiled_path: Pathname.new('/mnt/genie/compiled'),
+    solution_path: Pathname.new('/mnt/genie/solution')
+  }
+
 end
