@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:jimjh/genie-previewer.git
-  revision: 95f08c2625400f912ee8ee694a884ffc042d2557
+  revision: c2e685251f8111055f7567049373f56b2410cd0a
   branch: master
   specs:
     aladdin (0.0.8)
@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git@github.com:jimjh/genie-worker.git
-  revision: 3a7766787893b1577fa465703bc9bd0ec3af4230
+  revision: 6f8a5dc2c338f86ddf91b4e216ffcfb6e58d2599
   branch: master
   specs:
     lamp (0.0.2)
