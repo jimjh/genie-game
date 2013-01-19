@@ -55,3 +55,5 @@ Genie::Application.configure do
   config.github = { ips: %w(127.0.0.1) }
 
 end
+
+require_relative './locals'

@@ -77,3 +77,5 @@ Genie::Application.configure do
   }
 
 end
+
+require_relative './locals'

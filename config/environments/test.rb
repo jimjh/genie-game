@@ -34,4 +34,7 @@ Genie::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  config.github = { api_key: '21061b937e90e90e4dc9', api_secret: 'e3f4a30915e9388e2ef6b9fd2c7d3c1f0eece08e' }
+
 end

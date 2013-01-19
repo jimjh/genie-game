@@ -27,8 +27,8 @@ before 'deploy:assets:precompile', 'deploy:secrets'
 
 # If you are using Passenger mod_rails uncomment this:
 namespace :deploy do
-  task :start do ; end
-  task :stop do ; end
+  task :start do; end
+  task :stop do; end
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
   end
@@ -37,6 +37,6 @@ namespace :deploy do
   end
   task :secrets do
     run "ln -nfs #{deploy_to}/shared/config/database.d #{release_path}/config/database.d"
-    run "ln -nfs #{deploy_to}/shared/config/locals.d #{release_path}/config/initializers/locals.d"
+    run "ln -nfs #{deploy_to}/shared/config/locals.d #{release_path}/config/environments/locals.d"
   end
 end
