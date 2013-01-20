@@ -46,4 +46,5 @@ gem 'friendly_id',      '~> 4.0.1'
 gem 'github_api',       '~> 0.8.6'
 
 gem 'lamp',    git: 'git@github.com:jimjh/genie-worker.git', branch: 'master'
+gem 'spirit',  git: 'git@github.com:jimjh/genie-parser.git', branch: 'master'
 gem 'aladdin', git: 'git@github.com:jimjh/genie-previewer.git', branch: 'master'
