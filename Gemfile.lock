@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:jimjh/genie-parser.git
-  revision: 4c571aaceff83b4b467ec36545bcf1d58df5b847
+  revision: 84ea31575942982b2989a9282e37752fb82331e9
   branch: master
   specs:
     spirit (0.1.0.pre.1)
@@ -12,17 +12,17 @@ GIT
 
 GIT
   remote: git@github.com:jimjh/genie-previewer.git
-  revision: 4ce3c571c1bb59662ef6d2b7e8f3e72af23046c3
+  revision: 07405821a96c2b4cb38786e3686cebcb6a4d8e9f
   branch: master
   specs:
-    aladdin (0.1.0.pre)
+    aladdin (0.1.0.pre.1)
       activesupport (~> 3.2.9)
       sinatra (~> 1.3)
-      spirit (~> 0.1.0.pre)
+      spirit (~> 0.1.0.pre.1)
 
 GIT
   remote: git@github.com:jimjh/genie-worker.git
-  revision: 53567aad4f7d7d5c2265ccbd0096e88cd88767c8
+  revision: ebef71e597cf428033c2d30a6350697a76df28c8
   branch: master
   specs:
     lamp (0.1.0.pre.1)
@@ -111,18 +111,18 @@ GEM
     eventmachine (1.0.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
-    factory_girl (4.1.0)
+    factory_girl (4.2.0)
       activesupport (>= 3.0.0)
-    factory_girl_rails (4.1.0)
-      factory_girl (~> 4.1.0)
+    factory_girl_rails (4.2.0)
+      factory_girl (~> 4.2.0)
       railties (>= 3.0.0)
     faker (1.1.2)
       i18n (~> 0.5)
     faraday (0.8.4)
       multipart-post (~> 1.1)
     friendly_id (4.0.9)
-    fssm (0.2.9)
-    github_api (0.8.7)
+    fssm (0.2.10)
+    github_api (0.8.9)
       faraday (~> 0.8.1)
       hashie (~> 1.2.0)
       multi_json (~> 1.4)
@@ -136,7 +136,7 @@ GEM
     hashie (1.2.0)
     highline (1.6.15)
     hike (1.2.1)
-    hirb (0.7.0)
+    hirb (0.7.1)
     httpauth (0.2.0)
     i18n (0.6.1)
     journey (1.0.4)
@@ -191,7 +191,7 @@ GEM
     pg (0.14.1)
     polyglot (0.3.3)
     posix-spawn (0.3.6)
-    pry (0.9.11.3)
+    pry (0.9.11.4)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
@@ -255,9 +255,9 @@ GEM
     simple_form (2.0.4)
       actionpack (~> 3.0)
       activemodel (~> 3.0)
-    sinatra (1.3.3)
-      rack (~> 1.3, >= 1.3.6)
-      rack-protection (~> 1.2)
+    sinatra (1.3.4)
+      rack (~> 1.4)
+      rack-protection (~> 1.3)
       tilt (~> 1.3, >= 1.3.3)
     slop (3.4.3)
     sprockets (2.2.2)
@@ -282,7 +282,7 @@ GEM
     uuidtools (2.1.3)
     warden (1.2.1)
       rack (>= 1.0)
-    zurb-foundation (3.2.4)
+    zurb-foundation (3.2.5)
       compass (>= 0.12.2)
       modular-scale (= 1.0.6)
       rake
@@ -312,7 +312,7 @@ DEPENDENCIES
   omniauth-github (~> 1.0.3)
   pg
   rails (~> 3.2.11)
-  rspec-rails (~> 2.0)
+  rspec-rails (~> 2.12.2)
   rvm-capistrano
   sass-rails (~> 3.2.3)
   shoulda (~> 3.3.2)

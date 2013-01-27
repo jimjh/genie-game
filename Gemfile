@@ -14,7 +14,7 @@ group :assets do
 end
 
 group :development, :test do
-  gem 'rspec-rails',        '~> 2.0'
+  gem 'rspec-rails',        '~> 2.12.2'
   gem 'shoulda',            '~> 3.3.2'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'mocha',              '~> 0.10', :require => false
