@@ -1,16 +1,14 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 3.2.11'
+gem 'rails', '~> 3.2.12'
 gem 'sqlite3'
 
-# Gems used only for assets and not required
-# in production environments by default.
 group :assets do
   gem 'sass-rails',       '~> 3.2.3'
   gem 'coffee-rails',     '~> 3.2.1'
   gem 'compass-rails',    '~> 1.0.3'
-  gem 'zurb-foundation',  '~> 3.2.3'
-  gem 'uglifier'
+  gem 'zurb-foundation',  '~> 3.2.5'
+  gem 'uglifier',         '>= 1.0.3'
 end
 
 group :development, :test do
@@ -20,19 +18,19 @@ group :development, :test do
   gem 'mocha',              '~> 0.10', :require => false
   gem 'faker',              '~> 1.1.2'
   gem 'no_peeping_toms',    '~> 2.1.3'
+  gem 'hirb',               '~> 0.7.1'
   gem 'debugger-pry'
-  gem 'hirb'
   gem 'rvm-capistrano'
   gem 'capistrano'
 end
 
 group :production do
-  gem 'pg'
+  gem 'pg',   '~> 0.14.1'
 end
 
-gem 'jquery-rails', '~> 2.1.4'
+gem 'jquery-rails', '~> 2.2.1'
 gem 'thin', '~> 1.5.0'
-gem 'haml', '~> 3.1.7'
+gem 'haml', '~> 4.0.0'
 
 # Authentication
 gem 'devise',           '~> 2.1.2'

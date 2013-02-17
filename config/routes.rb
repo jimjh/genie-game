@@ -1,13 +1,14 @@
 Genie::Application.routes.draw do
 
   # User management w. Devise ------------------------------------------------
-  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' } do
-    delete 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session
+  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
+  devise_scope :user do
+    delete 'sign_out', to: 'devise/sessions#destroy', as: :destroy_user_session
   end
 
   # Lessons Controller -------------------------------------------------------
   resources :lessons, only: [:create, :destroy] do
-    post :push, on: :collection,
+    post :push, on: :collection, # GitHub Hook
       constraints: lambda { |r| Rails.configuration.github[:ips].include? r.remote_ip }
   end
 
@@ -16,6 +17,7 @@ Genie::Application.routes.draw do
     match '/' => :index
   end
 
+  # Home
   root :to => 'home#index'
 
   # Pretty URLs --------------------------------------------------------------
