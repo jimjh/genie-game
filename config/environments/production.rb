@@ -1,7 +1,9 @@
 Genie::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
-  Rails.application.routes.default_url_options[:host] = 'ec2-54-245-18-137.us-west-2.compute.amazonaws.com'
+  # Used to construct a web hook for GitHub
+  HOST = 'ec2-54-245-18-137.us-west-2.compute.amazonaws.com'
+  Rails.application.routes.default_url_options[:host] = HOST
 
   # Code is not reloaded between requests
   config.cache_classes = true
@@ -50,8 +52,8 @@ Genie::Application.configure do
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
   # config.assets.precompile += %w( search.js )
 
-  # Disable delivery errors, bad email addresses will be ignored
-  # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_url_options = { host: HOST }
 
   # Enable threaded mode
   # config.threadsafe!

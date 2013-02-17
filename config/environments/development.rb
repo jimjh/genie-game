@@ -14,10 +14,10 @@ Genie::Application.configure do
   config.action_controller.perform_caching = false
 
   # Used to construct a web hook for GitHub
-  Rails.application.routes.default_url_options[:host] = 'localhost:3000'
+  HOST = 'localhost:3000'
+  Rails.application.routes.default_url_options[:host] = HOST
 
   # ActionMailer
-  HOST = 'localhost:3000'
   ADMIN_EMAIL_FROM  = ''
   PHONY_VIA_OPTIONS = {
     address: 'smtp.gmail.com',
@@ -53,6 +53,8 @@ Genie::Application.configure do
 
   # GitHub's public IPs
   config.github = { ips: %w(127.0.0.1) }
+
+  config.faye   = { url: 'http://localhost:3000/faye' }
 
 end
 
