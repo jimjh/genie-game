@@ -1,4 +1,3 @@
-require 'uuidtools'
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   # TODO: I18n strings
