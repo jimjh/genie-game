@@ -11,17 +11,26 @@ group :assets do
   gem 'uglifier',         '>= 1.0.3'
 end
 
-group :development, :test do
-  gem 'rspec-rails',        '~> 2.12.2'
+group :test do
+  gem 'no_peeping_toms',    '~> 2.1.3'
+  gem 'faker',              '~> 1.1.2'
+  gem 'mocha',              '~> 0.10',  require: false
+  gem 'cucumber-rails',     '~> 1.3.0', require: false
+  gem 'database_cleaner',   '~> 0.9.1'
   gem 'shoulda',            '~> 3.3.2'
   gem 'factory_girl_rails', '~> 4.0'
-  gem 'mocha',              '~> 0.10', :require => false
-  gem 'faker',              '~> 1.1.2'
-  gem 'no_peeping_toms',    '~> 2.1.3'
-  gem 'hirb',               '~> 0.7.1'
-  gem 'debugger-pry'
+end
+
+group :development do
   gem 'rvm-capistrano'
   gem 'capistrano'
+end
+
+group :test, :development do
+  gem 'rspec-rails', '~> 2.12.2'
+  gem 'debugger',    '~> 1.3.1'
+  gem 'pry',         '~> 0.9.12'
+  gem 'hirb',        '~> 0.7.1'
 end
 
 group :production do
@@ -33,10 +42,9 @@ gem 'thin', '~> 1.5.0'
 gem 'haml', '~> 4.0.0'
 
 # Authentication
-gem 'devise',           '~> 2.1.2'
-gem 'omniauth',         '~> 1.1.1'
+gem 'devise',           '~> 2.2.3'
+gem 'omniauth',         '~> 1.1.3'
 gem 'omniauth-github',  '~> 1.0.3'
-gem 'uuidtools',        '~> 2.1.3'
 gem 'simple_form',      '~> 2.0.4'
 gem 'friendly_id',      '~> 4.0.1'
 
