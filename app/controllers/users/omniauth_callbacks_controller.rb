@@ -1,4 +1,3 @@
-require 'uuidtools'
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   # TODO: I18n strings
@@ -10,6 +9,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def passthru
     not_found
+  end
+
+  def after_omniauth_failure_path_for(scope)
+    root_path
   end
 
   private
