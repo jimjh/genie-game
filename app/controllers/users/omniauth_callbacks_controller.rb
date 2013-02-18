@@ -11,6 +11,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     not_found
   end
 
+  def after_omniauth_failure_path_for(scope)
+    root_path
+  end
+
   private
 
   def oauthorize(kind)
