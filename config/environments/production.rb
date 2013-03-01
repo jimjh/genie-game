@@ -75,7 +75,11 @@ Genie::Application.configure do
   # Output paths for Lamp.
   config.lamp = {
     compiled_path: Pathname.new('/mnt/genie/compiled'),
-    solution_path: Pathname.new('/mnt/genie/solution')
+    solution_path: Pathname.new('/mnt/genie/solution'),
+    client: {
+      'host' => 'localhost',
+      'port' => 5000
+    }
   }
 
 end

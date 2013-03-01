@@ -56,6 +56,16 @@ Genie::Application.configure do
 
   config.faye   = { url: 'http://localhost:3000/faye' }
 
+  # Output paths for Lamp.
+  config.lamp = {
+    compiled_path: Pathname.new('/tmp/genie/compiled'),
+    solution_path: Pathname.new('/tmp/genie/solution'),
+    client: {
+      'host' => 'localhost',
+      'port' => 5000
+    }
+  }
+
 end
 
 require_relative './locals'

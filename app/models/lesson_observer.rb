@@ -9,6 +9,7 @@
 # @todo TODO updates should also update hooks if the URL changed
 class LessonObserver < ActiveRecord::Observer
 
+  include LampConcern
   include Rails.application.routes.url_helpers
 
   # Parameters sent to GitHub when creating the hook.
@@ -70,11 +71,17 @@ class LessonObserver < ActiveRecord::Observer
 
   # Invokes worker to delete lesson files.
   # @param [Lesson] lesson
+  # @todo TODO add callback
   # @return [void]
   def delete_files(lesson)
-    Rails.logger.info ">> lamp rm #{lesson.path.to_s}"
-    return if system 'lamp', 'rm', lesson.path.to_s
+    Rails.logger.info ">> lamp remove #{lesson.path.to_s}"
+    lamp_client.transport.open
+    lamp_client.remove lesson.path.to_s, 'callback'
+  rescue Lamp::RPCError => e
     Rails.logger.error 'Unable to remove lesson %s using lamp.' % lesson.path
+    Rails.logger.error e
+  ensure
+    lamp_client.transport.close
   end
 
   # Adds a webhook to the GitHub repository. If the operation failed, the
@@ -95,9 +102,14 @@ class LessonObserver < ActiveRecord::Observer
   # @return [void]
   def create_files(lesson)
     Rails.logger.info ">> lamp create #{lesson.url} #{lesson.path.to_s}"
-    return if system 'lamp', 'create', lesson.url, lesson.path.to_s
+    lamp_client.transport.open
+    lamp_client.create lesson.url, lesson.path.to_s, 'callback', {}
+  rescue Lamp::RPCError => e
     lesson.errors.add(:lamp, 'was unable to create the lesson')
     raise ActiveRecord::RecordNotSaved, '`lamp create` failed'
+    Rails.logger.error e
+  ensure
+    lamp_client.transport.close
   end
 
   # Lazily adds {#push_lessons_url} to {HOOK_PARAMS}.
