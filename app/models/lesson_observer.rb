@@ -8,6 +8,7 @@
 #
 # @todo TODO updates should also update hooks if the URL changed
 class LessonObserver < ActiveRecord::Observer
+
   include Rails.application.routes.url_helpers
 
   # Parameters sent to GitHub when creating the hook.
