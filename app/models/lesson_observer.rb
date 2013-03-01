@@ -81,7 +81,7 @@ class LessonObserver < ActiveRecord::Observer
   # +github_api+ gem should raise an exception and stop the chain. Otherwise,
   # the hook ID is saved with the lesson.
   # @param [Lesson] lesson
-  # @todo FIXME make this work with orgs
+  # @todo FIXME make this work with organizations
   # @return [void]
   def create_hook(lesson)
     auth, client = github lesson
@@ -91,7 +91,7 @@ class LessonObserver < ActiveRecord::Observer
 
   # Invokes worker to clone and compile the lesson.
   # @param [Lesson] lesson
-  # @todo TODO add a build task and do this asynchronously
+  # @todo TODO add callback
   # @return [void]
   def create_files(lesson)
     Rails.logger.info ">> lamp create #{lesson.url} #{lesson.path.to_s}"

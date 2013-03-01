@@ -1,5 +1,4 @@
 require 'aladdin/support/weak_comparator'
-require 'spirit/constants'
 
 class LessonsController < ApplicationController
   include Aladdin::Support::WeakComparator
@@ -13,7 +12,7 @@ class LessonsController < ApplicationController
 
   SOLUTION_EXT  = '.sol'
   PARTIAL_EXT   = '.inc'
-  INDEX_FILE    = Pathname.new(Spirit::INDEX).sub_ext(PARTIAL_EXT)
+  INDEX_FILE    = 'index.inc'
 
   def initialize
     @compiled_path = Rails.configuration.lamp[:compiled_path]

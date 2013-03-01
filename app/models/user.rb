@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
   # validations --------------------------------------------------------------
   validates_presence_of   :nickname
 
-  # NOTE: this is unecessary, because FriendlyId will ensure uniqueness
+  # NOTE: this is unnecessary, because FriendlyId will ensure uniqueness
   #   validates_uniqueness_of :slug
 
   # Creates a new user with the given nickname.

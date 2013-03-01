@@ -54,5 +54,5 @@ gem 'github_api',   '~> 0.8.6'
 # WebSockets
 gem 'faye',         '~> 0.8.8'
 
-gem 'spirit',  git: 'git@github.com:jimjh/genie-parser.git',    branch: 'master'
+gem 'lamp',    git: 'git@github.com:jimjh/genie-compiler.git',  branch: 'master'
 gem 'aladdin', git: 'git@github.com:jimjh/genie-previewer.git', branch: 'master'

@@ -12,18 +12,6 @@ GIT
       thrift (~> 0.9.0)
 
 GIT
-  remote: git@github.com:jimjh/genie-parser.git
-  revision: 8d7ae53558bd22794f2847fb13bab6bf412afdd4
-  branch: master
-  specs:
-    spirit (0.1.0.pre.3)
-      activesupport (~> 3.2)
-      albino (~> 1.3)
-      haml (~> 4.0)
-      redcarpet (~> 2.2)
-      sanitize (~> 2.0)
-
-GIT
   remote: git@github.com:jimjh/genie-previewer.git
   revision: 07405821a96c2b4cb38786e3686cebcb6a4d8e9f
   branch: master
@@ -308,6 +296,12 @@ GEM
       rack-protection (~> 1.3)
       tilt (~> 1.3, >= 1.3.3)
     slop (3.4.3)
+    spirit (0.1.0.pre.3)
+      activesupport (~> 3.2)
+      albino (~> 1.3)
+      haml (~> 4.0)
+      redcarpet (~> 2.2)
+      sanitize (~> 2.0)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -373,7 +367,6 @@ DEPENDENCIES
   sass-rails (~> 3.2.3)
   shoulda (~> 3.3.2)
   simple_form (~> 2.0.4)
-  spirit!
   sqlite3
   thin (~> 1.5.0)
   uglifier (>= 1.0.3)
