@@ -31,6 +31,6 @@ Genie::Application.routes.draw do
   match ':user/:lesson' => redirect('/%{user}/%{lesson}/'),
     via: :get, constraints: lambda { |r| !r.original_fullpath.ends_with? '/' }
   match ':user/:lesson/verify/:type/:problem' => 'lessons#verify', via: :post
-  match ':user/:lesson(/*path)' => 'lessons#show', as: 'lesson', via: :get
+  match ':user/:lesson(/*path)' => 'lessons#show', as: 'user_lesson', via: :get
 
 end

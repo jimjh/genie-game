@@ -3,8 +3,8 @@ require 'aladdin/support/weak_comparator'
 class LessonsController < ApplicationController
   include Aladdin::Support::WeakComparator
 
-  protect_from_forgery except: [:push, :ready]
-  before_filter :authenticate_user!, except: [:show, :verify, :push, :ready]
+  protect_from_forgery except: [:push, :ready, :gone]
+  before_filter :authenticate_user!, except: [:show, :verify, :push, :ready, :gone]
 
   SOLUTION_EXT  = '.sol'
   INDEX_FILE    = 'index.inc'
@@ -18,11 +18,11 @@ class LessonsController < ApplicationController
   #   here.
   def show
 
-    user   = User.find_by_slug params[:user], select: 'id'
-    lesson = user.lessons.find_by_slug params[:lesson], select: 'compiled_path'
+    user   = User.find params[:user], select: 'id'
+    lesson = user.lessons.find params[:lesson], select: 'compiled_path'
 
     lesson_dir = Pathname.new lesson.compiled_path
-    path       = lesson_dir + params[:path]
+    path       = lesson_dir + (params[:path] || '')
 
     path  = path.sub_ext('.' + params[:format]) unless params[:format].blank?
     path += INDEX_FILE if path.directory?
@@ -57,10 +57,11 @@ class LessonsController < ApplicationController
   # Webhook that is registered with Lamp.
   # POST /lessons/:id/ready
   def ready
-    lesson  = Lesson.find params[:id]
     payload = JSON.parse  params[:payload]
-    lesson.compiled_path = payload[:compiled_path]
-    lesson.solution_path = payload[:solution_path]
+    lesson  = Lesson.find params[:id]
+    lesson.compiled_path = payload['compiled_path']
+    lesson.solution_path = payload['solution_path']
+    lesson.skip_observer = true
     if lesson.save then head :ok
     else head :bad_request
     end
@@ -73,8 +74,8 @@ class LessonsController < ApplicationController
   end
 
   def verify
-    user   = User.find_by_slug params[:user], select: 'id'
-    lesson = user.lessons.find_by_slug params[:lesson], select: 'solution_path'
+    user   = User.find params[:user], select: 'id'
+    lesson = user.lessons.find params[:lesson], select: 'solution_path'
     solution  = params[:problem] + SOLUTION_EXT
     path      = Pathname.new(lesson.solution_path) + solution
     not_found unless path.file?

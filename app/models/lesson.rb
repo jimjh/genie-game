@@ -19,7 +19,7 @@ class Lesson < ActiveRecord::Base
   friendly_id       :name, use: :slugged
 
   attr_accessible   :name, :url
-  attr_accessor     :action     # transaction action, used by {LessonObserver}
+  attr_accessor     :action, :skip_observer
 
   # relationships ------------------------------------------------------------
   belongs_to :user

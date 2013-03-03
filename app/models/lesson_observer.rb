@@ -31,16 +31,19 @@ class LessonObserver < ActiveRecord::Observer
   end
 
   def before_save(lesson)
+    return if lesson.skip_observer
     lesson.action = :create
     create_hook  lesson
     create_files lesson
   end
 
   def before_destroy(lesson)
+    return if lesson.skip_observer
     lesson.action = :destroy
   end
 
   def before_update(lesson)
+    return if lesson.skip_observer
     lesson.action = :update
     create_files lesson
   end
