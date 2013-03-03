@@ -58,6 +58,7 @@ Genie::Application.configure do
 
   # Output paths for Lamp.
   config.lamp = {
+    ips:           %w(127.0.0.1 0.0.0.0),
     compiled_path: Pathname.new('/tmp/genie/compiled'),
     solution_path: Pathname.new('/tmp/genie/solution'),
     client: {

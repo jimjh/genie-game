@@ -5,8 +5,8 @@ class LessonsController < ApplicationController
 
   class InvalidParameters < StandardError; end
 
-  protect_from_forgery except: :push
-  before_filter :authenticate_user!, except: [:show, :verify, :push]
+  protect_from_forgery except: [:push, :ready]
+  before_filter :authenticate_user!, except: [:show, :verify, :push, :ready]
   rescue_from InvalidParameters do |e| bad_request end
   attr_reader :compiled_path, :solution_path
 
@@ -57,14 +57,20 @@ class LessonsController < ApplicationController
     payload = JSON.parse params[:payload] rescue raise InvalidParameters.new('Missing payload.')
     auth    = Authorization.find_by_provider_and_nickname! 'github', payload['repository']['owner']['name']
     lesson  = Lesson.find_by_user_id_and_name! auth.user.id, payload['repository']['name']
+    # FIXME
     system 'lamp', 'create', lesson.url, lesson.path.to_s
     render nothing: true, status: 200
   rescue NoMethodError
     raise InvalidParameters.new 'Unexpected payload.'
   end
 
+  # Webhook that is registered with Lamp.
+  def ready
+    payload = JSON.parse params[:payload]
+    Rails.logger.info "received payload for #{params[:id]}"
+  end
+
   def verify
-    # TODO: use judge service
     validate_params! :user, :lesson, :problem
     solution  = params[:problem] + SOLUTION_EXT
     path      = sanitize_path!(solution_path, params[:user], params[:lesson], solution)

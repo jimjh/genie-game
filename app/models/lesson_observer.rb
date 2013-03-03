@@ -98,12 +98,13 @@ class LessonObserver < ActiveRecord::Observer
 
   # Invokes worker to clone and compile the lesson.
   # @param [Lesson] lesson
-  # @todo TODO add callback
   # @return [void]
   def create_files(lesson)
     Rails.logger.info ">> lamp create #{lesson.url} #{lesson.path.to_s}"
     lamp_client.transport.open
-    lamp_client.create lesson.url, lesson.path.to_s, 'callback', {}
+    lamp_client.create lesson.url,
+      lesson.path.to_s,
+      ready_lesson_url(lesson), {}
   rescue Lamp::RPCError => e
     lesson.errors.add(:lamp, 'was unable to create the lesson')
     raise ActiveRecord::RecordNotSaved, '`lamp create` failed'
