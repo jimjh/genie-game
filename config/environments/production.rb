@@ -72,7 +72,12 @@ Genie::Application.configure do
   # GitHub's public IPs
   config.github = { ips: %w(207.97.227.253 50.57.128.197 108.171.174.178) }
 
-  # Output paths for Lamp.
+  # Configuration for Faye
+  config.faye = {
+    url: 'http://localhost:3100/'
+  }
+
+  # Configuration for Lamp
   config.lamp = {
     ips:           %w(127.0.0.1 0.0.0.0),
     compiled_path: Pathname.new('/mnt/genie/compiled'),

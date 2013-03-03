@@ -15,7 +15,7 @@ Genie::Application.configure do
   config.action_controller.perform_caching = false
 
   # Used to construct a web hook for GitHub
-  HOST = 'localhost:3000'
+  HOST = 'localhost:3200'
   Rails.application.routes.default_url_options[:host] = HOST
 
   # ActionMailer
@@ -26,7 +26,7 @@ Genie::Application.configure do
     enable_starttls_auto: true,
     user_name: '',
     password: '',
-    authentication: :plain,
+    authentication: 'plain',
     domain: 'localhost.localdomain'
   }
   config.action_mailer.perform_delivery      = true
@@ -55,7 +55,7 @@ Genie::Application.configure do
   # GitHub's public IPs
   config.github = { ips: %w(127.0.0.1) }
 
-  config.faye   = { url: 'http://localhost:3000/faye' }
+  config.faye   = { url: 'http://localhost:3100/' }
 
   # Output paths for Lamp.
   config.lamp = {

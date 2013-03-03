@@ -38,9 +38,10 @@ Genie::Application.configure do
 
   # These are random strings that will not work. Make sure that GitHub API
   # calls are stubbed in spec.
-  config.github = { api_key: '64935979958897278281', api_secret: 'cyhdnq9tw3prppxliyjs' }
+  config.github = { api_key: '64935979958897278281',
+                    api_secret: 'cyhdnq9tw3prppxliyjs' }
 
-  config.faye   = { url: 'http://localhost:3000/faye' }
+  config.faye   = { url: 'http://localhost:3100/' }
 
   # Output paths for Lamp.
   config.lamp = {
