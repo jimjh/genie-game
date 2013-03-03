@@ -59,4 +59,5 @@ gem 'foreman',      '~> 0.61.0'
 
 gem 'lamp', git: 'git@github.com:jimjh/genie-compiler.git',
   branch: 'master', require: false
-gem 'aladdin', git: 'git@github.com:jimjh/genie-previewer.git', branch: 'master'
+gem 'aladdin', git: 'git@github.com:jimjh/genie-previewer.git',
+  branch: 'master', require: false

@@ -78,8 +78,6 @@ Genie::Application.configure do
   # Configuration for Lamp
   config.lamp = {
     ips:           %w(127.0.0.1 0.0.0.0),
-    compiled_path: Pathname.new('/mnt/genie/compiled'),
-    solution_path: Pathname.new('/mnt/genie/solution'),
     client: {
       'host' => 'localhost',
       'port' => 3300 # chosen by foreman

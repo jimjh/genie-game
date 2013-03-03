@@ -13,7 +13,7 @@ GIT
 
 GIT
   remote: git@github.com:jimjh/genie-previewer.git
-  revision: 07405821a96c2b4cb38786e3686cebcb6a4d8e9f
+  revision: 1c43d61d7a3c89db9948ff2c47a40dc6c4f5c962
   branch: master
   specs:
     aladdin (0.1.0.pre.1)

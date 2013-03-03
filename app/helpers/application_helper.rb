@@ -24,7 +24,7 @@ module ApplicationHelper
   def cdn_js
     %w[
       //cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js
-      //cdnjs.cloudflare.com/ajax/libs/foundation/3.2.2/javascripts/foundation.min.js
+      //cdnjs.cloudflare.com/ajax/libs/foundation/3.2.5/javascripts/foundation.min.js
       https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
     ]
   end

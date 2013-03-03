@@ -30,7 +30,7 @@ class LessonObserver < ActiveRecord::Observer
     else end
   end
 
-  def before_create(lesson)
+  def before_save(lesson)
     lesson.action = :create
     create_hook  lesson
     create_files lesson
@@ -42,6 +42,7 @@ class LessonObserver < ActiveRecord::Observer
 
   def before_update(lesson)
     lesson.action = :update
+    create_files lesson
   end
 
   private
@@ -71,12 +72,11 @@ class LessonObserver < ActiveRecord::Observer
 
   # Invokes worker to delete lesson files.
   # @param [Lesson] lesson
-  # @todo TODO add callback
   # @return [void]
   def delete_files(lesson)
     Rails.logger.info ">> lamp remove #{lesson.path.to_s}"
     lamp_client.transport.open
-    lamp_client.remove lesson.path.to_s, 'callback'
+    lamp_client.remove lesson.path.to_s, gone_lesson_url(lesson)
   rescue Lamp::RPCError => e
     Rails.logger.error 'Unable to remove lesson %s using lamp.' % lesson.path
     Rails.logger.error e

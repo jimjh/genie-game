@@ -12,6 +12,8 @@ Genie::Application.routes.draw do
       constraints: lambda { |r| Rails.configuration.github[:ips].include? r.remote_ip }
     post :ready, on: :member, # Lamp Hook
       constraints: lambda { |r| Rails.configuration.lamp[:ips].include? r.remote_ip }
+    post :gone,  on: :member, # Lamp Hook
+      constraints: lambda { |r| Rails.configuration.lamp[:ips].include? r.remote_ip }
   end
 
   # Settings Controller ------------------------------------------------------
