@@ -63,7 +63,7 @@ Genie::Application.configure do
     solution_path: Pathname.new('/tmp/genie/solution'),
     client: {
       'host' => 'localhost',
-      'port' => 5000
+      'port' => 3100 # chosen by foreman
     }
   }
 

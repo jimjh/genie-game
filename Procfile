@@ -1,2 +1,2 @@
-web:       bundle exec rails server
-compiler:  bundle exec lamp  server --port=5000
+web:       bundle exec rails server --port=$PORT
+compiler:  bundle exec lamp  server --port=$PORT
