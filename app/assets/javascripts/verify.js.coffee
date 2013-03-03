@@ -3,7 +3,6 @@ verify.js
 http://github.com/jimjh/genie-game
 ===
 Copyright (c) 2012 Jiunn Haur Lim, Carnegie Mellon University
-License: https://raw.github.com/jimjh/genie-game/master/LICENSE
 ###
 
 genie = exports? and @ or @genie = {}
