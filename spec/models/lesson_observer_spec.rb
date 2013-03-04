@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'lamp/thrift/client'
+require 'lamp/rpc/client'
 
 describe LessonObserver do
 

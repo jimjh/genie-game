@@ -6,7 +6,7 @@ describe LessonsController do
   describe 'GET #show' do
 
     before(:each) { @fake = FactoryGirl.create :compiled_lesson }
-    after(:each)  { @fake.user_path.rmtree }
+    after(:each)  { @fake.root.rmtree }
 
     it 'assigns index.inc' do
       rand = random_file @fake.lesson_path + LessonsController::INDEX_FILE
@@ -15,40 +15,42 @@ describe LessonsController do
     end
 
     it 'requires user' do
-      get :show, user: '', lesson: @fake.lesson
-      response.should be_bad_request
-      expect { get :show, lesson: @fake.lesson }.to raise_error(ActionController::RoutingError)
+      expect { get :show, user: '', lesson: @fake.lesson }.to \
+        raise_error(ActiveRecord::RecordNotFound)
+      expect { get :show, lesson: @fake.lesson }.to \
+        raise_error(ActionController::RoutingError)
     end
 
     it 'requires lesson' do
-      get :show, user: @fake.user, lesson: ''
-      response.should be_bad_request
-      expect { get :show, user: @fake.user}.to raise_error(ActionController::RoutingError)
+      expect { get :show, user: @fake.user, lesson: '' }.to \
+        raise_error(ActiveRecord::RecordNotFound)
+      expect { get :show, user: @fake.user}.to \
+        raise_error(ActionController::RoutingError)
     end
 
     it 'sanitizes user and lesson' do
-      get :show, user: '<>..', lesson: ' %'
-      response.should be_bad_request
+      expect { get :show, user: '<>..', lesson: ' %' }.to \
+        raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'protects against traversal attacks in user' do
       %w(. ../ ../../).each do |c|
-        get :show, user: c, lesson: @fake.lesson
-        response.should be_bad_request
+        expect { get :show, user: c, lesson: @fake.lesson }.to \
+          raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
     it 'protects against traversal attacks in lesson' do
       %w(. ../ ../../).each do |c|
-        get :show, user: @fake.user, lesson: c
-        response.should be_bad_request
+        expect { get :show, user: @fake.user, lesson: c }.to \
+          raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
     it 'protects against traversal attacks in path' do
       %w(. ../ ../../).each do |c|
-        get :show, user: @fake.user, lesson: @fake.lesson, path: c
-        response.should be_bad_request
+        expect { get :show, user: @fake.user, lesson: @fake.lesson, path: c }.to \
+          raise_error(ActionController::RoutingError)
       end
     end
 
@@ -94,7 +96,7 @@ describe LessonsController do
 
   describe 'POST #create' do
     it 'clones and compiles a lesson at the given URL'
-    pending 'rabbitmq'
+    pending 'compiler'
     pending 'error handling'
   end
 

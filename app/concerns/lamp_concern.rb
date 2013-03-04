@@ -1,4 +1,4 @@
-require 'lamp/thrift/client'
+require 'lamp/rpc/client'
 
 # Modular Concern for creating thread-singleton clients.
 module LampConcern
