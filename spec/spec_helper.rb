@@ -19,10 +19,9 @@ RSpec.configure do |config|
 
   config.treat_symbols_as_metadata_keys_with_true_values = true
   config.run_all_when_everything_filtered = true
-  config.filter_run :focus
 
-  config.include Devise::TestHelpers,       type: :controller
   config.include Test::Matchers,            type: :model
+  config.include Devise::TestHelpers,       type: :controller
   config.include Test::ControllerHelpers,   type: :controller
 
 end

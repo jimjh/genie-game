@@ -1,5 +1,3 @@
-require 'faye/client'
-
 # Modular Concern for creating thread-singleton clients.
 module FayeConcern
 

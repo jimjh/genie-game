@@ -10,6 +10,8 @@ describe User do
   it { should have_many(:lessons).dependent(:destroy) }
 
   it { should validate_presence_of(:nickname) }
+  it { should have_a_valid_factory }
+
   its(:name) { should eq 'Account' }
 
   it 'uses the parameterized nickname in to_param' do
@@ -20,12 +22,18 @@ describe User do
 
   describe '#register!' do
 
+    before :each do
+      @user = User.register! 'a nickname'
+    end
+
+    after :each do
+      @user.destroy
+    end
+
     it 'creates a single user' do
-      u = User.register! 'a nickname'
-      u.nickname.should eq 'a nickname'
-      u.slug.should eq 'a-nickname'
-      User.find(u.id).id.should eq u.id
-      u.destroy
+      @user.nickname.should eq 'a nickname'
+      @user.slug.should eq 'a-nickname'
+      User.find(@user.slug).id.should eq @user.id
     end
 
   end
@@ -38,6 +46,13 @@ describe User do
 
     after :each do
       @user.destroy
+    end
+
+    describe '::find' do
+      it 'finds the user by slug' do
+        user = User.find @user.slug, select: 'id'
+        user.id.should eq @user.id
+      end
     end
 
     describe '#name' do

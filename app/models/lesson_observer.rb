@@ -109,9 +109,9 @@ class LessonObserver < ActiveRecord::Observer
       lesson.path.to_s,
       ready_lesson_url(lesson), {}
   rescue Lamp::RPCError => e
+    Rails.logger.error e
     lesson.errors.add(:lamp, 'was unable to create the lesson')
     raise ActiveRecord::RecordNotSaved, '`lamp create` failed'
-    Rails.logger.error e
   ensure
     lamp_client.transport.close
   end

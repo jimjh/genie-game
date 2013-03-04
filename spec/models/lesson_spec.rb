@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe Lesson do
 
-  %w(name url path slug action).each do |s|
+  %w(name url path slug action skip_observer compiled_path solution_path).each do |s|
     it { should respond_to(s.to_sym) }
   end
 
@@ -11,6 +11,14 @@ describe Lesson do
 
   %w(name url user_id).each do |s|
     it { should validate_presence_of(s.to_sym) }
+  end
+
+  %w(name url).each do |s|
+    it { should allow_mass_assignment_of s.to_sym }
+  end
+
+  %w(path slug action skip_observer compiled_path solution_path).each do |s|
+    it { should_not allow_mass_assignment_of s.to_sym }
   end
 
   it { should validate_uniqueness_of(:name).scoped_to(:user_id) }
@@ -24,10 +32,12 @@ describe Lesson do
   # should check for suffix
   it { should_not allow_value('ftp://host.xz/path/to/repo/').for(:url) }
 
+  it { should have_a_valid_factory }
+
   context 'given a non-existent user' do
     it 'does not allow the lesson to be created' do
       ids = User.pluck :id
-      begin id = Random.rand(1000) end while ids.include?(id)
+      id = Random.rand(1000) while ids.include?(id)
       FactoryGirl.build(:lesson, user_id: id).should_not be_valid
     end
   end
@@ -48,9 +58,6 @@ describe Lesson do
 
     describe '#path' do
       it 'returns a clean path' do
-        l = FactoryGirl.create(:lesson, user: @user)
-        l.path.to_s.should eq @user.nickname.parameterize+'/'+l.name.parameterize
-        l.destroy
         l = FactoryGirl.create(:lesson, user: @user, name: 'ha ha')
         l.path.to_s.should eq @user.nickname.parameterize+'/ha-ha'
         l.destroy
