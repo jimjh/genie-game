@@ -5,6 +5,7 @@ class LessonsController < ApplicationController
 
   protect_from_forgery except: [:push, :ready, :gone]
   before_filter :authenticate_user!, except: [:show, :verify, :push, :ready, :gone]
+  respond_to    :json
 
   SOLUTION_EXT  = '.sol'
   INDEX_FILE    = 'index.inc'
@@ -36,11 +37,10 @@ class LessonsController < ApplicationController
   end
 
   def create
-    @lesson      = Lesson.new params[:lesson]
-    @lesson.user = current_user
-    if @lesson.save then render json: @lesson
-    else render json: { errors: @lesson.errors.full_messages }, status: :unprocessable_entity
-    end
+    lesson      = Lesson.new params[:lesson]
+    lesson.user = current_user
+    lesson.save
+    respond_with lesson
   end
 
   # Webhook that is registered with GitHub.
@@ -49,9 +49,8 @@ class LessonsController < ApplicationController
     payload = JSON.parse params[:payload]
     auth    = Authorization.find_by_provider_and_nickname! 'github', payload['repository']['owner']['name']
     lesson  = Lesson.find_by_user_id_and_name! auth.user.id, payload['repository']['name']
-    if lesson.save then head :ok
-    else :bad_request
-    end
+    lesson.save
+    respond_with lesson
   end
 
   # Webhook that is registered with Lamp.
@@ -62,9 +61,8 @@ class LessonsController < ApplicationController
     lesson.compiled_path = payload['compiled_path']
     lesson.solution_path = payload['solution_path']
     lesson.skip_observer = true
-    if lesson.save then head :ok
-    else head :bad_request
-    end
+    lesson.save
+    respond_with lesson
   end
 
   # Webhook that is registered with Lamp.
