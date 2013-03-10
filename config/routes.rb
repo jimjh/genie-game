@@ -10,6 +10,10 @@ Genie::Application.routes.draw do
   resources :lessons, only: [:create, :destroy] do
     post :push, on: :collection, # GitHub Hook
       constraints: lambda { |r| Rails.configuration.github[:ips].include? r.remote_ip }
+    post :ready, on: :member, # Lamp Hook
+      constraints: lambda { |r| Rails.configuration.lamp[:ips].include? r.remote_ip }
+    post :gone,  on: :member, # Lamp Hook
+      constraints: lambda { |r| Rails.configuration.lamp[:ips].include? r.remote_ip }
   end
 
   # Settings Controller ------------------------------------------------------
@@ -27,6 +31,6 @@ Genie::Application.routes.draw do
   match ':user/:lesson' => redirect('/%{user}/%{lesson}/'),
     via: :get, constraints: lambda { |r| !r.original_fullpath.ends_with? '/' }
   match ':user/:lesson/verify/:type/:problem' => 'lessons#verify', via: :post
-  match ':user/:lesson(/*path)' => 'lessons#show', as: 'lesson', via: :get
+  match ':user/:lesson(/*path)' => 'lessons#show', as: 'user_lesson', via: :get
 
 end

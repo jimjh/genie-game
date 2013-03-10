@@ -4,7 +4,8 @@ Genie::Application.configure do
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
-  config.cache_classes = false
+  config.cache_classes     = false
+  config.allow_concurrency = true
 
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
@@ -14,8 +15,9 @@ Genie::Application.configure do
   config.action_controller.perform_caching = false
 
   # Used to construct a web hook for GitHub
-  HOST = 'localhost:3000'
-  Rails.application.routes.default_url_options[:host] = HOST
+  PORT = 3200
+  HOST = 'localhost'
+  Rails.application.routes.default_url_options[:host] = "#{HOST}:#{PORT}"
 
   # ActionMailer
   ADMIN_EMAIL_FROM  = ''
@@ -25,12 +27,12 @@ Genie::Application.configure do
     enable_starttls_auto: true,
     user_name: '',
     password: '',
-    authentication: :plain,
+    authentication: 'plain',
     domain: 'localhost.localdomain'
   }
   config.action_mailer.perform_delivery      = true
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_url_options   = { host: HOST }
+  config.action_mailer.default_url_options   = { host: "#{HOST}:#{PORT}" }
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
@@ -54,7 +56,16 @@ Genie::Application.configure do
   # GitHub's public IPs
   config.github = { ips: %w(127.0.0.1) }
 
-  config.faye   = { url: 'http://localhost:3000/faye' }
+  config.faye   = { url: "http://#{HOST}:3100" }
+
+  # Output paths for Lamp.
+  config.lamp = {
+    ips:           %w(127.0.0.1 0.0.0.0),
+    client: {
+      'host' => 'localhost',
+      'port' => 3300 # chosen by foreman
+    }
+  }
 
 end
 

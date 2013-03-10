@@ -7,4 +7,25 @@ module ApplicationHelper
     end
   end
 
+  # Converts given flash type to appropriate CSS class.
+  # @return [String] css class
+  def flash_for(name)
+    case name
+    when :notice then ''
+    when :error then 'alert'
+    when :alert then 'alert'
+    when :success then 'success'
+    else 'secondary'
+    end
+  end
+
+  # @see http://encosia.com/3-reasons-why-you-should-let-google-host-jquery-for-you/
+  # @return [Array<String>] of URLs to javascript libraries hosted on CDNs.
+  def cdn_js
+    %w[
+      //cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js
+      https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+    ]
+  end
+
 end

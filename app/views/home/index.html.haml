@@ -7,4 +7,5 @@
       %tbody
       - @lessons.each do |lesson|
         %tr
-          %td= link_to lesson.name.titleize, lesson
+          %td= link_to lesson.name.titleize,
+            user_lesson_path(lesson.user, lesson)

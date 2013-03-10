@@ -6,6 +6,7 @@ Genie::Application.configure do
   # your test database is "scratch space" for the test suite and is wiped
   # and recreated between test runs. Don't rely on the data there!
   config.cache_classes = true
+  config.threadsafe!
 
   # Configure static asset server for tests with Cache-Control for performance
   config.serve_static_assets = true
@@ -37,8 +38,18 @@ Genie::Application.configure do
 
   # These are random strings that will not work. Make sure that GitHub API
   # calls are stubbed in spec.
-  config.github = { api_key: '64935979958897278281', api_secret: 'cyhdnq9tw3prppxliyjs' }
+  config.github = { api_key: '64935979958897278281',
+                    api_secret: 'cyhdnq9tw3prppxliyjs' }
 
-  config.faye   = { url: 'http://localhost:3000/faye' }
+  config.faye   = { url: 'http://localhost:3100/' }
+
+  # Output paths for Lamp.
+  config.lamp = {
+    ips:           %w(127.0.0.1 0.0.0.0),
+    client: {
+      'host' => 'localhost',
+      'port' => 3300 # chosen by foreman
+    }
+  }
 
 end

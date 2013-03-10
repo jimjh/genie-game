@@ -1,107 +1,84 @@
 require 'aladdin/support/weak_comparator'
-require 'spirit/constants'
 
 class LessonsController < ApplicationController
   include Aladdin::Support::WeakComparator
 
-  class InvalidParameters < StandardError; end
-
-  protect_from_forgery except: :push
-  before_filter :authenticate_user!, except: [:show, :verify, :push]
-  rescue_from InvalidParameters do |e| bad_request end
-  attr_reader :compiled_path, :solution_path
+  protect_from_forgery except: [:push, :ready, :gone]
+  before_filter :authenticate_user!, except: [:show, :verify, :push, :ready, :gone]
+  respond_to    :json
 
   SOLUTION_EXT  = '.sol'
-  PARTIAL_EXT   = '.inc'
-  INDEX_FILE    = Pathname.new(Spirit::INDEX).sub_ext(PARTIAL_EXT)
-
-  def initialize
-    @compiled_path = Rails.configuration.lamp[:compiled_path]
-    @solution_path = Rails.configuration.lamp[:solution_path]
-    super
-  end
+  INDEX_FILE    = 'index.inc'
 
   # Renders a single lesson page and its static assets.
   # @note It's important to use +attachment+ for send_file, because the user
   #   could have supplied a javascript-laden HTML file as a static file.
   #   Without the attachment disposition, the browser could choose to render
   #   it and execute malicious code.
+  # @todo TODO Cache static assets, so that they don't have to pass through
+  #   here.
   def show
 
-    # TODO cache static assets, so that they don't have to pass through here
-    #   be careful of HTML and JS assets.
-    validate_params! :user, :lesson
-    lesson_dir = sanitize_path! compiled_path, params[:user], params[:lesson]
-    path       = sanitize_path! lesson_dir, params[:path]
+    user   = User.find params[:user], select: 'id'
+    lesson = user.lessons.find params[:lesson], select: 'compiled_path'
+
+    lesson_dir = Pathname.new lesson.compiled_path
+    path       = lesson_dir + (params[:path] || '')
 
     path  = path.sub_ext('.' + params[:format]) unless params[:format].blank?
     path += INDEX_FILE if path.directory?
     not_found unless path.exist?
 
-    # html_safe iff it's at the root - every else is dangerous static asset
+    # html_safe iff it's at the root - everything else is dangerous static
+    # asset
     if path.parent == lesson_dir then @contents = File.read(path).html_safe
     else send_file path, disposition: 'attachment' end
 
   end
 
   def create
-    @lesson      = Lesson.new params[:lesson]
-    @lesson.user = current_user
-    if @lesson.save then render json: @lesson
-    else render json: { errors: @lesson.errors.full_messages }, status: :unprocessable_entity
-    end
+    lesson      = Lesson.new params[:lesson]
+    lesson.user = current_user
+    lesson.save
+    respond_with lesson
   end
 
   # Webhook that is registered with GitHub.
   # POST /lessons/push
   def push
-    payload = JSON.parse params[:payload] rescue raise InvalidParameters.new('Missing payload.')
+    payload = JSON.parse params[:payload]
     auth    = Authorization.find_by_provider_and_nickname! 'github', payload['repository']['owner']['name']
     lesson  = Lesson.find_by_user_id_and_name! auth.user.id, payload['repository']['name']
-    system 'lamp', 'create', lesson.url, lesson.path.to_s
-    render nothing: true, status: 200
-  rescue NoMethodError
-    raise InvalidParameters.new 'Unexpected payload.'
+    lesson.save
+    respond_with lesson
+  end
+
+  # Webhook that is registered with Lamp.
+  # POST /lessons/:id/ready
+  def ready
+    payload = JSON.parse  params[:payload]
+    lesson  = Lesson.find params[:id]
+    lesson.compiled_path = payload['compiled_path']
+    lesson.solution_path = payload['solution_path']
+    lesson.skip_observer = true
+    lesson.save
+    respond_with lesson
+  end
+
+  # Webhook that is registered with Lamp.
+  # POST /lessons/:id/gone
+  def gone
+    head :ok
   end
 
   def verify
-    # TODO: use judge service
-    validate_params! :user, :lesson, :problem
+    user   = User.find params[:user], select: 'id'
+    lesson = user.lessons.find params[:lesson], select: 'solution_path'
     solution  = params[:problem] + SOLUTION_EXT
-    path      = sanitize_path!(solution_path, params[:user], params[:lesson], solution)
+    path      = Pathname.new(lesson.solution_path) + solution
     not_found unless path.file?
     result    = File.open(path, 'rb') { |f| same? params[:answer], Marshal.restore(f) }
     render json: result
-  end
-
-  private
-
-  # Ensures that the arguments in +dangerous+ are not blank after
-  #  parameterization.
-  # @raise  [InvalidParameters] if the parameters are not valid.
-  # @return [void]
-  def validate_params!(*dangerous)
-    dangerous.each { |d| params[d] = params[d].try(:parameterize) }
-    if dangerous.map { |d| params[d].blank? }.inject(:|)
-      raise InvalidParameters.new 'Encountered suspicious parameters: %s' % params
-    end
-  end
-
-  # Joins arguments into a single path and ensures that it's a descendant of
-  # +base+.
-  # @note   The check needs to be done stepwise to ensure that each parameter
-  #   descends the directory.
-  # @raise  [InvalidParameters] if the path is suspicious
-  # @param  [Pathname] base
-  # @return [Pathname]
-  def sanitize_path!(base, *args)
-    args.compact.reduce(base) do |memo, arg|
-      candidate = memo + arg
-      unless candidate.cleanpath.to_s.starts_with?(memo.to_s + File::SEPARATOR)
-        raise InvalidParameters.new 'Encountered suspicious path: %s' % args
-      end
-      candidate
-    end
   end
 
 end
