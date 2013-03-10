@@ -3,15 +3,16 @@ require 'spec_helper'
 
 describe Authorization do
 
-  [:link, :name, :nickname, :provider, :secret, :token, :uid].each do |attr|
-    it { should respond_to(attr) }
+  %w(link name nickname provider secret token uid).each do |attr|
+    it { should respond_to(attr.to_sym) }
   end
 
-  [:provider, :uid, :user_id, :token, :nickname].each do |attr|
-    it { should validate_presence_of(attr) }
+  %w(provider uid user_id token nickname).each do |attr|
+    it { should validate_presence_of(attr.to_sym) }
   end
 
   it { should belong_to(:user) }
+  it { should have_a_valid_factory }
 
   describe '#user' do
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130107141724) do
+ActiveRecord::Schema.define(:version => 20130303205846) do
 
   create_table "authorizations", :force => true do |t|
     t.string   "provider"
@@ -32,10 +32,12 @@ ActiveRecord::Schema.define(:version => 20130107141724) do
     t.string   "name"
     t.integer  "user_id"
     t.string   "url"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.string   "slug"
     t.string   "hook"
+    t.string   "compiled_path"
+    t.string   "solution_path"
   end
 
   add_index "lessons", ["slug"], :name => "index_lessons_on_slug", :unique => true

@@ -56,7 +56,7 @@ Genie::Application.configure do
   config.action_mailer.default_url_options = { host: HOST }
 
   # Enable threaded mode
-  # config.threadsafe!
+  config.threadsafe!
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found)
@@ -72,10 +72,16 @@ Genie::Application.configure do
   # GitHub's public IPs
   config.github = { ips: %w(207.97.227.253 50.57.128.197 108.171.174.178) }
 
-  # Output paths for Lamp.
+  # Configuration for Faye
+  config.faye = { url: "http://#{HOST}:3100" }
+
+  # Configuration for Lamp
   config.lamp = {
-    compiled_path: Pathname.new('/mnt/genie/compiled'),
-    solution_path: Pathname.new('/mnt/genie/solution')
+    ips:           %w(127.0.0.1 0.0.0.0),
+    client: {
+      'host' => 'localhost',
+      'port' => 3300 # chosen by foreman
+    }
   }
 
 end

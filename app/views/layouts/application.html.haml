@@ -24,14 +24,18 @@
 
 %body
 
+  - # NAVIGATION BAR + FLASH MESSAGES
   = render partial: 'layouts/nav_bar'
   = render partial: 'layouts/flash', locals: { flash: flash }
 
-  = yield
+  = content_for?(:content) ? yield(:content) : yield
 
+  -# JAVASCRIPT
+  - cdn_js.each do |url|
+    %script{src: url}
+  %script{src: faye_js}
   = javascript_include_tag 'application'
-  -# mathjax
-  %script{src: 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
+  = yield :javascript if content_for? :javascript
 
 :plain
   </html>

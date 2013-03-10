@@ -9,6 +9,7 @@
 # @todo TODO updates should also update hooks if the URL changed
 class LessonObserver < ActiveRecord::Observer
 
+  include LampConcern
   include Rails.application.routes.url_helpers
 
   # Parameters sent to GitHub when creating the hook.
@@ -29,18 +30,22 @@ class LessonObserver < ActiveRecord::Observer
     else end
   end
 
-  def before_create(lesson)
+  def before_save(lesson)
+    return if lesson.skip_observer
     lesson.action = :create
     create_hook  lesson
     create_files lesson
   end
 
   def before_destroy(lesson)
+    return if lesson.skip_observer
     lesson.action = :destroy
   end
 
   def before_update(lesson)
+    return if lesson.skip_observer
     lesson.action = :update
+    create_files lesson
   end
 
   private
@@ -72,16 +77,21 @@ class LessonObserver < ActiveRecord::Observer
   # @param [Lesson] lesson
   # @return [void]
   def delete_files(lesson)
-    Rails.logger.info ">> lamp rm #{lesson.path.to_s}"
-    return if system 'lamp', 'rm', lesson.path.to_s
+    Rails.logger.info ">> lamp remove #{lesson.path.to_s}"
+    lamp_client.transport.open
+    lamp_client.remove lesson.path.to_s, gone_lesson_url(lesson)
+  rescue Lamp::RPCError => e
     Rails.logger.error 'Unable to remove lesson %s using lamp.' % lesson.path
+    Rails.logger.error e
+  ensure
+    lamp_client.transport.close
   end
 
   # Adds a webhook to the GitHub repository. If the operation failed, the
   # +github_api+ gem should raise an exception and stop the chain. Otherwise,
   # the hook ID is saved with the lesson.
   # @param [Lesson] lesson
-  # @todo FIXME make this work with orgs
+  # @todo FIXME make this work with organizations
   # @return [void]
   def create_hook(lesson)
     auth, client = github lesson
@@ -91,13 +101,19 @@ class LessonObserver < ActiveRecord::Observer
 
   # Invokes worker to clone and compile the lesson.
   # @param [Lesson] lesson
-  # @todo TODO add a build task and do this asynchronously
   # @return [void]
   def create_files(lesson)
     Rails.logger.info ">> lamp create #{lesson.url} #{lesson.path.to_s}"
-    return if system 'lamp', 'create', lesson.url, lesson.path.to_s
+    lamp_client.transport.open
+    lamp_client.create lesson.url,
+      lesson.path.to_s,
+      ready_lesson_url(lesson), {}
+  rescue Lamp::RPCError => e
+    Rails.logger.error e
     lesson.errors.add(:lamp, 'was unable to create the lesson')
     raise ActiveRecord::RecordNotSaved, '`lamp create` failed'
+  ensure
+    lamp_client.transport.close
   end
 
   # Lazily adds {#push_lessons_url} to {HOOK_PARAMS}.

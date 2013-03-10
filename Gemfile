@@ -52,7 +52,12 @@ gem 'friendly_id',      '~> 4.0.1'
 gem 'github_api',   '~> 0.8.6'
 
 # WebSockets
-gem 'faye',         '~> 0.8.8'
+gem 'faye',         '~> 0.8.9'
+gem 'faye-redis',   '~> 0.1.0', require: false
 
-gem 'spirit',  git: 'git@github.com:jimjh/genie-parser.git',    branch: 'master'
-gem 'aladdin', git: 'git@github.com:jimjh/genie-previewer.git', branch: 'master'
+gem 'foreman',      '~> 0.61.0'
+
+gem 'lamp', git: 'git@github.com:jimjh/genie-compiler.git',
+  branch: 'master', require: false
+gem 'aladdin', git: 'git@github.com:jimjh/genie-previewer.git',
+  branch: 'master', require: false
