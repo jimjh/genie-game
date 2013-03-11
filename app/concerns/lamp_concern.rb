@@ -1,6 +1,6 @@
 require 'lamp/rpc/client'
 
-# Modular Concern for creating thread-singleton clients.
+# Modular concern for creating thread-singleton clients.
 module LampConcern
 
   # @return [Lamp::Client] lamp client on this thread.

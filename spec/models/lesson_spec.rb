@@ -80,4 +80,50 @@ describe Lesson do
 
   end
 
+  context 'given an existing lesson' do
+
+    before(:each) { @lesson = FactoryGirl.create :lesson }
+    after(:each)  { @lesson.destroy }
+
+    describe '#ready!' do
+
+      let(:cp) { SecureRandom.uuid }
+      let(:sp) { SecureRandom.uuid }
+
+      before :each do
+        @readied = Lesson.ready!(@lesson.id, cp, sp)
+        @lesson.reload
+      end
+
+      it 'returns a lesson' do
+        @readied.should be_kind_of(Lesson)
+      end
+
+      it 'updates the compiled path' do
+        @lesson.compiled_path.should eq cp
+      end
+
+      it 'updates the solution path' do
+        @lesson.compiled_path.should eq cp
+      end
+
+    end
+
+    describe '#pushed!' do
+
+      let(:push) { Lesson.pushed! @lesson.user.id, @lesson.name }
+
+      it 'returns a lesson' do
+        push.should be_kind_of Lesson
+      end
+
+      it 'invokes the callbacks' do
+        last_updated_at = @lesson.updated_at
+        push.updated_at > last_updated_at
+      end
+
+    end
+
+  end
+
 end

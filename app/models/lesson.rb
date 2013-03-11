@@ -35,6 +35,25 @@ class Lesson < ActiveRecord::Base
     Pathname.new(user.slug) + self.slug
   end
 
+  # Updates the compiled and solution paths for the referenced lesson.
+  # @return [Lesson] lesson that has the given ID
+  def self.ready!(id, compiled_path, solution_path)
+    lesson = Lesson.find id
+    lesson.compiled_path = compiled_path
+    lesson.solution_path = solution_path
+    lesson.skip_observer = true
+    lesson.save
+    lesson
+  end
+
+  # Updates the referenced lesson and triggers callbacks to recompile lesson.
+  # @return [Lesson] lesson that belongs to +user_id+ and has +name+
+  def self.pushed!(user_id, name)
+    lesson  = Lesson.find_by_user_id_and_name! user_id, name
+    lesson.save
+    lesson
+  end
+
   private
 
   def user_must_exist

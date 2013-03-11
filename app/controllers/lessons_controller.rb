@@ -47,9 +47,10 @@ class LessonsController < ApplicationController
   # POST /lessons/push
   def push
     payload = JSON.parse params[:payload]
-    auth    = Authorization.find_by_provider_and_nickname! 'github', payload['repository']['owner']['name']
+    auth    = Authorization.find_by_provider_and_nickname! 'github',
+      payload['repository']['owner']['name']
     lesson  = Lesson.find_by_user_id_and_name! auth.user.id, payload['repository']['name']
-    lesson.save
+    lesson = Lesson.pushed! auth.user.id, payload['repository']['name']
     respond_with lesson
   end
 
@@ -57,11 +58,8 @@ class LessonsController < ApplicationController
   # POST /lessons/:id/ready
   def ready
     payload = JSON.parse  params[:payload]
-    lesson  = Lesson.find params[:id]
-    lesson.compiled_path = payload['compiled_path']
-    lesson.solution_path = payload['solution_path']
-    lesson.skip_observer = true
-    lesson.save
+    lesson = Lesson.ready! params[:id],
+      payload['compiled_path'], payload['solution_path']
     respond_with lesson
   end
 
