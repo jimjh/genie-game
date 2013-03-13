@@ -16,33 +16,46 @@ class Lesson < ActiveRecord::Base
 
   # callbacks ----------------------------------------------------------------
   before_validation :default_values
-  friendly_id       :name, use: :slugged
 
+  # attributes ---------------------------------------------------------------
+  friendly_id       :name, use: :scoped, scope: [:user]
   attr_accessible   :name, :url
-  attr_accessor     :action, :skip_observer
+  attr_accessor     :action, :skip_compiler
 
   # relationships ------------------------------------------------------------
   belongs_to :user
 
   # validations --------------------------------------------------------------
   validates_presence_of   :name, :url, :user_id
+  validates_uniqueness_of :name, scope: :user_id
   validate                :user_must_exist
   validate                :url_must_be_valid
-  validates_uniqueness_of :name, scope: :user_id
 
   # @return [Pathname] path that is suitable for use as lesson path
   def path
     Pathname.new(user.slug) + self.slug
   end
 
+  # @return [Symbol] +:ready+ if  we have a compiled path; +:not_ready+
+  #   otherwise.
+  def status
+    compiled_path.present? ? :ready : :not_ready
+  end
+
+  # Updates the compiled and solution paths.
+  # @return [Lesson] lesson that has the given ID
+  def ready!(c_path, s_path)
+    self.compiled_path = c_path
+    self.solution_path = s_path
+    self.skip_compiler = true
+    notify_observers :after_ready if save
+  end
+
   # Updates the compiled and solution paths for the referenced lesson.
   # @return [Lesson] lesson that has the given ID
   def self.ready!(id, compiled_path, solution_path)
     lesson = Lesson.find id
-    lesson.compiled_path = compiled_path
-    lesson.solution_path = solution_path
-    lesson.skip_observer = true
-    lesson.save
+    lesson.ready! compiled_path, solution_path
     lesson
   end
 

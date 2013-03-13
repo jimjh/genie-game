@@ -1,4 +1,5 @@
-# Observes operations in {Lesson} and invokes callbacks.
+# Observes operations in {Lesson} and invokes callbacks to compile lessons and
+# register web hooks with GitHub.
 #
 # We treate {#create_hook} as more important than {#delete_hook}. If
 # {#create_hook} fails, the system is inconsistent and we can't receive
@@ -10,6 +11,7 @@
 class LessonObserver < ActiveRecord::Observer
 
   include LampConcern
+  include FayeConcern
   include Rails.application.routes.url_helpers
 
   # Parameters sent to GitHub when creating the hook.
@@ -30,22 +32,27 @@ class LessonObserver < ActiveRecord::Observer
     else end
   end
 
-  def before_save(lesson)
-    return if lesson.skip_observer
+  def before_create(lesson)
+    return if lesson.skip_compiler
     lesson.action = :create
     create_hook  lesson
     create_files lesson
   end
 
   def before_destroy(lesson)
-    return if lesson.skip_observer
+    return if lesson.skip_compiler
     lesson.action = :destroy
   end
 
   def before_update(lesson)
-    return if lesson.skip_observer
+    return if lesson.skip_compiler
     lesson.action = :update
     create_files lesson
+  end
+
+  def after_ready(lesson)
+    faye_client.publish user_lesson_path(lesson.user, lesson),
+      lesson.to_json(methods: :status)
   end
 
   private
@@ -79,7 +86,7 @@ class LessonObserver < ActiveRecord::Observer
   def delete_files(lesson)
     Rails.logger.info ">> lamp remove #{lesson.path.to_s}"
     lamp_client.transport.open
-    lamp_client.remove lesson.path.to_s, gone_lesson_url(lesson)
+    lamp_client.remove lesson.path.to_s, gone_lesson_url(lesson.id)
   rescue Lamp::RPCError => e
     Rails.logger.error 'Unable to remove lesson %s using lamp.' % lesson.path
     Rails.logger.error e
@@ -107,7 +114,7 @@ class LessonObserver < ActiveRecord::Observer
     lamp_client.transport.open
     lamp_client.create lesson.url,
       lesson.path.to_s,
-      ready_lesson_url(lesson), {}
+      ready_lesson_url(lesson.id), {}
   rescue Lamp::RPCError => e
     Rails.logger.error e
     lesson.errors.add(:lamp, 'was unable to create the lesson')

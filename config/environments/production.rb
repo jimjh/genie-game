@@ -73,7 +73,7 @@ Genie::Application.configure do
   config.github = { ips: %w(207.97.227.253 50.57.128.197 108.171.174.178) }
 
   # Configuration for Faye
-  config.faye = { url: "http://#{HOST}:3100" }
+  config.faye = { url: "http://#{HOST}:3100/socket" }
 
   # Configuration for Lamp
   config.lamp = {

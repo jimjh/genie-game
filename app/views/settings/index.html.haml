@@ -7,18 +7,38 @@
             %td= repo.full_name
             %td
               - if @published.include? repo.clone_url
+                - # TODO show publishing
                 %a.button.small.disabled Published
               - else
                 %form.publisher{action: lessons_path, method: :post, 'data-remote' => true}
                   %input{type: 'hidden', name: 'lesson[url]', value: repo.clone_url}
                   %input{type: 'hidden', name: 'lesson[name]', value: repo.name}
-                  %input.button.small{type: 'submit', value: 'Publish', 'data-disable-with' => 'Publishing'}
+                  %input.button.small{type: 'submit', value: 'Publish'}
 
 - content_for :javascript do
   :javascript
     $(function() {
-      $('.publisher').bind('ajax:success', function() {
-        var button = $(this).find('input[type="submit"]');
-        button.addClass('disabled').text('Published');
+
+      $('.publisher')
+        .bind('ajax:beforeSend', function() {
+          var button = $(this).find('input[type="submit"]');
+          button.text('Publishing');
+          button.addClass('disabled');
+          $.rails.disableElement(button);
+        })
+        .bind('ajax:error', function() {
+          var button = $(this).find('input[type="submit"]');
+          button.addClass('alert').text('Failed');
+        });
+
+      var client = new Faye.Client('#{faye}');
+      client.subscribe('#{user_lesson_path(current_user, '*')}', function(data) {
+        var data = JSON.parse(data);
+        console.log(data);
       });
+
     });
+
+- # TODO handle errors from active record
+- # TODO why rollback? why id nil?
+  - # YEA ... probably need to rethink the commit/rollback procedure
