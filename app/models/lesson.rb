@@ -10,9 +10,18 @@
 #   +basename url+.
 # - +url+ is a cloneable url of the git repository.
 # - +hook+ is the ID of a web hook registered with the provider.
+# - +status+ is either
+#   - +publishing+,
+#   - +published+, or
+#   - +failed+
+#
+# TODO faye
+# TODO controller
 class Lesson < ActiveRecord::Base
   extend FriendlyId
   include GitConcern
+
+  STATUSES = %w[publishing published failed]
 
   # callbacks ----------------------------------------------------------------
   before_validation :default_values
@@ -20,7 +29,7 @@ class Lesson < ActiveRecord::Base
   # attributes ---------------------------------------------------------------
   friendly_id       :name, use: :scoped, scope: [:user]
   attr_accessible   :name, :url
-  attr_accessor     :action, :skip_compiler
+  attr_accessor     :action
 
   # relationships ------------------------------------------------------------
   belongs_to :user
@@ -28,6 +37,7 @@ class Lesson < ActiveRecord::Base
   # validations --------------------------------------------------------------
   validates_presence_of   :name, :url, :user_id
   validates_uniqueness_of :name, scope: :user_id
+  validates_inclusion_of  :status, in: STATUSES
   validate                :user_must_exist
   validate                :url_must_be_valid
 
@@ -36,34 +46,39 @@ class Lesson < ActiveRecord::Base
     Pathname.new(user.slug) + self.slug
   end
 
-  # @return [Symbol] +:ready+ if  we have a compiled path; +:not_ready+
-  #   otherwise.
-  def status
-    compiled_path.present? ? :ready : :not_ready
+  def failed
+    self.status = 'failed'
+    save!
+    notify_observers :after_fail
   end
 
-  # Updates the compiled and solution paths.
-  # @return [Lesson] lesson that has the given ID
-  def ready!(c_path, s_path)
+  def published(c_path, s_path)
     self.compiled_path = c_path
     self.solution_path = s_path
-    self.skip_compiler = true
-    notify_observers :after_ready if save
+    self.status = 'published'
+    save!
+    notify_observers :after_publish
+  end
+
+  def pushed
+    self.status = 'publishing'
+    save!
+    notify_observers :after_push
   end
 
   # Updates the compiled and solution paths for the referenced lesson.
   # @return [Lesson] lesson that has the given ID
-  def self.ready!(id, compiled_path, solution_path)
+  def self.published(id, compiled_path, solution_path)
     lesson = Lesson.find id
-    lesson.ready! compiled_path, solution_path
+    lesson.published compiled_path, solution_path
     lesson
   end
 
   # Updates the referenced lesson and triggers callbacks to recompile lesson.
   # @return [Lesson] lesson that belongs to +user_id+ and has +name+
-  def self.pushed!(user_id, name)
+  def self.pushed(user_id, name)
     lesson  = Lesson.find_by_user_id_and_name! user_id, name
-    lesson.save
+    lesson.pushed
     lesson
   end
 
