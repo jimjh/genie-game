@@ -91,7 +91,7 @@ describe Lesson do
     describe '#path' do
       it 'returns a clean path' do
         @lesson.path.to_s.should \
-          eq @lesson.user.nickname.parameterize + '/' + @lesson.name.parameterize
+          match %r[^#{@lesson.user.nickname.parameterize}.*\/.*#{@lesson.name.parameterize}$]
       end
     end
 

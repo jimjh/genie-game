@@ -66,6 +66,14 @@ class Lesson < ActiveRecord::Base
     notify_observers :after_push
   end
 
+  # Sets the status of the referenced lesson to +failed+.
+  # @return [LEsson] lesson that has the given ID
+  def self.failed(id)
+    lesson = Lesson.find id
+    lesson.failed
+    lesson
+  end
+
   # Updates the compiled and solution paths for the referenced lesson.
   # @return [Lesson] lesson that has the given ID
   def self.published(id, compiled_path, solution_path)
