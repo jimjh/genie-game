@@ -11,11 +11,13 @@ FactoryGirl.define do
     lesson      { lesson_record.slug }
     root        { Pathname.new Dir.mktmpdir }
     lesson_path { root + user + lesson }
+    index_file  { SecureRandom.uuid }
 
     to_create   do |i|
       i.lesson_record.compiled_path = i.lesson_path.to_s
       i.lesson_record.save!
       i.lesson_path.mkpath
+      IO.write i.lesson_path + LessonsController::INDEX_FILE, i.index_file
     end
 
   end

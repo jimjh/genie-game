@@ -1,6 +1,7 @@
-- class_for = {'publishing' => 'disabled', 'published' => 'disabled', 'failed' => 'alert'}
+- class_for = {'publishing' => 'disabled', 'published' => 'disabled', 'failed' => 'alert disabled'}
 .row
   .eight.columns
+    = link_to 'Sync', url_for(sync: true), class: 'button secondary'
     %table
       %tbody
         - @repos.each do |repo|
@@ -21,10 +22,11 @@
       $('.publisher')
         .bind('ajax:beforeSend', function() {
           var button = $(this).find('input[type="submit"]');
-          button.text('Publishing');
+          button.val('Publishing');
           button.addClass('disabled');
           $.rails.disableElement(button);
         });
+      $.rails.disableElement($('.publisher input.disabled[type="submit"]'));
     });
 
 - # TODO improve error handling (lamp, github, active record, faye)

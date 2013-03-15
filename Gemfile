@@ -40,6 +40,7 @@ end
 gem 'jquery-rails', '~> 2.2.1'
 gem 'thin', '~> 1.5.0'
 gem 'haml', '~> 4.0.0'
+gem 'redis-rails', '~> 3.2.3'
 
 # Authentication
 gem 'devise',           '~> 2.2.3'
