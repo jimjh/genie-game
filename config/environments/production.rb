@@ -43,8 +43,8 @@ Genie::Application.configure do
   # Use a different logger for distributed setups
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
 
-  # Use a different cache store in production
-  # config.cache_store = :mem_cache_store
+  # Redis for caching (port chosen by foreman)
+  config.cache_store = :redis_store, "redis://localhost:3000/0/cache"
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server
   # config.action_controller.asset_host = "http://assets.example.com"
@@ -72,7 +72,7 @@ Genie::Application.configure do
   # GitHub's public IPs
   config.github = { ips: %w(207.97.227.253 50.57.128.197 108.171.174.178) }
 
-  # Configuration for Faye
+  # Configuration for Faye (port chosen by foreman)
   config.faye = { url: "http://#{HOST}:3100/socket" }
 
   # Configuration for Lamp
