@@ -21,7 +21,7 @@
       $('.publisher')
         .bind('ajax:beforeSend', function() {
           var button = $(this).find('input[type="submit"]');
-          button.text('Publishing');
+          button.val('Publishing');
           button.addClass('disabled');
           $.rails.disableElement(button);
         });
