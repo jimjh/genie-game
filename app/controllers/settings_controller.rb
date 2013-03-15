@@ -9,8 +9,9 @@ class SettingsController < ApplicationController
 
   def index
     auth = current_user.authorizations.find_by_provider('github') || not_found
-    @repos     = Github.new.repos.list(user: auth.nickname, page: params[:page] || 0)
-    @published = current_user.lessons.pluck(:url)
+    @repos   = Github.new.repos.list(user: auth.nickname, page: params[:page] || 0)
+    lessons, @lessons = current_user.lessons.select([:url, :status]), {}
+    lessons.each { |lesson| @lessons[lesson.url] = lesson.status }
   end
 
 end

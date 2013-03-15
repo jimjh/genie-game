@@ -47,21 +47,21 @@ class LessonsController < ApplicationController
   # POST /lessons/push
   def push
     payload = JSON.parse params[:payload]
-    auth    = Authorization.find_by_provider_and_nickname! 'github', payload['repository']['owner']['name']
-    lesson  = Lesson.find_by_user_id_and_name! auth.user.id, payload['repository']['name']
-    lesson.save
+    auth    = Authorization.find_by_provider_and_nickname! 'github',
+      payload['repository']['owner']['name']
+    lesson = Lesson.pushed auth.user.id, payload['repository']['name']
     respond_with lesson
   end
 
   # Webhook that is registered with Lamp.
   # POST /lessons/:id/ready
   def ready
-    payload = JSON.parse  params[:payload]
-    lesson  = Lesson.find params[:id]
-    lesson.compiled_path = payload['compiled_path']
-    lesson.solution_path = payload['solution_path']
-    lesson.skip_observer = true
-    lesson.save
+    payload = JSON.parse params[:payload]
+    lesson = if '200' == params['status']
+      Lesson.published params[:id],
+        payload['compiled_path'], payload['solution_path']
+    else Lesson.failed params[:id]
+    end
     respond_with lesson
   end
 

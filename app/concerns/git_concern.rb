@@ -1,3 +1,4 @@
+# Modular concern for dealing with git urls
 module GitConcern
 
   GIT_SCHEMES = %w(ssh git http https ftp ftps rsync)

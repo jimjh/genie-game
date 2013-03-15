@@ -1,4 +1,4 @@
-# Modular Concern for creating thread-singleton clients.
+# Modular concern for creating thread-singleton clients.
 module FayeConcern
 
   include FayeHelper

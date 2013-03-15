@@ -41,7 +41,7 @@ Genie::Application.configure do
   config.github = { api_key: '64935979958897278281',
                     api_secret: 'cyhdnq9tw3prppxliyjs' }
 
-  config.faye   = { url: 'http://localhost:3100/' }
+  config.faye   = { url: 'http://localhost:3100/socket' }
 
   # Output paths for Lamp.
   config.lamp = {

@@ -3,10 +3,11 @@ require 'faye/redis'
 Faye::WebSocket.load_adapter('thin')
 
 run Faye::RackAdapter.new(
-  mount: '/',
+  mount: '/socket',
   timeout: 25,
   engine: {
     type: Faye::Redis,
-    host: 'localhost'
+    host: 'localhost',
+    port: 3000
   }
 )

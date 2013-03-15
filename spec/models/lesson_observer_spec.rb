@@ -9,110 +9,130 @@ describe LessonObserver do
   let(:observer) { LessonObserver.any_instance }
   subject        { lesson }
 
-  before(:each) { Rails.application.routes.default_url_options[:host] = 'test.host' }
-  after(:each)  { lesson.destroy if lesson.persisted? }
+  let(:hook_id)       { Random.rand 10000 }
+  let(:lamp_client)   { stub(create: true, transport: stub(open: 0, close: 0), remove: true) }
+  let(:github_hooks)  { stub(create: stub(id: hook_id), delete: true) }
+  let(:github_client) { stub(repos: stub(hooks: github_hooks))  }
 
-  shared_context 'destroying a lesson', observe_destroy: true do
-    before :each do
-      lesson.hook = (Random.rand(1000) + 1).to_s
+
+  before(:each)  do
+    Rails.application.routes.default_url_options[:host] = 'test.host'
+    @auth  = lesson.user.authorizations.first
+    observer.stubs(:lamp_client).returns(lamp_client)
+    observer.stubs(:github).returns([@auth, github_client])
+    ActiveRecord::Observer.enable_observers
+  end
+
+  after(:each) do
+    ActiveRecord::Observer.disable_observers
+    lesson.destroy if lesson.persisted?
+  end
+
+  describe 'create' do
+
+    it 'creates a web hook' do
+      github_hooks.expects(:create).once
+        .with(@auth.nickname, lesson.name, has_key(:config) & has_entry(:name, 'web'))
+        .returns(Hashie::Mash.new id: hook_id)
       lesson.save!
-      ActiveRecord::Observer.enable_observers
     end
-    after(:each) { ActiveRecord::Observer.disable_observers }
+
+    it 'deletes the web hook if a rollback was issued' do
+      github_hooks.expects(:delete).once
+        .with(@auth.nickname, lesson.name, hook_id)
+      Lesson.transaction do
+        lesson.save!
+        raise ActiveRecord::Rollback, 'to force a rollback'
+      end
+    end
+
+    it 'tells compiler to create files' do
+      lamp_client.expects(:create).once
+        .with(lesson.url,
+              regexp_matches(%r[#{lesson.name.parameterize}]),
+              regexp_matches(%r[\/lessons\/\d+\/ready$]), {})
+        .returns(true)
+      lesson.save!
+    end
+
+    it 'sets status to `failed` if the lamp RPC threw an exception' do
+      lamp_client.expects(:create).once.raises(Lamp::RPCError)
+      lesson.save!
+      lesson.status.should eq 'failed'
+    end
+
   end
 
-  shared_context 'creating a lesson', observe_create: true do
-    before(:each) { ActiveRecord::Observer.enable_observers }
-    after(:each)  { ActiveRecord::Observer.disable_observers }
-  end
-
-  let(:lamp_client)   { stub(create: true, transport: stub(open: 0, close: 0)) }
-  let(:github_client) { stub(repos: stub(hooks: stub(create: stub(id: 0), delete: true))) }
-
-  describe '#github' do
+  describe '#destroy' do
 
     before(:each) do
-
-      observer.stubs(:lamp_client).returns(lamp_client)
-
-      @hooks = mock('hooks')
-      @auth  = lesson.user.authorizations.first
-      github_client.repos.stubs(:hooks).returns(@hooks)
-      observer.stubs(:github).returns([@auth, github_client])
-
+      lesson.hook = Random.rand(1000).to_s
+      lesson.save!
     end
 
-    context 'create', :observe_create do
-
-      it 'creates a web hook' do
-        @hooks.expects(:create).once
-          .with(@auth.nickname, lesson.name, anything)
-          .returns(Hashie::Mash.new id: 0)
-        lesson.save!
-      end
-
-      it 'deletes the web hook if a rollback was issued' do
-        lamp_client.stubs(:create).raises(Lamp::RPCError)
-        @hooks.expects(:create).once
-          .with(@auth.nickname, lesson.name, anything)
-          .returns(Hashie::Mash.new id: 0)
-        expect { lesson.save! }.to raise_error(ActiveRecord::RecordNotSaved)
-      end
-
+    it 'deletes the web hook' do
+      github_hooks.expects(:delete).once
+        .with(@auth.nickname, lesson.name, lesson.hook)
+      lesson.destroy
     end
 
-    context 'destroy', :observe_destroy do
-      it 'deletes the web hook' do
-        @hooks.expects(:delete).once.with(@auth.nickname, lesson.name, lesson.hook)
-        lesson.destroy
-      end
+    it 'tells compiler to delete files' do
+      lamp_client.expects(:remove).once
+        .with(regexp_matches(%r[#{lesson.name.parameterize}$]),
+              regexp_matches(%r[\/lessons\/\d+\/gone$]))
+        .returns(true)
+      lesson.destroy
     end
 
   end
 
-  describe '#lamp_client' do
+  describe '#published' do
 
-    before(:each) do
-      auth   = lesson.user.authorizations.first
-      observer.stubs(:github).returns([auth, github_client])
-      observer.stubs(:lamp_client).returns(lamp_client)
+    it 'does not use github_client' do
+      github_hooks.expects(:create).never
+      github_hooks.expects(:delete).never
+      lesson.published '', ''
     end
 
-    context 'create', :observe_create do
-
-      it 'invokes lamp create' do
-        lamp_client.expects(:create).once
-          .with(lesson.url, is_a(String), is_a(String), {})
-          .returns(true)
-        lesson.save!
-      end
-
-      it 'raises an exception if lamp fails' do
-        lamp_client.expects(:create).once
-          .with(lesson.url, is_a(String), is_a(String), {})
-          .raises(Lamp::RPCError)
-        expect { lesson.save! }.to raise_error(ActiveRecord::RecordNotSaved)
-      end
-
-      it 'invokes lamp rm when a rollback is issued' do
-        lamp_client.expects(:create).once
-          .with(lesson.url, is_a(String), is_a(String), {})
-          .raises(Lamp::RPCError)
-        lamp_client.expects(:remove).once
-          .with(regexp_matches(/#{lesson.name.parameterize}$/), is_a(String))
-          .returns(true)
-        expect { lesson.save! }.to raise_error(ActiveRecord::RecordNotSaved)
-      end
-
+    it 'does not use lamp_client' do
+      lamp_client.expects(:create).never
+      lamp_client.expects(:remove).never
+      lesson.published '', ''
     end
 
-    context 'destroy', :observe_destroy do
-      it 'invokes lamp rm' do
-        lamp_client.expects(:remove).once
-          .with(regexp_matches(/#{lesson.name.parameterize}\z/), is_a(String))
-          .returns(true)
-        lesson.destroy
-      end
+  end
+
+  describe '#failed' do
+
+    it 'does not use github_client' do
+      github_hooks.expects(:create).never
+      github_hooks.expects(:delete).never
+      lesson.failed
+    end
+
+    it 'does not use lamp_client' do
+      lamp_client.expects(:create).never
+      lamp_client.expects(:remove).never
+      lesson.failed
+    end
+
+  end
+
+  describe '#pushed' do
+
+    it 'tells compiler to create files' do
+      lamp_client.expects(:create).once
+        .with(lesson.url,
+              regexp_matches(%r[#{lesson.name.parameterize}]),
+              regexp_matches(%r[\/lessons\/\d+\/ready$]), {})
+        .returns(true)
+      lesson.pushed
+    end
+
+    it 'sets status to `failed` if the lamp RPC threw an exception' do
+      lamp_client.expects(:create).once.raises(Lamp::RPCError)
+      lesson.pushed
+      lesson.status.should eq 'failed'
     end
 
   end
