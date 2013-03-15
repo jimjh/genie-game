@@ -57,11 +57,12 @@ class LessonsController < ApplicationController
   # POST /lessons/:id/ready
   def ready
     payload = JSON.parse params[:payload]
-    if payload['status'] == 200
-      respond_with Lesson.published params[:id],
+    lesson = if '200' == params['status']
+      Lesson.published params[:id],
         payload['compiled_path'], payload['solution_path']
-    else respond_with Lesson.failed params[:id]
+    else Lesson.failed params[:id]
     end
+    respond_with lesson
   end
 
   # Webhook that is registered with Lamp.

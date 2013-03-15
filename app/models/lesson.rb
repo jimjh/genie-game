@@ -69,7 +69,7 @@ class Lesson < ActiveRecord::Base
   # Sets the status of the referenced lesson to +failed+.
   # @return [LEsson] lesson that has the given ID
   def self.failed(id)
-    lesson = Lesson.find id
+    lesson = Lesson.find_by_id id
     lesson.failed
     lesson
   end
@@ -77,7 +77,7 @@ class Lesson < ActiveRecord::Base
   # Updates the compiled and solution paths for the referenced lesson.
   # @return [Lesson] lesson that has the given ID
   def self.published(id, compiled_path, solution_path)
-    lesson = Lesson.find id
+    lesson = Lesson.find_by_id id
     lesson.published compiled_path, solution_path
     lesson
   end

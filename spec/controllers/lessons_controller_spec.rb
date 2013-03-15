@@ -80,7 +80,7 @@ describe LessonsController do
       assigns[:contents].should eq rand
     end
 
-    it 'raises ActionDispatch::RoutingError if the path does not exist' do
+    it 'raises ActionController::RoutingError if the path does not exist' do
       expect do
         get :show, user: @fake.user, lesson: @fake.lesson, path: 'xyz'
       end.to raise_error(ActionController::RoutingError)
@@ -101,7 +101,21 @@ describe LessonsController do
   end
 
   describe 'POST #push' do
-    it 'updates the lesson'
+    it 're-compiles the lesson'
+    it 'sets status to publishing'
+  end
+
+  describe 'POST #ready' do
+    context 'success' do
+      it 'sets status to published'
+    end
+    context 'failure' do
+      it 'sets status to failed'
+    end
+  end
+
+  describe 'POST #gone' do
+    it 'does something'
   end
 
 end
