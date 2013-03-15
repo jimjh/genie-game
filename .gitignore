@@ -15,3 +15,5 @@
 /tmp
 
 config/environments/locals.d/api_keys.rb
+
+*.swo

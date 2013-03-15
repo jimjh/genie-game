@@ -10,29 +10,84 @@
 #   +basename url+.
 # - +url+ is a cloneable url of the git repository.
 # - +hook+ is the ID of a web hook registered with the provider.
+# - +status+ is either
+#   - +publishing+,
+#   - +published+, or
+#   - +failed+
+#
+# TODO faye
+# TODO controller
 class Lesson < ActiveRecord::Base
   extend FriendlyId
   include GitConcern
 
+  STATUSES = %w[publishing published failed]
+
   # callbacks ----------------------------------------------------------------
   before_validation :default_values
-  friendly_id       :name, use: :slugged
 
+  # attributes ---------------------------------------------------------------
+  friendly_id       :name, use: :scoped, scope: [:user]
   attr_accessible   :name, :url
-  attr_accessor     :action, :skip_observer
+  attr_accessor     :action
 
   # relationships ------------------------------------------------------------
   belongs_to :user
 
   # validations --------------------------------------------------------------
   validates_presence_of   :name, :url, :user_id
+  validates_uniqueness_of :name, scope: :user_id
+  validates_inclusion_of  :status, in: STATUSES
   validate                :user_must_exist
   validate                :url_must_be_valid
-  validates_uniqueness_of :name, scope: :user_id
 
   # @return [Pathname] path that is suitable for use as lesson path
   def path
     Pathname.new(user.slug) + self.slug
+  end
+
+  def failed
+    self.status = 'failed'
+    save!
+    notify_observers :after_fail
+  end
+
+  def published(c_path, s_path)
+    self.compiled_path = c_path
+    self.solution_path = s_path
+    self.status = 'published'
+    save!
+    notify_observers :after_publish
+  end
+
+  def pushed
+    self.status = 'publishing'
+    save!
+    notify_observers :after_push
+  end
+
+  # Sets the status of the referenced lesson to +failed+.
+  # @return [LEsson] lesson that has the given ID
+  def self.failed(id)
+    lesson = Lesson.find_by_id id
+    lesson.failed
+    lesson
+  end
+
+  # Updates the compiled and solution paths for the referenced lesson.
+  # @return [Lesson] lesson that has the given ID
+  def self.published(id, compiled_path, solution_path)
+    lesson = Lesson.find_by_id id
+    lesson.published compiled_path, solution_path
+    lesson
+  end
+
+  # Updates the referenced lesson and triggers callbacks to recompile lesson.
+  # @return [Lesson] lesson that belongs to +user_id+ and has +name+
+  def self.pushed(user_id, name)
+    lesson  = Lesson.find_by_user_id_and_name! user_id, name
+    lesson.pushed
+    lesson
   end
 
   private
