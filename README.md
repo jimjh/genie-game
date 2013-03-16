@@ -66,20 +66,8 @@ The root user is `postgres`. I don't remember the password, but you can login us
 $> sudo -u postgres psql
 ```
 
-from an appropriate sudoer.
-
-`production.yml` should look like the following:
-
-```yml
-production:
-	adapter: postgresql
-	encoding: unicode
-	database: genie
-	username: passenger
-	password: # read from /home/passenger/.secrets
-	pool: 5
-	timout: 500
-```
+from an appropriate sudoer. The confidential authentication details should be
+stored in `config/environments/locals.d` and left out of git.
 
 ## Redis
 Configuration files are at `/etc/redis/redis.conf`. For more information, refer
