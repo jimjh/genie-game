@@ -70,8 +70,4 @@ Genie::Application.configure do
     }
   }
 
-  config.postgresql = {}
-
 end
-
-require_relative './locals'

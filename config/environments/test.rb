@@ -52,6 +52,4 @@ Genie::Application.configure do
     }
   }
 
-  config.postgresql = {}
-
 end
