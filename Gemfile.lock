@@ -194,10 +194,6 @@ GEM
     mime-types (1.21)
     mocha (0.10.5)
       metaclass (~> 0.0.1)
-    modular-scale (1.0.6)
-      compass (>= 0.12.1)
-      sass (>= 3.2.0)
-      sassy-math (>= 1.5)
     multi_json (1.6.1)
     multipart-post (1.2.0)
     net-scp (1.1.0)
@@ -300,8 +296,6 @@ GEM
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
-    sassy-math (1.5)
-      compass (~> 0.11)
     selenium-webdriver (2.31.0)
       childprocess (>= 0.2.5)
       multi_json (~> 1.0)
@@ -354,10 +348,7 @@ GEM
     xpath (1.0.0)
       nokogiri (~> 1.3)
     yajl-ruby (1.1.0)
-    zurb-foundation (3.2.5)
-      compass (>= 0.12.2)
-      modular-scale (= 1.0.6)
-      rake
+    zurb-foundation (4.0.8)
       sass (>= 3.2.0)
 
 PLATFORMS
@@ -399,4 +390,4 @@ DEPENDENCIES
   sqlite3
   thin (~> 1.5.0)
   uglifier (>= 1.0.3)
-  zurb-foundation (~> 3.2.5)
+  zurb-foundation (~> 4.0.8)

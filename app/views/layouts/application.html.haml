@@ -1,11 +1,12 @@
 -# coding: UTF-8
 !!! 5
 
-<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
-<!--[if lt IE 7 ]> <html class="ie6" lang="en"> <![endif]-->
-<!--[if IE 7 ]>    <html class="ie7" lang="en"> <![endif]-->
-<!--[if IE 8 ]>    <html class="ie8" lang="en"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
+/ paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/
+/[if lt IE 7 ] <html class=\"ie6\" lang=\"en\">
+/[if IE 7 ]    <html class=\"ie7\" lang=\"en\">
+/[if IE 8 ]    <html class=\"ie8\" lang=\"en\">
+/[if IE 9 ]    <html class=\"ie9\" lang=\"en\">
+/[if (gt IE 9)|!(IE)] <!--> <html lang=\"en\">
 
 %head
 
@@ -20,15 +21,17 @@
     %link{rel: 'stylesheet', href: '/assets/general_foundicons_ie7.css'}
 
   = stylesheet_link_tag 'application'
+  = javascript_include_tag 'vendor/custom.modernizr'
   = csrf_meta_tags
 
 %body
 
-  - # NAVIGATION BAR + FLASH MESSAGES
   = render partial: 'layouts/nav_bar'
-  = render partial: 'layouts/flash', locals: { flash: flash }
 
-  = content_for?(:content) ? yield(:content) : yield
+  .row
+    .large-12.columns
+      = render partial: 'layouts/flash', locals: { flash: flash }
+      = content_for?(:content) ? yield(:content) : yield
 
   -# JAVASCRIPT
   - cdn_js.each do |url|
@@ -36,6 +39,3 @@
   %script{src: faye_js}
   = javascript_include_tag 'application'
   = yield :javascript if content_for? :javascript
-
-:plain
-  </html>

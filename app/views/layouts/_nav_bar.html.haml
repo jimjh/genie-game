@@ -1,26 +1,21 @@
-.container
-  %nav.top-bar
-    %ul
-      -# title
-      %li.name
-        %h1= link_to 'Genie', root_path
-      -# button for menu-access in smaller screens
-      %li.toggle-topbar
-        %a{href: '#'}
-    %section
-      %ul.left
-        %li.divider
-        = nav_link 'Home', root_path
-        -# nav_link 'About', about_path
-      %ul.right
-        - if user_signed_in?
-          %li.has-dropdown
-            %a{href: '#'}= current_user.name
-            %ul.dropdown
-              %li= link_to 'Settings', settings_path
-              %li.divider
-              %li= link_to 'Sign Out →', destroy_session_path, method: :delete
-        - else
-          %li.has-button
-            = link_to 'Sign In', user_omniauth_authorize_path(:github),
-              class: 'button small'
+%nav.top-bar
+  %ul.title-area
+    %li.name
+      %h1= link_to 'Genie', root_path
+    %li.toggle-topbar.menu-icon
+      %a{href: '#'}
+        %span Menu
+  %section.top-bar-section
+    %ul.right
+      %li.divider.hide-for-small
+      - if user_signed_in?
+        %li.has-dropdown
+          %a{href: '#'}= current_user.name
+          %ul.dropdown
+            %li= link_to 'Settings', settings_path
+            %li.divider
+            %li= link_to 'Sign Out →', destroy_session_path, method: :delete
+      - else
+        %li.has-form
+          = link_to 'Sign In', user_omniauth_authorize_path(:github),
+            class: 'button small'

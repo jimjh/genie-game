@@ -1,11 +1,7 @@
 .row
-  .eight.columns
-    %table
-      %thead
-        %tr
-          %th Lessons
-      %tbody
-      - @lessons.each do |lesson|
-        %tr
-          %td= link_to lesson.name.titleize,
-            user_lesson_path(lesson.user, lesson)
+  .large-12.columns
+    %h1.header Lessons
+    %hr
+    - @lessons.each do |lesson|
+      = link_to lesson.name.titleize,
+        user_lesson_path(lesson.user, lesson)

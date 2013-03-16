@@ -1,8 +1,6 @@
 - if flash.any?
-  .row
-    .twelve.columns
-      - flash.each do |name, msg|
-        - if msg.is_a?(String)
-          .alert-box{class: flash_for(name)}
-            %div= msg
-            %a.close ×
+  - flash.each do |name, msg|
+    - if msg.is_a?(String)
+      .alert-box{:'data-alert' => true, class: flash_for(name) + ' radius'}
+        = msg
+        %a.close{href: '#'} ×

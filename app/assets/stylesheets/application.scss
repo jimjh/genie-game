@@ -1,9 +1,6 @@
 @import "settings";
 @import "foundation";
 
-/* settings */
-$borderWidth: 2px;
-
 .highlight {
   @import "pygment";
   @import "github";
@@ -14,7 +11,7 @@ $borderWidth: 2px;
 
 /* Meta panel */
 div.meta.panel {
-  border-top: $borderWidth solid $darkEdge;
+  border-top: $fieldset-border-width solid $shiny-edge-color;
 }
 
 /* Lesson graphic */
@@ -24,16 +21,16 @@ a.hero img {
 
 /* Floating navigation bar */
 #sections {
-  background: darken($white, 5%);
+  background: darken(#fff, 5%);
   padding-top: 10px;
-  width: $rowWidth + 18;
-  border-bottom: $borderWidth solid $darkEdge;
+  width: $row-width + 18;
+  border-bottom: $fieldset-border-width solid $shiny-edge-color;
   z-index: 3;
 }
 
 /* Progress bar */
 #footer .meter {
-  color: $white;
+  color: #fff;
   font-weight: 800;
   text-align: right;
   padding: 2px 2px 0 0;

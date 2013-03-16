@@ -1,9 +1,23 @@
-@import "settings";
+.success input, input.success, .success textarea, textarea.success {
+  border-color: $success-color;
+  background-color: rgba($success-color, 0.1);
+}
 
-/* successes */
-.success input, input.success, .success textarea, textarea.success { border-color: $successColor; background-color: rgba($successColor, 0.1); }
-.success label, label.success { color: $successColor; }
-.success small, small.success { display: block; padding: 6px 4px; margin-top: -($formSpacing) - 1; margin-bottom: $formSpacing; background: $successColor; color: #fff; font-size: ms(0) - 2; font-weight: bold; @include border-corner-radius(bottom, $defaultFloat, $inputBorderRadius); @include border-corner-radius(bottom, $defaultOpposite, $inputBorderRadius); }
+.success label, label.success { color: $success-color; }
+
+.success small, small.success {
+  display: block;
+  padding: $input-error-message-padding;
+  margin-top: $input-error-message-top;
+  margin-bottom: $form-spacing;
+  background: $success-color;
+  color: #fff;
+  font-size: $input-error-message-font-size;
+  font-weight: $input-error-message-font-weight;
+  // @include border-corner-radius(bottom, $default-float, $input-border-radius);
+  // @include border-corner-radius(bottom, $default-opposite, $input-border-radius);
+}
+
 .success textarea, textarea.success {
-  &:focus { background: darken($white, 2%); border-color: darken($white, 30%); }
+  &:focus { background: darken(#fff, 2%); border-color: darken(#fff, 30%); }
 }

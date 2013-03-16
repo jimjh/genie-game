@@ -31,7 +31,7 @@ class LessonsController < ApplicationController
 
     # html_safe iff it's at the root - everything else is dangerous static
     # asset
-    if path.parent == lesson_dir then @contents = File.read(path).html_safe
+    if path.parent == lesson_dir then @contents = File.read(path)
     else send_file path, disposition: 'attachment' end
 
   end

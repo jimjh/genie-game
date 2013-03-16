@@ -1,12 +1,9 @@
-@import "settings";
-
-/* code blocks */
 pre {
   background-color: lighten(#000, 97.5%);
   border: 1px solid lighten(#000, 80%);
   overflow: auto;
   padding: 6px 10px;
-  border-radius: $tableBorderRadius;
+  border-radius: $global-radius;
   font-size: ms(0) - 1;
   line-height: 1.6;
   font-family: Consolas, 'Liberation Mono', monospace;
