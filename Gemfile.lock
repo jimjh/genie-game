@@ -1,22 +1,22 @@
 GIT
   remote: git@github.com:jimjh/genie-compiler.git
-  revision: 92f6c9b39ae86b2c4ee7e8a10d6a19b5f3dab418
+  revision: b8856696514a957765e896f1975c6c4c1f8e9c36
   branch: master
   specs:
-    lamp (0.1.0.pre.2)
+    lamp (0.2)
       activesupport (~> 3.2.9)
       grit (~> 2.5.0)
       pry (~> 0.9.11)
-      spirit (~> 0.1.0.pre.3)
+      spirit
       thor (~> 0.16.0)
       thrift (~> 0.9.0)
 
 GIT
   remote: git@github.com:jimjh/genie-parser.git
-  revision: a45ad24fa6ed7c58a88c8f81d30753c4ce7a0eb6
+  revision: 7986d05af2742454e0aec9e9a5c7aa6b543d767d
   branch: master
   specs:
-    spirit (0.1.0.pre.3)
+    spirit (0.2)
       activesupport (~> 3.2)
       albino (~> 1.3)
       haml (~> 4.0)
@@ -25,13 +25,13 @@ GIT
 
 GIT
   remote: git@github.com:jimjh/genie-previewer.git
-  revision: 1c43d61d7a3c89db9948ff2c47a40dc6c4f5c962
+  revision: 7903492037a136b81a8dd60920dc4705ccf91c5d
   branch: master
   specs:
-    aladdin (0.1.0.pre.1)
+    aladdin (0.2)
       activesupport (~> 3.2.9)
       sinatra (~> 1.3)
-      spirit (~> 0.1.0.pre.2)
+      spirit
 
 GEM
   remote: https://rubygems.org/

@@ -206,7 +206,7 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   key, secret = Genie::Application.config.github[:api_key], Genie::Application.config.github[:api_secret]
-  config.omniauth :github, key, secret, scope: 'user,public_repo'
+  config.omniauth :github, key, secret, scope: 'user:email,public_repo'
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

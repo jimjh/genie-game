@@ -16,9 +16,9 @@ set :use_sudo,   false
 set :rvm_ruby_string, 'ruby-1.9.3-p362'
 set :rvm_type,        :system
 
-role :web, 'ec2-54-245-18-137.us-west-2.compute.amazonaws.com'                   # Your HTTP server, Apache/etc
-role :app, 'ec2-54-245-18-137.us-west-2.compute.amazonaws.com'                   # This may be the same as your `Web` server
-role :db,  'ec2-54-245-18-137.us-west-2.compute.amazonaws.com', :primary => true # This is where Rails migrations will run
+role :web, 'beta.geniehub.org'                   # Your HTTP server, Apache/etc
+role :app, 'beta.geniehub.org'                   # This may be the same as your `Web` server
+role :db,  'beta.geniehub.org', :primary => true # This is where Rails migrations will run
 
 after 'deploy:restart',  'deploy:cleanup'
 after 'deploy:update',   'deploy:migrate'

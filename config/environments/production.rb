@@ -2,7 +2,7 @@ Genie::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # Used to construct a web hook for GitHub
-  HOST = 'ec2-54-245-18-137.us-west-2.compute.amazonaws.com'
+  HOST = 'beta.geniehub.org'
   Rails.application.routes.default_url_options[:host] = HOST
 
   # Code is not reloaded between requests
