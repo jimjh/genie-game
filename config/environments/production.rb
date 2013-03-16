@@ -1,8 +1,10 @@
+require File.expand_path('../../shared', __FILE__)
+
 Genie::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # Used to construct a web hook for GitHub
-  HOST = 'beta.geniehub.org'
+  HOST = Genie::SharedConstants::HOST
   Rails.application.routes.default_url_options[:host] = HOST
 
   # Code is not reloaded between requests
@@ -29,7 +31,7 @@ Genie::Application.configure do
 
   # Specifies the header that your server uses for sending files
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
-  # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
+  config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
@@ -43,8 +45,8 @@ Genie::Application.configure do
   # Use a different logger for distributed setups
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
 
-  # Redis for caching (port chosen by foreman)
-  config.cache_store = :redis_store, "redis://localhost:3000/0/cache"
+  # Redis for caching
+  config.cache_store = :redis_store, Genie::SharedConstants::REDIS_URL
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server
   # config.action_controller.asset_host = "http://assets.example.com"

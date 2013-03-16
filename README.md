@@ -10,7 +10,9 @@ $> cap deploy
 `cap deploy` will clone the repository to `/u/apps/genie-game/releases/current`, execute `rake db:migrate`, and `rake assets:precompile`. The assets compilation step will take a while, but I am waiting on progress at [Pull Request #21][pull-21].
 
 ## EC2 Instance
-The current deployment server is `beta.geniehub.org`, running Ubuntu 12.04.1. For the rest of this README, `genie.ec2` refers to the above host.
+The current deployment server is `beta.geniehub.org`, running Ubuntu 12.04.1.
+For the rest of this README, `genie.ec2` refers to the above host. If the host
+is changed, please update `config/shared.rb`.
 
 The root user is `ubuntu`. To login as the root user,
 
@@ -79,6 +81,12 @@ production:
 	timout: 500
 ```
 
+## Redis
+Configuration files are at `/etc/redis/redis.conf`. For more information, refer
+to [redis documentation](http://redis.io/topics/config).
+
+If the port is changed, please update `config/shared.rb`.
+
 ## Installation
 These are the steps I took to set up the Ubuntu server.
 
@@ -136,6 +144,12 @@ Follow instructions from Ubuntu. Create `passenger` user and `genie` database.
 
 Follow the fresh deploy instructions given below.
 
+### 7. Redis
+
+```sh
+remote> sudo aptitude install redis-server
+```
+
 ## Misc.
 
 ### Fresh Deploy
@@ -159,7 +173,7 @@ $> cap deploy
 ```
 
 ### Process Monitoring
-Both nginx and postgresql are installed with System V scripts in `/etc/init.d`.
+nginx, postgresql, and redis are installed with System V scripts in `/etc/init.d`.
 and are monitored with Upstart. Passenger monitors all rails processes.
 
 I think Passenger is started by nginx, but I am not sure.

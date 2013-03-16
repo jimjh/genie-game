@@ -1,5 +1,6 @@
 require 'rvm/capistrano'
 require 'bundler/capistrano'
+require File.expand_path('../shared', __FILE__)
 
 set :application, 'genie-game'
 set :repository,  'git@github.com:jimjh/genie-game.git'
@@ -16,9 +17,9 @@ set :use_sudo,   false
 set :rvm_ruby_string, 'ruby-1.9.3-p362'
 set :rvm_type,        :system
 
-role :web, 'beta.geniehub.org'                   # Your HTTP server, Apache/etc
-role :app, 'beta.geniehub.org'                   # This may be the same as your `Web` server
-role :db,  'beta.geniehub.org', :primary => true # This is where Rails migrations will run
+role :web, Genie::SharedConstants::HOST          # Your HTTP server, Apache/etc
+role :app, Genie::SharedConstants::HOST          # This may be the same as your `Web` server
+role :db,  Genie::SharedConstants::HOST, primary: true # This is where Rails migrations will run
 
 after 'deploy:restart',  'deploy:cleanup'
 after 'deploy:update',   'deploy:migrate'
