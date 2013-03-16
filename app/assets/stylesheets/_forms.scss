@@ -1,23 +1,41 @@
-.success input, input.success, .success textarea, textarea.success {
-  border-color: $success-color;
-  background-color: rgba($success-color, 0.1);
+// Adapted from foundation/blob/master/scss/foundation/components/_forms.scss
+
+@mixin form-label-success-color($color:$success-color) { color: $color; }
+
+@mixin form-success-color($color:$success-color) {
+  border-color: $color;
+  background-color: rgba($color, 0.1);
+  &:focus {
+    background: $input-focus-bg-color;
+    border-color: $input-focus-border-color;
+  }
 }
 
-.success label, label.success { color: $success-color; }
-
-.success small, small.success {
+@mixin form-success-message($bg:$success-color) {
   display: block;
   padding: $input-error-message-padding;
   margin-top: $input-error-message-top;
   margin-bottom: $form-spacing;
-  background: $success-color;
-  color: #fff;
   font-size: $input-error-message-font-size;
   font-weight: $input-error-message-font-weight;
-  // @include border-corner-radius(bottom, $default-float, $input-border-radius);
-  // @include border-corner-radius(bottom, $default-opposite, $input-border-radius);
+  $bg-lightness: lightness($bg);
+  background: $bg;
+  color: #fff;
 }
 
-.success textarea, textarea.success {
-  &:focus { background: darken(#fff, 2%); border-color: darken(#fff, 30%); }
+.success label,
+label.success {
+  @include form-label-success-color;
+}
+
+.success input,
+input.success,
+.success textarea,
+textarea.success {
+  @include form-success-color;
+}
+
+.success small,
+small.success {
+  @include form-success-message;
 }

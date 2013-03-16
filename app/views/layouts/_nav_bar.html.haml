@@ -17,5 +17,4 @@
             %li= link_to 'Sign Out →', destroy_session_path, method: :delete
       - else
         %li.has-form
-          = link_to 'Sign In', user_omniauth_authorize_path(:github),
-            class: 'button small'
+          = link_to 'Sign In', user_omniauth_authorize_path(:github), class: 'button small'

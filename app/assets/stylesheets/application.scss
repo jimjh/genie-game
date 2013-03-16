@@ -9,32 +9,28 @@
 @import "mathjax";
 @import "forms";
 
-/* Meta panel */
-div.meta.panel {
-  border-top: $fieldset-border-width solid $shiny-edge-color;
-}
+//div.meta.panel {
+//  border-top: $fieldset-border-width solid $shiny-edge-color;
+//}
+//
+//a.hero img {
+//  width: 100%;
+//}
 
-/* Lesson graphic */
-a.hero img {
-  width: 100%;
-}
-
-/* Floating navigation bar */
 #sections {
   background: darken(#fff, 5%);
   padding-top: 10px;
-  width: $row-width + 18;
+  width: $row-width;
   border-bottom: $fieldset-border-width solid $shiny-edge-color;
   z-index: 3;
 }
 
-/* Progress bar */
-#footer .meter {
-  color: #fff;
-  font-weight: 800;
-  text-align: right;
-  padding: 2px 2px 0 0;
-}
+//#footer .meter {
+//  color: #fff;
+//  font-weight: 800;
+//  text-align: right;
+//  padding: 2px 2px 0 0;
+//}
 
 /* Styling within lesson */
 section[role='lesson'] {
