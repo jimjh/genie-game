@@ -11,5 +11,11 @@ test: &test
 cucumber:
   <<: *test
 
-<% glob = File.join Rails.application.root, 'config', 'database.d', '*.yml' %>
-<%= Dir[glob].reduce('') { |memo, inc| memo += IO.read(inc) + "\n" } %>
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: genie
+  username: <%= Rails.application.config.postgresql[:username] %>
+  password: <%= Rails.application.config.postgresql[:password] %>
+  pool: 5
+  timeout: 5000
