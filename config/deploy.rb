@@ -37,6 +37,9 @@ namespace :deploy do
     run "cd #{current_path}; bundle exec rake RAILS_ENV=production db:schema:load"
   end
   task :secrets do
-    run "ln -nfs #{deploy_to}/shared/config/locals.d #{release_path}/config/environments/locals.d"
+    run "ln -nfs #{shared_path}/config/locals.d #{release_path}/config/environments/locals.d"
+  end
+  task :migrate do
+    run "cd #{release_path} && bundle exec rake RAILS_ENV=production --require ./config/environment db:migrate"
   end
 end
