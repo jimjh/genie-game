@@ -25,10 +25,16 @@ Capistrano deploys using `passenger`. It's setup to use passwordless login using
 ## NGINX
 We are using a Rails-Passenger-Nginx setup. Nginx is started using `start-stop-daemon`, which does PID management for us. The main process runs as the `root` user, but worker processes are launched under `www-data`. All of the configuration files are available at `/opt/nginx/conf`.
 
+To check on the status of all monitored services, use
+
+```sh
+$> sudo service --status-all
+```
+
 To start, stop, restart, or reload nginx, use
 
 ```sh
-$> sudo /etc/init.d/nginx <command>
+$> sudo service nginx {start|stop|restart}
 ```
 
 ## Passenger
@@ -41,7 +47,7 @@ $> cap deploy:restart
 ```
 
 ## RVM
-The server currently has a system-wide install of rvm using ruby 1.9.3
+The server currently has a system-wide install of rvm using ruby 1.9.3.
 
 ## Postgresql
 I did a standard install using `aptitude`, then configured `/etc/postgresql/9.1/main/pg_hba.conf` and changed the following line:
@@ -153,7 +159,10 @@ $> cap deploy
 ```
 
 ### Process Monitoring
-Further configuration is needed to leverage Upstart and Monit to monitor postgres, rails, passenger, and nginx.
+Both nginx and postgresql are installed with System V scripts in `/etc/init.d`.
+and are monitored with Upstart. Passenger monitors all rails processes.
+
+I think Passenger is started by nginx, but I am not sure.
 
 ### Capistrano templates
 Should probably use some of these for locals.d, database.d, and pg_hba.conf.
