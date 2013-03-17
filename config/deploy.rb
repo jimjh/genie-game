@@ -41,6 +41,6 @@ namespace :deploy do
     run "ln -fs -- #{shared_path}/config/locals.d #{release_path}/config/environments"
   end
   task :clean_expired do
-    run "cd #{current_path}; bundle exec rake assets:clean_expired"
+    run "cd #{release_path}; bundle exec rake assets:clean_expired"
   end
 end
