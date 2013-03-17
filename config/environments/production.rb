@@ -72,7 +72,7 @@ Genie::Application.configure do
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   # GitHub's public IPs
-  config.github[:ips] = %w[207.97.227.253 50.57.128.197 108.171.174.178]
+  config.github[:ips] = %w[207.97.227.224 173.203.140.192 204.232.175.64 72.4.117.96]
 
   # Configuration for Faye (port chosen by foreman)
   config.faye = { url: "http://#{HOST}:3100/socket" }
