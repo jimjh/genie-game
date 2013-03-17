@@ -75,6 +75,9 @@ to [redis documentation](http://redis.io/topics/config).
 
 If the port is changed, please update `config/shared.rb`.
 
+## Lamp
+Lamp is currently launched manually at port 3300 without any monitoring.
+
 ## Installation
 These are the steps I took to set up the Ubuntu server.
 
@@ -117,7 +120,7 @@ Follow given instructions to configure nginx so that it points to `/u/apps/genie
 
 ### 4. Lamp
 
-Setup `/usr/local/etc/genie/worker.yml` and create directory at `/mnt/genie`.
+Create directory at `/mnt/genie`.
 
 ```sh
 remote> chown passenger /mnt/genie
@@ -145,11 +148,10 @@ To do a fresh deploy, edit `config/deploy.rb` to disable `after deploy:update, d
 
 1. Setup directories with `cap deploy:setup`. Then login to the remote server and adjust permissions using `chown -R passenger:passenger /u/apps/genie-game`.
 2. Setup passwords and API keys by creating the following files:
-	- `shared/config/locals.d`
-		- `shared/config/locals.d/path.rb`
-		- `shared/config/locals.d/api_keys.rb`
-	- `shared/config/database.d`
-		- `shared/config/database.d/production.yml`
+	- `shared/config/environments/locals.d`
+		- `shared/config/environments/locals.d/path.rb`
+		- `shared/config/environments/locals.d/api_keys.rb`
+    - `shared/config/environments/locals.d/postgresql.rb`
 3. Setup codebase with `cap deploy:update`
 4. Setup database with `cap deploy:load_schema`
 5. Run a simple check with `cap deploy:check`
@@ -170,7 +172,7 @@ I think Passenger is started by nginx, but I am not sure.
 Should probably use some of these for locals.d, database.d, and pg_hba.conf.
 
 ### Security
-Need to restrict permissions on database.d and locals.d. Need to restrict permissions on /u/apps/genie-game. Need to restrict privileges for `passenger`. Can we do without passwords for Postgres and use ident or peer? Remove UNIX password for `passenger`? Permissions for `/mnt/genie/*`?
+Need to restrict permissions on locals.d. Need to restrict permissions on /u/apps/genie-game. Need to restrict privileges for `passenger`. Can we do without passwords for Postgres and use ident or peer? Remove UNIX password for `passenger`? Permissions for `/mnt/genie/*`?
 
   [capistrano-guide]: https://github.com/capistrano/capistrano/wiki/2.x-from-the-beginning
   [pull-21]: https://github.com/rails/sprockets-rails/pull/21

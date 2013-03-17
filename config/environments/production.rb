@@ -82,7 +82,7 @@ Genie::Application.configure do
     ips:           %w(127.0.0.1 0.0.0.0),
     client: {
       'host' => 'localhost',
-      'port' => 3300 # chosen by foreman
+      'port' => 3300
     }
   }
 
