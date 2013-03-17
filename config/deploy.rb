@@ -39,7 +39,4 @@ namespace :deploy do
   task :secrets do
     run "ln -fs -- #{shared_path}/config/locals.d #{release_path}/config/environments"
   end
-  task :migrate do
-    run "cd #{release_path} && bundle exec rake RAILS_ENV=production --require ./config/environment db:migrate"
-  end
 end
