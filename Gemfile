@@ -6,7 +6,6 @@ if RUBY_VERSION =~ /1.9/
 end
 
 gem 'rails', '~> 3.2.12'
-gem 'sqlite3'
 
 group :assets do
   gem 'sass-rails',       '~> 3.2.3'
@@ -27,12 +26,13 @@ group :test do
 end
 
 group :development do
-  gem 'rvm-capistrano'
-  gem 'capistrano'
-  gem 'foreman',      '~> 0.61.0'
+  gem 'rvm-capistrano', '~> 1.2.7',  require: false
+  gem 'capistrano',     '~> 2.14.2', require: false
+  gem 'foreman',        '~> 0.61.0', require: false
 end
 
 group :test, :development do
+  gem 'sqlite3'
   gem 'rspec-rails', '~> 2.12.2'
   gem 'debugger',    '~> 1.3.1'
   gem 'pry',         '~> 0.9.12'

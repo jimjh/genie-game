@@ -36,11 +36,7 @@ Genie::Application.configure do
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
 
-  # These are random strings that will not work. Make sure that GitHub API
-  # calls are stubbed in spec.
-  config.github = { api_key: '64935979958897278281',
-                    api_secret: 'cyhdnq9tw3prppxliyjs' }
-
+  config.github[:ips] = %w[127.0.0.1]
   config.faye   = { url: 'http://localhost:3100/socket' }
 
   # Output paths for Lamp.

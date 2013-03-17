@@ -62,7 +62,7 @@ module Genie
     config.assets.version = '1.0'
 
     # Secrets from locals.d
-    config.github = {}
+    config.github     = {}
     config.postgresql = {}
 
   end

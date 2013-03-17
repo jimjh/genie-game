@@ -78,6 +78,11 @@ If the port is changed, please update `config/shared.rb`.
 ## Lamp
 Lamp is currently launched manually at port 3300 without any monitoring.
 
+```sh
+$> git clone ...
+$> bundle install --path vendor/bundle --without development test
+```
+
 ## Installation
 These are the steps I took to set up the Ubuntu server.
 
@@ -172,7 +177,8 @@ I think Passenger is started by nginx, but I am not sure.
 Should probably use some of these for locals.d, database.d, and pg_hba.conf.
 
 ### Security
-Need to restrict permissions on locals.d. Need to restrict permissions on /u/apps/genie-game. Need to restrict privileges for `passenger`. Can we do without passwords for Postgres and use ident or peer? Remove UNIX password for `passenger`? Permissions for `/mnt/genie/*`?
+Need to restrict permissions on locals.d. Need to restrict permissions on
+/u/apps/genie-game and genie-compiler. Need to restrict privileges for `passenger`. Can we do without passwords for Postgres and use ident or peer? Remove UNIX password for `passenger`? Permissions for `/mnt/genie/*`?
 
   [capistrano-guide]: https://github.com/capistrano/capistrano/wiki/2.x-from-the-beginning
   [pull-21]: https://github.com/rails/sprockets-rails/pull/21
