@@ -8,8 +8,7 @@ Genie::Application.routes.draw do
 
   # Lessons Controller -------------------------------------------------------
   resources :lessons, only: [:create, :destroy] do
-    post :push, on: :collection, # GitHub Hook
-      constraints: lambda { |r| Rails.configuration.github[:ips].include? r.remote_ip }
+    post :push, on: :collection
     post :ready, on: :member, # Lamp Hook
       constraints: lambda { |r| Rails.configuration.lamp[:ips].include? r.remote_ip }
     post :gone,  on: :member, # Lamp Hook

@@ -5,6 +5,7 @@ class LessonsController < ApplicationController
 
   protect_from_forgery except: [:push, :ready, :gone]
   before_filter :authenticate_user!, except: [:show, :verify, :push, :ready, :gone]
+  before_filter :authenticate_github!, only: [:push]
   respond_to    :json
 
   SOLUTION_EXT  = '.sol'
@@ -79,6 +80,15 @@ class LessonsController < ApplicationController
     not_found unless path.file?
     result    = File.open(path, 'rb') { |f| same? params[:answer], Marshal.restore(f) }
     render json: result
+  end
+
+  private
+
+  def authenticate_github!
+    authenticate_or_request_with_http_basic do |username, password|
+      username == 'github' &&
+        password == Rails.application.config.github[:password]
+    end
   end
 
 end

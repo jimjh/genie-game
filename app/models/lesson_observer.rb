@@ -21,21 +21,30 @@ class LessonObserver < ActiveRecord::Observer
   }
 
   def after_rollback(lesson)
-    delete_hook(lesson) if :create == lesson.action
+    if :create == lesson.action
+      delete_hook  lesson
+      delete_files lesson
+    end
   end
 
-  def after_destroy(lesson)
-    delete_hook lesson
-    delete_files lesson
+  def after_commit(lesson)
+    case lesson.action
+    when :destroy
+      delete_hook  lesson
+      delete_files lesson
+    when :create
+      # this needs to be here so that the callback url can be given an ID
+      create_files lesson
+    end
+  end
+
+  def before_destroy(lesson)
+    lesson.action = :destroy
   end
 
   def before_create(lesson)
     lesson.action = :create
     create_hook  lesson
-  end
-
-  def after_create(lesson)
-    create_files lesson
   end
 
   def after_publish(lesson)
@@ -110,8 +119,8 @@ class LessonObserver < ActiveRecord::Observer
       ready_lesson_url(lesson.id), {}
   rescue Lamp::RPCError => e
     Rails.logger.error 'Unable to create lesson %s using lamp.' % lesson.path
-    Rails.logger.error e
     lesson.failed
+    raise e
   ensure
     lamp_client.transport.close
   end
@@ -119,8 +128,11 @@ class LessonObserver < ActiveRecord::Observer
   # Lazily adds {#push_lessons_url} to {HOOK_PARAMS}.
   # @return [Hash] parameters suitable for +github_api+.
   def hook_params
-    params = HOOK_PARAMS.clone
-    params[:config].merge! url: push_lessons_url
+    username = Rails.application.config.github[:username]
+    password = Rails.application.config.github[:password]
+    url      = "#{username}:#{password}@#{push_lessons_url}"
+    params   = HOOK_PARAMS.clone
+    params[:config].merge! url: url
     params
   end
 

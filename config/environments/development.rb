@@ -56,9 +56,6 @@ Genie::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
-  # GitHub's public IPs
-  config.github[:ips] = %w[127.0.0.1]
-
   config.faye   = { url: "http://#{HOST}:3100/socket" }
 
   # Output paths for Lamp.

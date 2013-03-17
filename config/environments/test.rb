@@ -36,7 +36,6 @@ Genie::Application.configure do
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
 
-  config.github[:ips] = %w[127.0.0.1]
   config.faye   = { url: 'http://localhost:3100/socket' }
 
   # Output paths for Lamp.

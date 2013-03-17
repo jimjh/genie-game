@@ -55,6 +55,17 @@ describe LessonObserver do
       lesson.save!
     end
 
+    it 'deletes the files if a rollback was issued' do
+      lamp_client.expects(:remove).once
+        .with(regexp_matches(%r[#{lesson.name.parameterize}$]),
+              regexp_matches(%r[\/lessons\/\d+\/gone$]))
+        .returns(true)
+      Lesson.transaction do
+        lesson.save!
+        raise ActiveRecord::Rollback, 'to force a rollback'
+      end
+    end
+
     it 'sets status to `failed` if the lamp RPC threw an exception' do
       lamp_client.expects(:create).once.raises(Lamp::RPCError)
       lesson.save!
