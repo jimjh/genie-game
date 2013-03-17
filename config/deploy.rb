@@ -17,12 +17,14 @@ set :use_sudo,   false
 set :rvm_ruby_string, 'ruby-1.9.3-p362'
 set :rvm_type,        :system
 
+set :keep_releases, 5
+
 role :web, Genie::SharedConstants::HOST          # Your HTTP server, Apache/etc
 role :app, Genie::SharedConstants::HOST          # This may be the same as your `Web` server
 role :db,  Genie::SharedConstants::HOST, primary: true # This is where Rails migrations will run
 
-after 'deploy:restart',  'deploy:cleanup'
-after 'deploy:update',   'deploy:migrate'
+after 'deploy:restart',       'deploy:cleanup'
+after 'deploy:update_code',   'deploy:migrate'
 
 before 'deploy:assets:precompile', 'deploy:secrets'
 after  'deploy:assets:precompile', 'deploy:clean_expired' # for turbo-sprockets
@@ -41,6 +43,6 @@ namespace :deploy do
     run "ln -fs -- #{shared_path}/config/locals.d #{release_path}/config/environments"
   end
   task :clean_expired do
-    run "cd #{release_path}; bundle exec rake assets:clean_expired"
+    run "cd #{release_path}; bundle exec RAILS_ENV=production RAILS_GROUPS=assets rake assets:clean_expired"
   end
 end

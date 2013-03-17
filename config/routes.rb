@@ -10,9 +10,9 @@ Genie::Application.routes.draw do
   resources :lessons, only: [:create, :destroy] do
     post :push, on: :collection
     post :ready, on: :member, # Lamp Hook
-      constraints: lambda { |r| Rails.configuration.lamp[:ips].include? r.remote_ip }
+      constraints: lambda { |r| r.local? }
     post :gone,  on: :member, # Lamp Hook
-      constraints: lambda { |r| Rails.configuration.lamp[:ips].include? r.remote_ip }
+      constraints: lambda { |r| r.local? }
   end
 
   # Settings Controller ------------------------------------------------------
