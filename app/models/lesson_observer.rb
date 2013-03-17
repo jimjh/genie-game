@@ -128,11 +128,10 @@ class LessonObserver < ActiveRecord::Observer
   # Lazily adds {#push_lessons_url} to {HOOK_PARAMS}.
   # @return [Hash] parameters suitable for +github_api+.
   def hook_params
-    username = Rails.application.config.github[:username]
+    user     = Rails.application.config.github[:username]
     password = Rails.application.config.github[:password]
-    url      = "#{username}:#{password}@#{push_lessons_url}"
     params   = HOOK_PARAMS.clone
-    params[:config].merge! url: url
+    params[:config].merge! url: push_lessons_url(user: user, password: password)
     params
   end
 
