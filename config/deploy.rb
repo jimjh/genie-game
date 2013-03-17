@@ -25,6 +25,7 @@ after 'deploy:restart',  'deploy:cleanup'
 after 'deploy:update',   'deploy:migrate'
 
 before 'deploy:assets:precompile', 'deploy:secrets'
+after  'deploy:assets:precompile', 'deploy:clean_expired' # for turbo-sprockets
 
 # If you are using Passenger mod_rails uncomment this:
 namespace :deploy do
@@ -38,5 +39,8 @@ namespace :deploy do
   end
   task :secrets do
     run "ln -fs -- #{shared_path}/config/locals.d #{release_path}/config/environments"
+  end
+  task :clean_expired do
+    run "cd #{current_path}; bundle exec rake assets:clean_expired"
   end
 end

@@ -13,6 +13,7 @@ group :assets do
   gem 'compass-rails',    '~> 1.0.3'
   gem 'zurb-foundation',  '~> 4.0.8'
   gem 'uglifier',         '>= 1.0.3'
+  gem 'turbo-sprockets-rails3'
 end
 
 group :test do
