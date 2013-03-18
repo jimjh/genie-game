@@ -5,6 +5,7 @@ Genie::Application.configure do
 
   # Used to construct a web hook for GitHub
   HOST = Genie::SharedConstants::HOST
+  IP   = Genie::SharedConstants::IP
   Rails.application.routes.default_url_options[:host] = HOST
 
   # Code is not reloaded between requests
@@ -76,7 +77,7 @@ Genie::Application.configure do
 
   # Configuration for Lamp
   config.lamp = {
-    ips:           %w(127.0.0.1 0.0.0.0),
+    ips:           %W[127.0.0.1 0.0.0.0 #{IP}],
     client: {
       'host' => 'localhost',
       'port' => 3300

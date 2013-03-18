@@ -23,11 +23,11 @@ role :web, Genie::SharedConstants::HOST          # Your HTTP server, Apache/etc
 role :app, Genie::SharedConstants::HOST          # This may be the same as your `Web` server
 role :db,  Genie::SharedConstants::HOST, primary: true # This is where Rails migrations will run
 
-after 'deploy:restart',       'deploy:cleanup'
-after 'deploy:update_code',   'deploy:migrate'
+before 'deploy:restart',   'deploy:migrate'
+after  'deploy:restart',   'deploy:cleanup'
 
 before 'deploy:assets:precompile', 'deploy:secrets'
-after  'deploy:assets:precompile', 'deploy:clean_expired' # for turbo-sprockets
+# after  'deploy:assets:precompile', 'deploy:clean_expired' # for turbo-sprockets
 
 # If you are using Passenger mod_rails uncomment this:
 namespace :deploy do
@@ -43,6 +43,6 @@ namespace :deploy do
     run "ln -fs -- #{shared_path}/config/locals.d #{release_path}/config/environments"
   end
   task :clean_expired do
-    run "cd #{release_path}; bundle exec RAILS_ENV=production RAILS_GROUPS=assets rake assets:clean_expired"
+    run "cd #{release_path}; bundle exec rake RAILS_ENV=production RAILS_GROUPS=assets assets:clean_expired"
   end
 end
