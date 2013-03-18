@@ -47,10 +47,9 @@ class LessonsController < ApplicationController
   # Webhook that is registered with GitHub.
   # POST /lessons/push
   def push
-    payload = JSON.parse params[:payload]
     auth    = Authorization.find_by_provider_and_nickname! 'github',
-      payload['repository']['owner']['name']
-    lesson = Lesson.pushed auth.user.id, payload['repository']['name']
+      params[:repository][:owner][:name]
+    lesson = Lesson.pushed auth.user.id, params[:repository][:name]
     respond_with lesson
   end
 
