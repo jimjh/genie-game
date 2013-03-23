@@ -12,7 +12,7 @@
         %li.has-dropdown
           %a{href: '#'}= current_user.name
           %ul.dropdown
-            %li= link_to 'Settings', settings_path
+            %li= link_to 'Profile', settings_path
             %li.divider
             %li= link_to 'Sign Out →', destroy_session_path, method: :delete
       - else

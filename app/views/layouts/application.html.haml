@@ -31,6 +31,9 @@
   .row
     .large-12.columns
       = render partial: 'layouts/flash', locals: { flash: flash }
+
+  .row
+    .large-12.columns
       = content_for?(:content) ? yield(:content) : yield
 
   -# JAVASCRIPT

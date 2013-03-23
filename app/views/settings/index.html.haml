@@ -1,4 +1,3 @@
-- class_for = {'publishing' => 'disabled', 'published' => 'disabled', 'failed' => 'alert disabled'}
 .row
   .large-12.columns
     = link_to 'Sync', url_for(sync: true), class: 'button secondary'
@@ -9,7 +8,7 @@
             %td= repo.full_name
             %td
               - status = @lessons[repo.clone_url] || 'publish'
-              - button_class = class_for[status] || ''
+              - button_class = class_for(status) || ''
               %form.publisher{action: lessons_path, method: :post, 'data-remote' => true}
                 %input{type: 'hidden', name: 'lesson[url]', value: repo.clone_url}
                 %input{type: 'hidden', name: 'lesson[name]', value: repo.name}
