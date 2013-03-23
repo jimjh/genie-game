@@ -27,6 +27,8 @@ Capistrano deploys using `passenger`. It's setup to use passwordless login using
 ## NGINX
 We are using a Rails-Passenger-Nginx setup. Nginx is started using `start-stop-daemon`, which does PID management for us. The main process runs as the `root` user, but worker processes are launched under `www-data`. All of the configuration files are available at `/opt/nginx/conf`.
 
+I updated `/opt/nginx/conf/nginx.conf` and `/opt/nginx/conf/mime.types`.
+
 To check on the status of all monitored services, use
 
 ```sh
