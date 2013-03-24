@@ -1,7 +1,7 @@
 class HomeController < ApplicationController
 
   def index
-    @lessons = Lesson.all
+    @lessons = Lesson.published
   end
 
 end

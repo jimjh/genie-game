@@ -58,10 +58,11 @@ class LessonsController < ApplicationController
   def ready
     if '200' == params['status']
       payload = JSON.parse params[:payload]
-      lesson = Lesson.published params[:id],
-        payload['compiled_path'], payload['solution_path']
+      lesson  = Lesson.find_by_id params[:id]
+      lesson.published payload['compiled_path'], payload['solution_path']
     else
-      lesson = Lesson.failed params[:id]
+      lesson = Lesson.find_by_id params[:id]
+      lesson.failed
     end
     respond_with lesson
   end

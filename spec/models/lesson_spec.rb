@@ -52,18 +52,14 @@ describe Lesson do
 
   it { should have_a_valid_factory }
 
-  context 'creating a lesson' do
+  context 'created with default values' do
 
     before(:each) { @lesson = FactoryGirl.create(:lesson, name: nil) }
     after(:each)  { @lesson.destroy }
+    subject { @lesson }
 
-    it 'has a default value of `publishing` for status' do
-      @lesson.status.should eq 'publishing'
-    end
-
-    it 'defaults lesson name to basename of URL' do
-      @lesson.name.should eq File.basename @lesson.url, '.git'
-    end
+    its(:status) { should eq 'publishing' }
+    its(:name)   { should eq File.basename @lesson.url, '.git' }
 
   end
 
@@ -87,6 +83,7 @@ describe Lesson do
 
     before(:each) { @lesson = FactoryGirl.create :lesson }
     after(:each)  { @lesson.destroy }
+    subject       { @lesson }
 
     describe '#path' do
       it 'returns a clean path' do
@@ -109,36 +106,23 @@ describe Lesson do
       let(:sp) { SecureRandom.uuid }
 
       before :each do
-        @published = Lesson.published(@lesson.id, cp, sp)
+        Lesson.find_by_id(@lesson.id).published(cp, sp)
         @lesson.reload
       end
 
-      it 'returns a lesson' do
-        @published.should be_kind_of(Lesson)
-      end
-
-      it 'updates the compiled path' do
-        @lesson.compiled_path.should eq cp
-      end
-
-      it 'updates the solution path' do
-        @lesson.compiled_path.should eq cp
-      end
-
-      it 'sets status to `published`' do
-        @lesson.status.should eq 'published'
-      end
+      subject { @lesson}
+      its(:compiled_path) { should eq cp }
+      its(:solution_path) { should eq sp }
+      its(:status) { should eq 'published' }
 
     end
 
     describe '#failed' do
-
-      it 'sets the status to failed' do
+      before :each do
         @lesson.failed
         @lesson.reload
-        @lesson.status.should eq 'failed'
       end
-
+      its(:status) { should eq 'failed' }
     end
 
     describe '#pushed' do
@@ -156,6 +140,20 @@ describe Lesson do
 
     end
 
+  end
+
+end
+
+describe Lesson, '.published' do
+
+  it 'includes published lessons' do
+    lesson = FactoryGirl.create :lesson, status: 'published'
+    Lesson.published.should include(lesson)
+  end
+
+  it 'excludes non-published lessons' do
+    lesson = FactoryGirl.create :lesson
+    Lesson.published.should_not include(lesson)
   end
 
 end

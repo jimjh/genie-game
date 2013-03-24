@@ -41,6 +41,9 @@ class Lesson < ActiveRecord::Base
   validate                :user_must_exist
   validate                :url_must_be_valid
 
+  # scopes -------------------------------------------------------------------
+  scope :published, where(status: 'published')
+
   # @return [Pathname] path that is suitable for use as lesson path
   def path
     Pathname.new(user.slug) + self.slug
@@ -64,22 +67,6 @@ class Lesson < ActiveRecord::Base
     self.status = 'publishing'
     save!
     notify_observers :after_push
-  end
-
-  # Sets the status of the referenced lesson to +failed+.
-  # @return [LEsson] lesson that has the given ID
-  def self.failed(id)
-    lesson = Lesson.find_by_id id
-    lesson.failed
-    lesson
-  end
-
-  # Updates the compiled and solution paths for the referenced lesson.
-  # @return [Lesson] lesson that has the given ID
-  def self.published(id, compiled_path, solution_path)
-    lesson = Lesson.find_by_id id
-    lesson.published compiled_path, solution_path
-    lesson
   end
 
   # Updates the referenced lesson and triggers callbacks to recompile lesson.
