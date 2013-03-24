@@ -3,11 +3,11 @@ module SettingsHelper
   CLASS_STATUS = {
     'publishing' => 'disabled',
     'published' => 'disabled',
-    'failed' => 'alert disabled'
+    'failed' => 'alert'
   }
 
   def status_class(status)
-    CLASS_STATUS[status]
+    CLASS_STATUS[status] || ''
   end
 
   def active_class(path)
