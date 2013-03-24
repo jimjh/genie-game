@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe SettingsHelper do
 
-  describe '#class_for' do
+  describe '#status_class' do
     it 'returns a string' do
-      helper.class_for('failed').should be_a String
+      helper.status_class('failed').should be_a String
     end
   end
 

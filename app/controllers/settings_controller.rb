@@ -6,8 +6,11 @@ class SettingsController < ApplicationController
   # TODO:   [github] make this work with private repos.
   # TODO:   [github] make this work with organization repos.
 
-  def index
-    @repos = repositories
+  def profile
+  end
+
+  def repositories
+    @repos = github_repos
     lessons, @lessons = current_user.lessons.select([:url, :status]), {}
     lessons.each { |lesson| @lessons[lesson.url] = lesson.status }
   end
@@ -15,7 +18,7 @@ class SettingsController < ApplicationController
   private
 
   # Get list of repositories from GitHub and cache it.
-  def repositories
+  def github_repos
     page = params[:page] || 1
     key  = "github_repositories_for_user_#{current_user.id}_on_page_#{page}"
     opts = { expires_in: 2.days, force: params[:sync].present? }

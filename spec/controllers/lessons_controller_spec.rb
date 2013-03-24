@@ -17,14 +17,14 @@ describe LessonsController do
       expect { get :show, user: '', lesson: @fake.lesson }.to \
         raise_error(ActiveRecord::RecordNotFound)
       expect { get :show, lesson: @fake.lesson }.to \
-        raise_error(ActionController::RoutingError)
+        raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'requires lesson' do
       expect { get :show, user: @fake.user, lesson: '' }.to \
         raise_error(ActiveRecord::RecordNotFound)
       expect { get :show, user: @fake.user}.to \
-        raise_error(ActionController::RoutingError)
+        raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'protects against traversal attacks in path' do

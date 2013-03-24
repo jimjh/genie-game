@@ -6,8 +6,12 @@ module SettingsHelper
     'failed' => 'alert disabled'
   }
 
-  def class_for(status)
+  def status_class(status)
     CLASS_STATUS[status]
+  end
+
+  def active_class(path)
+    current_page?(path) ? 'active' : ''
   end
 
 end

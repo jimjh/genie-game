@@ -1,0 +1,14 @@
+- content_for :content do
+  .row
+    .large-9.push-3.columns
+      = content_for?(:settings_content) ? yield(:settings_content) : yield
+    .large-3.pull-9.columns
+      .section-container.vertical-nav{'data-section' => 'vertical-nav'}
+        %section.section{class: active_class(settings_repositories_path)}
+          %p.title
+            = link_to 'Repositories', settings_repositories_path
+        %section.section{class: active_class(settings_profile_path)}
+          %p.title
+            = link_to 'Profile', settings_profile_path
+
+= render template: 'layouts/application'

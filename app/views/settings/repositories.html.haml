@@ -1,0 +1,29 @@
+= link_to 'Sync', url_for(sync: true), class: 'button secondary'
+%table
+  %tbody
+    - @repos.each do |repo|
+      %tr
+        %td= repo.full_name
+        %td
+          - status = @lessons[repo.clone_url] || 'publish'
+          - button_class = status_class(status) || ''
+          %form.publisher{action: lessons_path, method: :post, 'data-remote' => true}
+            %input{type: 'hidden', name: 'lesson[url]', value: repo.clone_url}
+            %input{type: 'hidden', name: 'lesson[name]', value: repo.name}
+            %input.button.small{type: 'submit', value: status.titleize,
+              class: button_class}
+
+- content_for :javascript do
+  :javascript
+    $(function() {
+      $('.publisher')
+        .bind('ajax:beforeSend', function() {
+          var button = $(this).find('input[type="submit"]');
+          button.val('Publishing');
+          button.addClass('disabled');
+          $.rails.disableElement(button);
+        });
+      $.rails.disableElement($('.publisher input.disabled[type="submit"]'));
+    });
+
+- # TODO improve error handling (lamp, github, active record, faye)

@@ -17,7 +17,9 @@ Genie::Application.routes.draw do
 
   # Settings Controller ------------------------------------------------------
   scope path: 'settings', controller: :settings, as: 'settings' do
-    match '/' => :index
+    match '/'             => redirect('/settings/profile')
+    match '/profile'      => :profile,      :as => 'profile'
+    match '/repositories' => :repositories, :as => 'repositories'
   end
 
   # Home
