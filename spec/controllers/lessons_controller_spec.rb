@@ -81,9 +81,28 @@ describe LessonsController do
   end
 
   describe 'POST #push' do
+
+    before(:each) { @lesson = FactoryGirl.create :lesson, status: 'published' }
+    after(:each)  { @lesson.destroy }
+
+    let(:user) { @lesson.user }
+    let(:auth) { @lesson.user.authorizations.first }
+
     it 're-compiles the lesson'
-    it 'sets status to publishing'
     it 'handles errors'
+
+    it 'sets status to publishing' do
+      github_http_login
+      post :push, repository: { owner: { name: auth.nickname }, name: @lesson.name }
+      @lesson.reload
+      @lesson.status.should eq 'publishing'
+    end
+
+    it 'requires basic http auth' do
+      post :push, repository: { owner: { name: auth.nickname }, name: @lesson.name }
+      response.status.should eq 401
+    end
+
   end
 
   describe 'POST #ready' do

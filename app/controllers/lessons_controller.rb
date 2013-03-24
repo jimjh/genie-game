@@ -49,7 +49,9 @@ class LessonsController < ApplicationController
   def push
     auth    = Authorization.find_by_provider_and_nickname! 'github',
       params[:repository][:owner][:name]
-    lesson = Lesson.pushed auth.user.id, params[:repository][:name]
+    lesson  = Lesson.find_by_user_id_and_name! auth.user.id,
+      params[:repository][:name]
+    lesson.pushed
     respond_with lesson
   end
 
@@ -58,10 +60,10 @@ class LessonsController < ApplicationController
   def ready
     if '200' == params['status']
       payload = JSON.parse params[:payload]
-      lesson  = Lesson.find_by_id params[:id]
+      lesson  = Lesson.find_by_id! params[:id]
       lesson.published payload['compiled_path'], payload['solution_path']
     else
-      lesson = Lesson.find_by_id params[:id]
+      lesson = Lesson.find_by_id! params[:id]
       lesson.failed
     end
     respond_with lesson
@@ -87,7 +89,7 @@ class LessonsController < ApplicationController
 
   def authenticate_github!
     authenticate_or_request_with_http_basic do |username, password|
-      username == 'github' &&
+      username == Rails.application.config.github[:username] &&
         password == Rails.application.config.github[:password]
     end
   end

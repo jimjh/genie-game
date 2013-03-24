@@ -51,6 +51,7 @@ describe Lesson do
   it { should ensure_inclusion_of(:status).in_array(Lesson::STATUSES) }
 
   it { should have_a_valid_factory }
+  it { should validate_existence_of :user }
 
   context 'created with default values' do
 
@@ -61,22 +62,6 @@ describe Lesson do
     its(:status) { should eq 'publishing' }
     its(:name)   { should eq File.basename @lesson.url, '.git' }
 
-  end
-
-  context 'given a non-existent user' do
-    it 'does not allow the lesson to be created' do
-      ids = User.pluck :id
-      id = Random.rand(1000) while ids.include?(id)
-      FactoryGirl.build(:lesson, user_id: id).should_not be_valid
-    end
-  end
-
-  context 'given an existing user' do
-    before(:each) { @user = FactoryGirl.create :user }
-    after(:each)  { @user.destroy }
-    it 'allows the lesson to be created' do
-      FactoryGirl.build(:lesson, user_id: @user.id).should be_valid
-    end
   end
 
   context 'given an existing lesson' do
@@ -106,11 +91,10 @@ describe Lesson do
       let(:sp) { SecureRandom.uuid }
 
       before :each do
-        Lesson.find_by_id(@lesson.id).published(cp, sp)
+        @lesson.published(cp, sp)
         @lesson.reload
       end
 
-      subject { @lesson}
       its(:compiled_path) { should eq cp }
       its(:solution_path) { should eq sp }
       its(:status) { should eq 'published' }
@@ -126,18 +110,11 @@ describe Lesson do
     end
 
     describe '#pushed' do
-
-      let(:push) { Lesson.pushed @lesson.user.id, @lesson.name }
-
-      it 'returns a lesson' do
-        push.should be_kind_of Lesson
-      end
-
-      it 'sets the status to `publishing`' do
+      before :each do
+        @lesson.pushed
         @lesson.reload
-        @lesson.status.should eq 'publishing'
       end
-
+      its(:status) { should eq 'publishing' }
     end
 
   end

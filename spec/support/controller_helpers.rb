@@ -18,5 +18,12 @@ module Test
       rand
     end
 
+    def github_http_login
+      user = Rails.application.config.github[:username]
+      pw =   Rails.application.config.github[:password]
+      request.env['HTTP_AUTHORIZATION'] = \
+        ActionController::HttpAuthentication::Basic.encode_credentials(user,pw)
+    end
+
   end
 end

@@ -38,7 +38,7 @@ class Lesson < ActiveRecord::Base
   validates_presence_of   :name, :url, :user_id
   validates_uniqueness_of :name, scope: :user_id
   validates_inclusion_of  :status, in: STATUSES
-  validate                :user_must_exist
+  validates_existence_of  :user
   validate                :url_must_be_valid
 
   # scopes -------------------------------------------------------------------
@@ -69,21 +69,7 @@ class Lesson < ActiveRecord::Base
     notify_observers :after_push
   end
 
-  # Updates the referenced lesson and triggers callbacks to recompile lesson.
-  # @return [Lesson] lesson that belongs to +user_id+ and has +name+
-  def self.pushed(user_id, name)
-    lesson  = Lesson.find_by_user_id_and_name! user_id, name
-    lesson.pushed
-    lesson
-  end
-
   private
-
-  def user_must_exist
-    if user_id.present? and not User.exists?(user_id)
-      errors.add :user, 'is not a registerd user'
-    end
-  end
 
   # Checks if the given url is a valid git URL. Local paths with +file://+ are
   # not supported.

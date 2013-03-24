@@ -16,15 +16,7 @@ class Authorization < ActiveRecord::Base
   belongs_to :user
 
   # validations --------------------------------------------------------------
-  validates_presence_of :provider, :uid, :user_id, :token, :nickname
-  validate              :user_must_exist
-
-  private
-
-  def user_must_exist
-    if user_id.present? and not User.exists?(user_id)
-      errors.add :user, 'is not a registerd user'
-    end
-  end
+  validates_presence_of  :provider, :uid, :user_id, :token, :nickname
+  validates_existence_of :user
 
 end
