@@ -25,6 +25,7 @@ describe LessonObserver do
 
   after(:each) do
     ActiveRecord::Observer.disable_observers
+    lesson.user.destroy
     lesson.destroy if lesson.persisted?
   end
 
@@ -102,13 +103,13 @@ describe LessonObserver do
     it 'does not use github_client' do
       github_hooks.expects(:create).never
       github_hooks.expects(:delete).never
-      lesson.published '', ''
+      lesson.published compiled_path: '', solution_path: ''
     end
 
     it 'does not use lamp_client' do
       lamp_client.expects(:create).never
       lamp_client.expects(:remove).never
-      lesson.published '', ''
+      lesson.published compiled_path: '', solution_path: ''
     end
 
   end

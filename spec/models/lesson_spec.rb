@@ -91,7 +91,7 @@ describe Lesson do
       let(:sp) { SecureRandom.uuid }
 
       before :each do
-        @lesson.published(cp, sp)
+        @lesson.published(compiled_path: cp, solution_path: sp)
         @lesson.reload
       end
 
