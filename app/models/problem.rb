@@ -12,6 +12,7 @@ class Problem < ActiveRecord::Base
 
   # relationships ------------------------------------------------------------
   belongs_to :lesson
+  has_many   :answers, dependent: :destroy
 
   # attributes ---------------------------------------------------------------
   attr_accessible :solution, :digest, :position, :active
