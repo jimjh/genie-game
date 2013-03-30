@@ -24,7 +24,7 @@ class SettingsController < ApplicationController
     opts = { expires_in: 2.days, force: params[:sync].present? }
     Rails.cache.fetch key, opts do
       auth = current_user.authorizations.find_by_provider('github') || not_found
-      Github.new.repos.list(user: auth.nickname, page: page)
+      Github.repos.list(user: auth.nickname).page(page).body
     end
   end
 
