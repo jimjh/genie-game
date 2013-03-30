@@ -16,7 +16,6 @@
 #   - +failed+
 #
 # TODO faye
-# TODO controller
 class Lesson < ActiveRecord::Base
   extend FriendlyId
   include GitConcern
@@ -33,6 +32,7 @@ class Lesson < ActiveRecord::Base
 
   # relationships ------------------------------------------------------------
   belongs_to :user
+  has_many   :problems, order: 'digest', dependent: :destroy, autosave: true, extend: UpdateProblemsExtension
 
   # validations --------------------------------------------------------------
   validates_presence_of   :name, :url, :user_id
@@ -55,10 +55,11 @@ class Lesson < ActiveRecord::Base
     notify_observers :after_fail
   end
 
-  def published(c_path, s_path)
-    self.compiled_path = c_path
-    self.solution_path = s_path
-    self.status = 'published'
+  def published(opts)
+    self.compiled_path = opts[:compiled_path]
+    self.solution_path = opts[:solution_path]
+    self.status        = 'published'
+    self.problems.update_or_initialize(opts[:problems] || [])
     save!
     notify_observers :after_publish
   end

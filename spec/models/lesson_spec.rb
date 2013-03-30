@@ -23,6 +23,7 @@ describe Lesson do
   end
 
   it { should belong_to(:user) }
+  it { should have_many(:problems).order('digest').dependent(:destroy) }
 
   %w(name url user_id).each do |s|
     it { should validate_presence_of(s.to_sym) }
@@ -91,7 +92,7 @@ describe Lesson do
       let(:sp) { SecureRandom.uuid }
 
       before :each do
-        @lesson.published(cp, sp)
+        @lesson.published(compiled_path: cp, solution_path: sp)
         @lesson.reload
       end
 
@@ -115,6 +116,68 @@ describe Lesson do
         @lesson.reload
       end
       its(:status) { should eq 'publishing' }
+    end
+
+    context 'with some existing problems' do
+
+      # create 6 old problems
+      def init_old_problems
+        @old_problems = []
+        6.times do
+          @old_problems << FactoryGirl.create(:problem, lesson: @lesson, position: @old_problems.length)
+        end
+      end
+
+      # build 5 new problems
+      def init_new_problems
+        @new_problems = []
+        5.times do
+          @new_problems << FactoryGirl.build(:problem_digest)
+        end
+      end
+
+      before :each do
+        init_old_problems
+        init_new_problems
+        # reuse the second and sixth problem
+        @new_problems[3] = { digest: @old_problems[1].digest }
+        @new_problems   << { digest: @old_problems[5].digest }
+      end
+
+      after(:each) { @lesson.problems.map(&:destroy) }
+
+      let(:old_problems) { @old_problems.map(&:reload); @old_problems }
+      let(:new_problems) { @new_problems }
+
+      describe '#problems', '#update_or_initialize' do
+
+        before :each do
+          @lesson.problems.update_or_initialize new_problems
+          @lesson.save!
+        end
+
+        it 'updates position of existing problems' do
+          old_problems[1].position.should be 3
+          old_problems[5].position.should be 5
+        end
+
+        it 'creates new problems' do
+          new_problems.each_with_index do |p, i|
+            Problem.should be_exists(digest: p[:digest])
+          end
+        end
+
+        it 'deactivates missing problems' do
+          old_problems.each_with_index do |p, i|
+            case i
+            when 1, 5 then p.should be_active
+            else p.should_not be_active
+            end
+          end
+        end
+
+      end
+
     end
 
   end
