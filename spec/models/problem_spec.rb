@@ -10,11 +10,11 @@ describe Problem do
   it { should validate_presence_of :position     }
   it { should validate_numericality_of :position }
 
-  %w[lesson answer digest position active].each do |attr|
+  %w[lesson solution digest position active].each do |attr|
     it { should respond_to attr.to_sym }
   end
 
-  %w[answer digest position active].each do |attr|
+  %w[solution digest position active].each do |attr|
     it { should allow_mass_assignment_of attr.to_sym }
   end
 

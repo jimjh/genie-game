@@ -59,7 +59,7 @@ class Lesson < ActiveRecord::Base
     self.compiled_path = opts[:compiled_path]
     self.solution_path = opts[:solution_path]
     self.status        = 'published'
-    # self.problems.update_or_initialize opts[:problems]
+    self.problems.update_or_initialize(opts[:problems] || [])
     save!
     notify_observers :after_publish
   end

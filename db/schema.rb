@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130330160229) do
+ActiveRecord::Schema.define(:version => 20130330205035) do
 
   create_table "authorizations", :force => true do |t|
     t.string   "provider"
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(:version => 20130330160229) do
     t.binary   "digest",     :limit => 255,                   :null => false
     t.integer  "position",                                    :null => false
     t.integer  "lesson_id",                                   :null => false
-    t.binary   "answer"
+    t.binary   "solution"
     t.boolean  "active",                    :default => true
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
