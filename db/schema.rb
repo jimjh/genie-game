@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130314034217) do
+ActiveRecord::Schema.define(:version => 20130330205035) do
 
   create_table "authorizations", :force => true do |t|
     t.string   "provider"
@@ -43,6 +43,20 @@ ActiveRecord::Schema.define(:version => 20130314034217) do
 
   add_index "lessons", ["slug"], :name => "index_lessons_on_slug", :unique => true
   add_index "lessons", ["user_id"], :name => "index_lessons_on_user_id"
+
+  create_table "problems", :force => true do |t|
+    t.binary   "digest",     :limit => 255,                   :null => false
+    t.integer  "position",                                    :null => false
+    t.integer  "lesson_id",                                   :null => false
+    t.binary   "solution"
+    t.boolean  "active",                    :default => true
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
+  end
+
+  add_index "problems", ["digest"], :name => "index_questions_on_digest"
+  add_index "problems", ["lesson_id"], :name => "index_questions_on_lesson_id"
+  add_index "problems", ["position"], :name => "index_questions_on_position"
 
   create_table "users", :force => true do |t|
     t.datetime "remember_created_at"
