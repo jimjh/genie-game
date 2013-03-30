@@ -23,6 +23,7 @@ describe Lesson do
   end
 
   it { should belong_to(:user) }
+  it { should have_many(:problems).order('position').dependent(:destroy) }
 
   %w(name url user_id).each do |s|
     it { should validate_presence_of(s.to_sym) }
@@ -115,6 +116,14 @@ describe Lesson do
         @lesson.reload
       end
       its(:status) { should eq 'publishing' }
+    end
+
+    context 'with some existing problems' do
+
+      describe '#problems#update_or_initialize' do
+        it 'does the right thing'
+      end
+
     end
 
   end

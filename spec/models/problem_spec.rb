@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Question do
+describe Problem do
 
   it { should belong_to :lesson    }
   it { should have_a_valid_factory }

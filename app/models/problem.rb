@@ -1,14 +1,14 @@
-# == Question
+# == Problem
 # - +id+ is the usual primary key
-# - +position+ is the position of this question in the lesson. This is used by
+# - +position+ is the position of this problem in the lesson. This is used by
 #   +verify+ to submit answers
-# - +digest+ is the SHA256 digest of the question text (in YAML)
+# - +digest+ is the SHA256 digest of the problem text (in YAML)
 #
-# On push, if the digest has changed, we create a new question. Otherwise, the
-# existing questions is updated. Old questions that no longer exist are
+# On push, if the digest has changed, we create a new problem. Otherwise, the
+# existing problem is updated. Old problems that no longer exist are
 # deactivated. As such, it's possible for users to have answers pointing to an
-# old question.
-class Question < ActiveRecord::Base
+# old problem.
+class Problem < ActiveRecord::Base
 
   # relationships ------------------------------------------------------------
   belongs_to :lesson

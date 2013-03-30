@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130324223019) do
+ActiveRecord::Schema.define(:version => 20130330152641) do
 
   create_table "authorizations", :force => true do |t|
     t.string   "provider"
@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(:version => 20130324223019) do
   add_index "lessons", ["slug"], :name => "index_lessons_on_slug", :unique => true
   add_index "lessons", ["user_id"], :name => "index_lessons_on_user_id"
 
-  create_table "questions", :force => true do |t|
+  create_table "problems", :force => true do |t|
     t.string   "digest",                       :null => false
     t.integer  "position",                     :null => false
     t.integer  "lesson_id",                    :null => false
@@ -54,9 +54,9 @@ ActiveRecord::Schema.define(:version => 20130324223019) do
     t.datetime "updated_at",                   :null => false
   end
 
-  add_index "questions", ["digest"], :name => "index_questions_on_digest"
-  add_index "questions", ["lesson_id"], :name => "index_questions_on_lesson_id"
-  add_index "questions", ["position"], :name => "index_questions_on_position"
+  add_index "problems", ["digest"], :name => "index_questions_on_digest"
+  add_index "problems", ["lesson_id"], :name => "index_questions_on_lesson_id"
+  add_index "problems", ["position"], :name => "index_questions_on_position"
 
   create_table "users", :force => true do |t|
     t.datetime "remember_created_at"

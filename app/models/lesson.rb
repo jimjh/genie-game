@@ -32,6 +32,32 @@ class Lesson < ActiveRecord::Base
 
   # relationships ------------------------------------------------------------
   belongs_to :user
+  has_many   :problems, order: 'position', dependent: :destroy do
+    def update_or_initialize(problems = [])
+      problems.map!.with_index { |p, i| p[:position] = i; p }
+      new_problems = problems.sort_by! { |p| p[:digest] }.each
+      old_problems = proxy_association.target.all(order: 'digest').each
+      begin
+        new, old = new_problems.next, old_problems.next
+        loop do
+          case
+          when new < old
+            proxy_association.target.build_problem new
+            new = new_problems.next
+          when new > old
+            old.active = false
+            old = old_problems.next
+          else
+            old.position = new.position
+            new, old = new_problems.next, old_problems.next
+          end
+        end
+      rescue StopIteration
+        new_problems.each { |p| proxy_association.target.build_problem p }
+        old_problems.each { |p| p.active = false }
+      end
+    end
+  end
 
   # validations --------------------------------------------------------------
   validates_presence_of   :name, :url, :user_id
@@ -57,7 +83,8 @@ class Lesson < ActiveRecord::Base
   def published(opts)
     self.compiled_path = opts[:compiled_path]
     self.solution_path = opts[:solution_path]
-    self.status = 'published'
+    self.status        = 'published'
+    # self.problems.update_or_initialize opts[:problems]
     save!
     notify_observers :after_publish
   end
