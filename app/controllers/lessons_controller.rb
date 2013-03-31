@@ -8,7 +8,6 @@ class LessonsController < ApplicationController
   before_filter :authenticate_github!, only: [:push]
   respond_to    :json
 
-  SOLUTION_EXT  = '.sol'
   INDEX_FILE    = 'index.inc'
 
   # Renders a single lesson page and its static assets.
@@ -20,9 +19,7 @@ class LessonsController < ApplicationController
   #   here.
   def show
 
-    user   = User.find params[:user], select: 'id'
-    lesson = user.lessons.find params[:lesson], select: 'compiled_path'
-
+    lesson     = Lesson.select(:compiled_path).for_user(params[:user]).find(params[:lesson])
     lesson_dir = Pathname.new lesson.compiled_path
     path       = lesson_dir + (params[:path] || '')
 
@@ -77,12 +74,9 @@ class LessonsController < ApplicationController
   end
 
   def verify
-    user   = User.find params[:user], select: 'id'
-    lesson = user.lessons.find params[:lesson], select: 'solution_path'
-    solution  = params[:problem] + SOLUTION_EXT
-    path      = Pathname.new(lesson.solution_path) + solution
-    not_found unless path.file?
-    result    = File.open(path, 'rb') { |f| same? params[:answer], Marshal.restore(f) }
+    lesson   = Lesson.select('lessons.id').for_user(params[:user]).find(params[:lesson])
+    solution = lesson.solution_for params[:problem]
+    result   = same? params[:answer], Marshal.load(solution)
     render json: result
   end
 

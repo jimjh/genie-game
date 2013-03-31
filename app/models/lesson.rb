@@ -43,6 +43,7 @@ class Lesson < ActiveRecord::Base
 
   # scopes -------------------------------------------------------------------
   scope :published, where(status: 'published')
+  scope :for_user, lambda { |user| joins(:user).where('users.slug=?', user) }
 
   # @return [Pathname] path that is suitable for use as lesson path
   def path
@@ -68,6 +69,10 @@ class Lesson < ActiveRecord::Base
     self.status = 'publishing'
     save!
     notify_observers :after_push
+  end
+
+  def solution_for(position)
+    problems.select(:solution).find_by_position!(position).solution
   end
 
   private
