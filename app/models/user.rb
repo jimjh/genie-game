@@ -25,6 +25,7 @@ class User < ActiveRecord::Base
   # relationships ------------------------------------------------------------
   has_many :authorizations, dependent: :destroy
   has_many :lessons, dependent: :destroy
+  has_many :answers, dependent: :destroy
 
   # validations --------------------------------------------------------------
   validates_presence_of   :nickname

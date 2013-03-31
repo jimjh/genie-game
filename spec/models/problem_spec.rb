@@ -22,4 +22,18 @@ describe Problem do
     it { should_not allow_mass_assignment_of attr.to_sym }
   end
 
+  context 'given an existing problem' do
+
+    before(:each) do
+      @solution = Faker::Lorem.sentence
+      @problem  = FactoryGirl.create :problem, solution: Base64.urlsafe_encode64(@solution)
+    end
+    after(:each) { @problem.destroy }
+
+    it 'decodes the solution before create' do
+      @problem.solution.should eq @solution
+    end
+
+  end
+
 end
