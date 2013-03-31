@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:jimjh/genie-compiler.git
-  revision: 4af82645f311bd9e30f23266604cbb4c1b769463
+  revision: d6c45fa66327aa5629387af98b8c44d0fd0e7cc7
   branch: master
   specs:
     lamp (0.2)
@@ -13,7 +13,7 @@ GIT
 
 GIT
   remote: git@github.com:jimjh/genie-parser.git
-  revision: 702e24734213f9d83bf6eccf2dad44c4eb890025
+  revision: fd9ceb83be12edd3f0fafcd7145c3940bb926d2f
   branch: master
   specs:
     spirit (0.2)
