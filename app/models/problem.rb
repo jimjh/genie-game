@@ -22,4 +22,14 @@ class Problem < ActiveRecord::Base
   validates_presence_of  :digest, :position
   validates_numericality_of :position
 
+  # callbacks ----------------------------------------------------------------
+  before_create :decode_solution
+
+  private
+
+  def decode_solution
+    return unless solution.present?
+    self.solution = Base64.urlsafe_decode64 self.solution
+  end
+
 end
