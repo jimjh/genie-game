@@ -24,6 +24,7 @@ describe Lesson do
 
   it { should belong_to(:user) }
   it { should have_many(:problems).order('digest').dependent(:destroy) }
+  it { should have_many(:answers).through(:problems) }
 
   %w(name url user_id).each do |s|
     it { should validate_presence_of(s.to_sym) }

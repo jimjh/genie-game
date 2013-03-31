@@ -33,6 +33,7 @@ class Lesson < ActiveRecord::Base
   # relationships ------------------------------------------------------------
   belongs_to :user
   has_many   :problems, order: 'digest', dependent: :destroy, autosave: true, extend: UpdateProblemsExtension
+  has_many   :answers, through: :problems
 
   # validations --------------------------------------------------------------
   validates_presence_of   :name, :url, :user_id
@@ -72,6 +73,9 @@ class Lesson < ActiveRecord::Base
 
   def problem_at(position)
     problems.select([:id, :solution]).find_by_position!(position)
+  end
+
+  def answers_for(user)
   end
 
   private

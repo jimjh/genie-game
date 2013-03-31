@@ -29,7 +29,9 @@ class LessonsController < ApplicationController
 
     # html_safe iff it's at the root - everything else is dangerous static
     # asset
-    if path.parent == lesson_dir then @contents = File.read(path)
+    if path.parent == lesson_dir
+      @contents = File.read path
+      @answers  = lesson.answers_for current_user if user_signed_in?
     else send_file path, disposition: 'attachment' end
 
   end

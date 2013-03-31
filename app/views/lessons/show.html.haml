@@ -1,2 +1,7 @@
 %section{role: 'lesson'}
   = @contents.html_safe
+
+#answers{data: { preload: @answers.sort_by { |a| a.position }.to_json } }
+
+- content_for :javascript do
+  :javascript
