@@ -12,6 +12,7 @@ class Problem < ActiveRecord::Base
 
   # relationships ------------------------------------------------------------
   belongs_to :lesson
+  has_many   :answers, dependent: :destroy
 
   # attributes ---------------------------------------------------------------
   attr_accessible :solution, :digest, :position, :active
@@ -20,5 +21,15 @@ class Problem < ActiveRecord::Base
   validates_existence_of :lesson
   validates_presence_of  :digest, :position
   validates_numericality_of :position
+
+  # callbacks ----------------------------------------------------------------
+  before_create :decode_solution
+
+  private
+
+  def decode_solution
+    return unless solution.present?
+    self.solution = Base64.urlsafe_decode64 self.solution
+  end
 
 end

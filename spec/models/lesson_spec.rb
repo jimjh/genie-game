@@ -136,25 +136,31 @@ describe Lesson do
         end
       end
 
-      before :each do
-        init_old_problems
-        init_new_problems
-        # reuse the second and sixth problem
-        @new_problems[3] = { digest: @old_problems[1].digest }
-        @new_problems   << { digest: @old_problems[5].digest }
-      end
-
-      after(:each) { @lesson.problems.map(&:destroy) }
-
+      before(:each) { init_old_problems }
+      after(:each)  { @lesson.problems.map(&:destroy) }
       let(:old_problems) { @old_problems.map(&:reload); @old_problems }
-      let(:new_problems) { @new_problems }
+
+      describe '#problem_at' do
+        it 'returns the solution for the correct problem' do
+          @lesson.problem_at(0).solution.should eq old_problems.first.solution
+          @lesson.problem_at(old_problems.length - 1).solution.should eq old_problems.last.solution
+        end
+        it 'raises an error if the problem does not exist' do
+          expect { @lesson.problem_at(old_problems.length) }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+      end
 
       describe '#problems', '#update_or_initialize' do
 
         before :each do
+          init_new_problems
+          # reuse the second and sixth problem
+          @new_problems[3] = { digest: @old_problems[1].digest }
+          @new_problems   << { digest: @old_problems[5].digest }
           @lesson.problems.update_or_initialize new_problems
           @lesson.save!
         end
+        let(:new_problems) { @new_problems }
 
         it 'updates position of existing problems' do
           old_problems[1].position.should be 3
@@ -194,6 +200,29 @@ describe Lesson, '.published' do
   it 'excludes non-published lessons' do
     lesson = FactoryGirl.create :lesson
     Lesson.published.should_not include(lesson)
+  end
+
+end
+
+describe Lesson, '.for_user' do
+
+  context 'given 2 users' do
+
+    before :each do
+      @users = []
+      @users << FactoryGirl.create(:lesson).user
+      @users << FactoryGirl.create(:lesson).user
+      FactoryGirl.create(:lesson, user: @users.first)
+    end
+
+    after :each do
+      @users.map(&:destroy)
+    end
+
+    it 'returns all lessons for the correct user' do
+      Lesson.for_user(@users.first.slug).pluck(:id).sort.should eq @users.first.lessons.pluck(:id).sort
+    end
+
   end
 
 end
