@@ -140,13 +140,13 @@ describe Lesson do
       after(:each)  { @lesson.problems.map(&:destroy) }
       let(:old_problems) { @old_problems.map(&:reload); @old_problems }
 
-      describe '#solution_for' do
+      describe '#problem_at' do
         it 'returns the solution for the correct problem' do
-          @lesson.solution_for(0).should eq old_problems.first.solution
-          @lesson.solution_for(old_problems.length - 1).should eq old_problems.last.solution
+          @lesson.problem_at(0).solution.should eq old_problems.first.solution
+          @lesson.problem_at(old_problems.length - 1).solution.should eq old_problems.last.solution
         end
         it 'raises an error if the problem does not exist' do
-          expect { @lesson.solution_for(old_problems.length) }.to raise_error(ActiveRecord::RecordNotFound)
+          expect { @lesson.problem_at(old_problems.length) }.to raise_error(ActiveRecord::RecordNotFound)
         end
       end
 

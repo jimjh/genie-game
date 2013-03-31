@@ -74,9 +74,14 @@ class LessonsController < ApplicationController
   end
 
   def verify
-    lesson   = Lesson.select('lessons.id').for_user(params[:user]).find(params[:lesson])
-    solution = lesson.solution_for params[:problem]
-    result   = same? params[:answer], Marshal.load(solution)
+    lesson  = Lesson.select('lessons.id').for_user(params[:user]).find(params[:lesson])
+    problem = lesson.problem_at params[:problem]
+    if user_signed_in?
+      answer = problem.answers.build content: params[:answer]
+      answer.user = current_user
+      answer.save!
+    end
+    result = same? params[:answer], Marshal.load(problem.solution)
     render json: result
   end
 

@@ -16,4 +16,8 @@ describe Answer do
     it { should_not allow_mass_assignment_of attr.to_sym }
   end
 
+  it { should validate_presence_of :content }
+  it { should validate_existence_of :user }
+  it { should validate_existence_of :problem }
+
 end

@@ -71,8 +71,8 @@ class Lesson < ActiveRecord::Base
     notify_observers :after_push
   end
 
-  def solution_for(position)
-    problems.select(:solution).find_by_position!(position).solution
+  def problem_at(position)
+    problems.select([:id, :solution]).find_by_position!(position)
   end
 
   private
