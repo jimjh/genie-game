@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130330215807) do
+ActiveRecord::Schema.define(:version => 20130331182751) do
 
   create_table "answers", :force => true do |t|
     t.integer  "problem_id"
@@ -48,7 +48,6 @@ ActiveRecord::Schema.define(:version => 20130330215807) do
     t.string   "slug"
     t.string   "hook"
     t.string   "compiled_path"
-    t.string   "solution_path"
     t.string   "status",        :default => "publishing", :null => false
   end
 

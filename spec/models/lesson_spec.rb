@@ -17,7 +17,7 @@ describe Lesson do
   # update
   #   - tells faye
 
-  %w(name url path slug compiled_path solution_path status action)
+  %w(name url path slug compiled_path status action)
   .each do |s|
     it { should respond_to(s.to_sym) }
   end
@@ -33,7 +33,7 @@ describe Lesson do
     it { should allow_mass_assignment_of s.to_sym }
   end
 
-  %w(path slug compiled_path solution_path status action)
+  %w(path slug compiled_path status action)
   .each do |s|
     it { should_not allow_mass_assignment_of s.to_sym }
   end
@@ -92,12 +92,11 @@ describe Lesson do
       let(:sp) { SecureRandom.uuid }
 
       before :each do
-        @lesson.published(compiled_path: cp, solution_path: sp)
+        @lesson.published compiled_path: cp
         @lesson.reload
       end
 
       its(:compiled_path) { should eq cp }
-      its(:solution_path) { should eq sp }
       its(:status) { should eq 'published' }
 
     end
