@@ -17,7 +17,71 @@ describe Answer do
   end
 
   it { should validate_presence_of :content }
-  it { should validate_existence_of :user }
-  it { should validate_existence_of :problem }
+
+  context 'given an answer' do
+    subject { Answer.new content: 'x' }
+    it { should validate_existence_of :user }
+    it { should validate_existence_of :problem }
+  end
+
+end
+
+describe Answer, '.upsert' do
+
+  before(:each) { @first = FactoryGirl.create :answer }
+  after(:each)  { @first.destroy }
+
+  it 'has a first answer' do
+    @first.should_not be_nil
+    Answer.count.should be 1
+  end
+
+  context 'with a different problem but same user' do
+
+    before(:each) do
+      second  = FactoryGirl.build :answer, user: @first.user
+      @second = Answer.upsert second.user.id, second.problem.id,
+        second.attributes.slice('content')
+      @second.save!
+    end
+
+    after(:each)  { @second.destroy if @second.persisted? }
+
+    it 'upserts successfully' do
+      @second.should be_persisted
+    end
+
+    it 'inserts a new answer' do
+      Answer.count.should be 2
+    end
+
+  end
+
+  context 'with the same problem and user' do
+
+    before(:each) do
+      second  = FactoryGirl.build :answer, user: @first.user,
+        problem: @first.problem
+      @second = Answer.upsert second.user.id, second.problem.id,
+        second.attributes.slice('content')
+      @second.save!
+    end
+
+    after(:each)  { @second.destroy if @second.persisted? }
+
+    it 'upserts successfully' do
+      @second.should be_persisted
+    end
+
+    it 'does not insert a new answer' do
+      Answer.count.should be 1
+    end
+
+    it 'updates the existing answer' do
+      @first.reload
+      @first.content.should eq(@second.content)
+    end
+
+  end
 
 end

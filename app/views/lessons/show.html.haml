@@ -5,3 +5,9 @@
 
 - content_for :javascript do
   :javascript
+    $(function() {
+        genie.init_lesson({
+          answers: $('#answers').data('preload'),
+          forms:   $('form.problem')
+        });
+    });

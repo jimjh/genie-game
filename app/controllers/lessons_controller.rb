@@ -19,7 +19,7 @@ class LessonsController < ApplicationController
   #   here.
   def show
 
-    lesson     = Lesson.select(:compiled_path).for_user(params[:user]).find(params[:lesson])
+    lesson     = Lesson.select(%w[lessons.id compiled_path]).for_user(params[:user]).find(params[:lesson])
     lesson_dir = Pathname.new lesson.compiled_path
     path       = lesson_dir + (params[:path] || '')
 
@@ -79,8 +79,7 @@ class LessonsController < ApplicationController
     lesson  = Lesson.select('lessons.id').for_user(params[:user]).find(params[:lesson])
     problem = lesson.problem_at params[:problem]
     if user_signed_in?
-      answer = problem.answers.build content: params[:answer]
-      answer.user = current_user
+      answer = Answer.upsert current_user.id, problem.id, content: params[:answer]
       answer.save!
     end
     result = same? params[:answer], Marshal.load(problem.solution)

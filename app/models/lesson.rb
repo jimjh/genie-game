@@ -76,6 +76,9 @@ class Lesson < ActiveRecord::Base
   end
 
   def answers_for(user)
+    answers.select(%w[content problems.position])
+      .where('user_id=?', user.id)
+      .where('problems.active=?', true)
   end
 
   private

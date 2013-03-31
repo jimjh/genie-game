@@ -28,7 +28,7 @@ label.success {
   @include form-label-success-color;
 }
 
-.success input,
+.success input:not([type='submit']),
 input.success,
 .success textarea,
 textarea.success {
