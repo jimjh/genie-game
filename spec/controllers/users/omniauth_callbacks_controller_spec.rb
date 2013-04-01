@@ -11,7 +11,7 @@ describe Users::OmniauthCallbacksController do
 
     context 'with a valid provider' do
       it 'redirects to the GitHub site' do
-        sign_in nil
+        oauth_in
         expect { get :passthru, provider: 'github' }.to raise_error(ActionController::RoutingError)
         response.should be_success
       end
@@ -21,7 +21,7 @@ describe Users::OmniauthCallbacksController do
 
   describe 'GET #github' do
 
-    before(:each) { sign_in nil }
+    before(:each) { oauth_in }
 
     shared_examples 'authentication' do
 

@@ -5,7 +5,11 @@ describe LessonsController do
 
   describe 'GET #show' do
 
-    before(:each) { @fake = FactoryGirl.create :compiled_lesson }
+    before :each do
+      @fake = FactoryGirl.create :compiled_lesson
+      @user = FactoryGirl.create :user
+      sign_in User.first
+    end
     after(:each)  { @fake.root.rmtree }
 
     it 'assigns index.inc' do
