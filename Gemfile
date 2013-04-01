@@ -30,6 +30,7 @@ group :development do
   gem 'rvm-capistrano', '~> 1.2',  require: false
   gem 'capistrano',     '~> 2.14', require: false
   gem 'foreman',        '~> 0.61', require: false
+  gem 'capistrano-maintenance', '0.0.3', require: false
 end
 
 group :test, :development do

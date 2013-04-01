@@ -1,5 +1,6 @@
 require 'rvm/capistrano'
 require 'bundler/capistrano'
+require 'capistrano/maintenance'
 require File.expand_path('../shared', __FILE__)
 
 set :application, 'genie-game'
@@ -19,12 +20,16 @@ set :rvm_type,        :system
 
 set :keep_releases, 5
 
+set :maintenance_config_warning, false
+
 role :web, Genie::SharedConstants::HOST          # Your HTTP server, Apache/etc
 role :app, Genie::SharedConstants::HOST          # This may be the same as your `Web` server
 role :db,  Genie::SharedConstants::HOST, primary: true # This is where Rails migrations will run
 
+before 'deploy:update',    'deploy:web:disable'
 before 'deploy:restart',   'deploy:migrate'
 after  'deploy:restart',   'deploy:cleanup'
+after  'deploy:restart',   'deploy:web:enable'
 
 before 'deploy:assets:precompile', 'deploy:secrets'
 # after  'deploy:assets:precompile', 'deploy:clean_expired' # for turbo-sprockets
