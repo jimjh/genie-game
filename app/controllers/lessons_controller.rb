@@ -4,7 +4,7 @@ class LessonsController < ApplicationController
   include Aladdin::Support::WeakComparator
 
   protect_from_forgery except: [:push, :ready, :gone]
-  before_filter :authenticate_user!, except: [:show, :verify, :push, :ready, :gone]
+  before_filter :authenticate_user!, except: [:push, :ready, :gone]
   before_filter :authenticate_github!, only: [:push]
   skip_filter   :protect_closed_beta,  only: [:push, :ready, :gone]
   respond_to    :json
@@ -32,7 +32,7 @@ class LessonsController < ApplicationController
     # asset
     if path.parent == lesson_dir
       @contents = File.read path
-      @answers  = lesson.answers_for current_user if user_signed_in?
+      @answers  = lesson.answers_for current_user
     else send_file path, disposition: 'attachment' end
 
   end
@@ -79,10 +79,8 @@ class LessonsController < ApplicationController
   def verify
     lesson  = Lesson.select('lessons.id').for_user(params[:user]).find(params[:lesson])
     problem = lesson.problem_at params[:problem]
-    if user_signed_in?
-      answer = Answer.upsert current_user.id, problem.id, content: params[:answer]
-      answer.save!
-    end
+    answer = Answer.upsert current_user.id, problem.id, content: params[:answer]
+    answer.save!
     result = same? params[:answer], Marshal.load(problem.solution)
     render json: result
   end
