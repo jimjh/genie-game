@@ -1,0 +1,9 @@
+@import "compass/css3/transform";
+
+header#welcome {
+  padding: 40px 0 0;
+  #welcome_image, #welcome_button { margin-top: 30px; }
+  .rotate-left img   { @include rotate(120deg); }
+  .rotate-center img { @include rotate(90deg); }
+  .rotate-right img  { @include rotate(60deg); }
+}

@@ -1,47 +1,31 @@
-%br
-%br
-%br
-%br
-.row
-	.large-11.large-centered.columns.text-center{:style => "font-size: 130%;"}
-		%h1{:style => "line-height: 20%;"} Teach, Learn &
-		%h1 Share With the
-		%h1{:style => "line-height: 20%;"} World
+- def arrow; image_tag 'arrow.jpg', size: '80x41'; end
 
-%br
-%br
+%header#welcome
+  .row
+    .large-11.large-centered.columns.text-center
+      %h1 Teach, Learn & <br> Share With the <br> World
 
-.row
-	.large-10.large-centered.columns
-		.row
-			.large-4.columns.text-center{:style => "transform:rotate(120deg);-ms-transform:rotate(120deg); /* Internet Explorer */-moz-transform:rotate(120deg); /* Firefox */-webkit-transform:rotate(120deg); /* Safari and Chrome */-o-transform:rotate(120deg); /* Opera */"}
-				= image_tag "arrow.jpg"
-			.large-4.columns.text-center{:style => "transform:rotate(90deg);-ms-transform:rotate(90deg); /* Internet Explorer */-moz-transform:rotate(90deg); /* Firefox */-webkit-transform:rotate(90deg); /* Safari and Chrome */-o-transform:rotate(90deg); /* Opera */"}
-				= image_tag "arrow.jpg"
-			.large-4.columns.text-center{:style => "transform:rotate(60deg);-ms-transform:rotate(60deg); /* Internet Explorer */-moz-transform:rotate(60deg); /* Firefox */-webkit-transform:rotate(60deg); /* Safari and Chrome */-o-transform:rotate(60deg); /* Opera */"}
-				= image_tag "arrow.jpg"
-%br
-.row
-	.large-12.large-centered.columns.text-center
-		= image_tag("home_page_image.png", :size => '800x1200')
+  .row
+    .large-10.large-centered.columns
+      .row
+        .large-4.columns.text-center.rotate-left= arrow
+        .large-4.columns.text-center.rotate-center= arrow
+        .large-4.columns.text-center.rotate-right= arrow
 
-.row
-	.large-10.large-centered.columns
-		.row
-			.large-4.columns.text-center
-				Create and manage lessons on an online platform
-			.large-4.columns.text-center
-				Intuitive way of learning by doing on an actual terminal - no setup needed!
-			.large-4.columns.text-center
-				Browse lessons from all over the world
+  .row#welcome_image
+    .large-12.large-centered.columns.text-center
+      = image_tag 'welcome_image.png', size: '800x140'
 
-%br
-%br
-.row
-	.large-12.large-centered.columns.text-center.has-form.round
-		= link_to 'Sign in with GitHub', user_omniauth_authorize_path(:github), class: 'button'
+  .row
+    .large-10.large-centered.columns
+      .row
+        .large-4.columns.text-center
+          Create and manage lessons on an online platform
+        .large-4.columns.text-center
+          Intuitive way of learning by doing on an actual terminal - no setup needed!
+        .large-4.columns.text-center
+          Browse lessons from all over the world
 
-
-
-
-
+  .row#welcome_button
+    .large-12.large-centered.columns.text-center
+      = link_to 'Sign in with GitHub', user_omniauth_authorize_path(:github), class: 'button round'

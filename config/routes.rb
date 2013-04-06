@@ -28,7 +28,6 @@ Genie::Application.routes.draw do
   # Pretty URLs --------------------------------------------------------------
 
   match '/closed_beta' => 'home#closed_beta'
-  match '/welcome' => 'home#welcome'
 
   # add trailing slashes to lessons/jimjh/floating-point so that relative
   #   links for images resolve to jimjh/floating-point/images.

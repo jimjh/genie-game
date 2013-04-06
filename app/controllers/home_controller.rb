@@ -3,7 +3,10 @@ class HomeController < ApplicationController
   skip_filter :protect_closed_beta, only: [:closed_beta] # TODO: remove
 
   def index
-    @lessons = Lesson.published
+    if user_signed_in?
+      @lessons = Lesson.published
+    else render 'welcome'
+    end
   end
 
   def closed_beta
