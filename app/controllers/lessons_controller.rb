@@ -38,10 +38,8 @@ class LessonsController < ApplicationController
   end
 
   def create
-    lesson      = Lesson.new params[:lesson]
-    lesson.user = current_user
-    lesson.save
-    respond_with lesson
+    lesson = current_user.lessons.create params[:lesson]
+    respond_with lesson, only: [:slug, :url, :status]
   end
 
   # Webhook that is registered with GitHub.
@@ -52,7 +50,7 @@ class LessonsController < ApplicationController
     lesson  = Lesson.find_by_user_id_and_name! auth.user.id,
       params[:repository][:name]
     lesson.pushed
-    respond_with lesson
+    respond_with lesson, only: [:slug, :url, :status]
   end
 
   # Webhook that is registered with Lamp.
@@ -67,7 +65,7 @@ class LessonsController < ApplicationController
       lesson = Lesson.find_by_id! params[:id]
       lesson.failed
     end
-    respond_with lesson
+    respond_with lesson, only: [:slug, :url, :status]
   end
 
   # Webhook that is registered with Lamp.
