@@ -18,7 +18,7 @@ Genie::Application.configure do
   config.cache_store = :redis_store, "redis://localhost:3000/0/cache"
 
   # Used to construct a web hook for GitHub
-  PORT = 3200
+  PORT = 3100
   HOST = 'localhost'
   Rails.application.routes.default_url_options[:host] = "#{HOST}:#{PORT}"
 
@@ -56,14 +56,14 @@ Genie::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
-  config.faye   = { url: "http://#{HOST}:3100/socket" }
+  config.faye   = { url: "http://#{HOST}:3300/socket" }
 
   # Output paths for Lamp.
   config.lamp = {
     ips:           %w(127.0.0.1 0.0.0.0),
     client: {
       'host' => 'localhost',
-      'port' => 3300 # chosen by foreman
+      'port' => 3200 # chosen by foreman
     }
   }
 
