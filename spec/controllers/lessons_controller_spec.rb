@@ -31,6 +31,12 @@ describe LessonsController do
         raise_error(ActiveRecord::RecordNotFound)
     end
 
+    it 'requires published lesson' do
+      Lesson.find(@fake.lesson).deactivate
+      expect { get :show, user: @fake.user, lesson: @fake.lesson }.to \
+        raise_error(ActionController::RoutingError)
+    end
+
     it 'protects against traversal attacks in path' do
       %w[.. ../..].each do |c|
         expect { get :show, user: @fake.user, lesson: @fake.lesson, path: c }.to \

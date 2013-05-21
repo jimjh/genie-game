@@ -20,7 +20,11 @@ class LessonsController < ApplicationController
   #   here.
   def show
 
-    lesson     = Lesson.select(%w[lessons.id compiled_path]).for_user(params[:user]).find(params[:lesson])
+    lesson = Lesson.select(%w[lessons.id compiled_path status])
+                   .for_user(params[:user])
+                   .find(params[:lesson])
+    not_found unless lesson.published?
+
     lesson_dir = Pathname.new lesson.compiled_path
     path       = lesson_dir + (params[:path] || '')
 
@@ -40,6 +44,11 @@ class LessonsController < ApplicationController
   def create
     lesson = current_user.lessons.create params[:lesson]
     respond_with lesson, only: [:slug, :url, :status]
+  end
+
+  def deactivate
+    lesson = current_user.lessons.find params[:id]
+    lesson.deactivate
   end
 
   # Webhook that is registered with GitHub.

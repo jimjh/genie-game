@@ -15,6 +15,7 @@ FactoryGirl.define do
 
     to_create   do |i|
       i.lesson_record.compiled_path = i.lesson_path.to_s
+      i.lesson_record.status = 'published'
       i.lesson_record.save!
       i.lesson_path.mkpath
       IO.write i.lesson_path + LessonsController::INDEX_FILE, i.index_file
