@@ -1,30 +1,40 @@
 = link_to 'Sync', url_for(sync: true), class: 'button secondary'
 Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
 %table
+  %thead
+    %tr
+      %th Project
+      %th Status
+      %th Publishing
   %tbody
     - @repos.each do |repo|
       %tr
         %td= repo.full_name
         %td
-          - status = @lessons[repo.clone_url] || 'publish'
-          - button_class = status_class status
-          %form.publisher{action: lessons_path, method: :post, 'data-remote' => true}
+          - if @lessons.has_key? repo.clone_url
+            .status{class: status_class(@lessons[repo.clone_url])}
+        %td
+          - published = 'published' == @lessons[repo.clone_url]
+          = form_for Lesson.new, remote: true, html: {id: nil, class: 'publish'} do
             %input{type: 'hidden', name: 'lesson[url]', value: repo.clone_url}
             %input{type: 'hidden', name: 'lesson[name]', value: repo.name}
-            %input.button.small{type: 'submit', value: status.titleize,
-              class: button_class}
+            .switch.radius.small
+              %input{type: 'radio', checked: !published, name: 'switch-publish'}
+              %label Off
+              %input{type: 'radio', checked: published, name: 'switch-publish'}
+              %label On
+              %span
 
 - content_for :javascript do
   :javascript
     $(function() {
-      $('.publisher')
-        .bind('ajax:beforeSend', function() {
-          var button = $(this).find('input[type="submit"]');
-          button.val('Publishing');
-          button.addClass('disabled');
-          $.rails.disableElement(button);
+      $('.publish').each(function() {
+        var form = $(this);
+        form.find('input[type="radio"]').click(function() {
+          form.submit();
         });
-      $.rails.disableElement($('.publisher input.disabled[type="submit"]'));
+      });
     });
 
-- # TODO improve error handling (lamp, github, active record, faye)
+- # TODO improve error handling (lamp, github, active record, faye) (with hover messages?)
+- # TODO add reactivity (e.g. update status codes)
