@@ -31,6 +31,12 @@ describe LessonsController do
         raise_error(ActiveRecord::RecordNotFound)
     end
 
+    it 'requires published lesson' do
+      Lesson.find(@fake.lesson).deactivate
+      expect { get :show, user: @fake.user, lesson: @fake.lesson }.to \
+        raise_error(ActionController::RoutingError)
+    end
+
     it 'protects against traversal attacks in path' do
       %w[.. ../..].each do |c|
         expect { get :show, user: @fake.user, lesson: @fake.lesson, path: c }.to \
@@ -80,19 +86,22 @@ describe LessonsController do
   end
 
   describe 'POST #create' do
+
     it 'clones and compiles a lesson at the given URL'
     it 'handles errors'
+
   end
 
   describe 'POST #push' do
 
-    before(:each) { @lesson = FactoryGirl.create :lesson, status: 'published' }
+    before(:each) { @lesson = FactoryGirl.create :lesson, :published }
     after(:each)  { @lesson.destroy }
 
     let(:user) { @lesson.user }
     let(:auth) { @lesson.user.authorizations.first }
 
     it 're-compiles the lesson'
+    it 'ignores deactivated lessons'
     it 'handles errors'
 
     it 'sets status to publishing' do
@@ -110,12 +119,29 @@ describe LessonsController do
   end
 
   describe 'POST #ready' do
+
+    before(:each) { @lesson = FactoryGirl.create :lesson, :publishing }
+    after(:each)  { @lesson.user.destroy }
+
     context 'success' do
-      it 'sets status to published'
+      it 'sets status to published' do
+        post :ready, id: @lesson.id, format: 'json',
+          status: '200', payload: { compiled_path: 'x' }
+        response.status.should eq 200
+        @lesson.reload.status.should eq 'published'
+      end
     end
+
     context 'failure' do
-      it 'sets status to failed'
+      it 'sets status to failed' do
+        post :ready, id: @lesson.id, format: 'json'
+        response.status.should eq 200
+        @lesson.reload.status.should eq 'failed'
+      end
     end
+
+    it 'handles errors'
+
   end
 
   describe 'POST #gone' do
@@ -125,8 +151,32 @@ describe LessonsController do
   describe 'POST #verify' do
     it 'requires user, lesson, and problem'
     it 'raises ActionDispatch::RoutingError if the path is not a file'
-    pending 'judge service'
+    pending 'tangle service'
+  end
+
+  describe 'POST #toggle' do
+
+    before :each do
+      @lesson = FactoryGirl.create :lesson, :published
+      sign_in @lesson.user
+    end
+
+    after(:each)  { @lesson.user.destroy }
+
+    it 'deactivates the lesson' do
+      post :toggle, id: @lesson.id, toggle: 'off', format: 'json'
+      response.status.should eq 202
+      @lesson.reload.status.should eq 'deactivated'
+    end
+
+    it 'publishes the lesson' do
+      post :toggle, id: @lesson.id, toggle: 'on', format: 'json'
+      response.status.should eq 202
+      @lesson.reload.status.should eq 'publishing'
+    end
+
+    it 'handles errors'
+
   end
 
 end
-

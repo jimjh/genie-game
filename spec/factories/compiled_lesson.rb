@@ -4,7 +4,7 @@ FactoryGirl.define do
   factory :compiled_lesson, class: OpenStruct do
 
     ignore do
-      association :lesson_record, factory: :lesson
+      association :lesson_record, :published, factory: :lesson
     end
 
     user        { lesson_record.user.slug }
