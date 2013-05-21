@@ -55,29 +55,51 @@ class Lesson < ActiveRecord::Base
     self.status == 'published'
   end
 
+  def deactivated?
+    self.status == 'deactivated'
+  end
+
+  # Sets status to +deactivated+.
+  # @return [Boolean] success
   def deactivate
     self.status = 'deactivated'
-    save!
+    save
   end
 
+  # Removes deactivated status and imitates a push.
+  # @return [Boolean] success
+  def activate
+    self.status = ''
+    pushed
+  end
+
+  # Sets status to +failed+ unless lesson has been deactivated.
+  # @return [Boolean] success
   def failed
+    return false if deactivated?
     self.status = 'failed'
-    save!
-    notify_observers :after_fail
+    notify_observers :after_fail if (suc = save)
+    suc
   end
 
+  # Sets status to +failed+ unless lesson has been deactivated.
+  # @return [Boolean] success
   def published(opts)
+    return false if deactivated?
     self.compiled_path = opts[:compiled_path]
     self.status        = 'published'
     self.problems.update_or_initialize(opts[:problems] || [])
-    save!
-    notify_observers :after_publish
+    notify_observers :after_publish if (suc = save)
+    suc
   end
 
+  # Sets status to +publishing+ unless lesson has been deactivated.
+  # @return [Boolean] success
   def pushed
+    return false if deactivated?
     self.status = 'publishing'
-    save!
-    notify_observers :after_push
+    notify_observers :after_push if (suc = save)
+    suc
   end
 
   def problem_at(position)
