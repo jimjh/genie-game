@@ -19,9 +19,45 @@ describe Answer do
   it { should validate_presence_of :content }
 
   context 'given an answer' do
+
     subject { Answer.new content: 'x' }
+
     it { should validate_existence_of :user }
     it { should validate_existence_of :problem }
+
+    context 'and a published lesson' do
+
+      before :each do
+        @problem = FactoryGirl.create :problem
+        subject.problem_id = @problem.id
+        subject.user_id = @problem.lesson.user_id
+      end
+
+      after(:each)  { @problem.lesson.destroy }
+
+      it 'allows the answer to be saved' do
+        subject.save.should be true
+      end
+
+    end
+
+    context 'and a deactivated lesson' do
+
+      before :each do
+        @problem = FactoryGirl.create :problem
+        @problem.lesson.deactivate
+        subject.problem_id = @problem.id
+        subject.user_id = @problem.lesson.user_id
+      end
+
+      after(:each) { @problem.lesson.destroy }
+
+      it 'does not allow the answer to be saved' do
+        subject.save.should be false
+      end
+
+    end
+
   end
 
 end

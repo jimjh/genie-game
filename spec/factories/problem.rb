@@ -2,7 +2,7 @@
 FactoryGirl.define do
 
   factory :problem do
-    lesson
+    association :lesson, :published
     solution { Base64.urlsafe_encode64 Marshal.dump Faker::Lorem.sentence }
     digest   { OpenSSL::Digest::SHA256.digest Faker::Lorem.sentence }
     sequence(:position)
