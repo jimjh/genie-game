@@ -41,6 +41,11 @@ class LessonsController < ApplicationController
 
   end
 
+  # GET /:user/:lesson/settings
+  def settings
+  end
+
+  # POST /lessons
   def create
     # if ID is given, assume that user wants to toggle
     return toggle if params[:id]
@@ -49,7 +54,6 @@ class LessonsController < ApplicationController
   end
 
   # Activate/Deactivate
-  # TODO error handling - should I use save instead of save!?
   # POST /lessons/:id/toggle
   def toggle
     lesson = current_user.lessons.find params[:id]
@@ -91,6 +95,7 @@ class LessonsController < ApplicationController
     head :ok
   end
 
+  # POST /:user/:lesson/verify
   def verify
     lesson  = Lesson.select('lessons.id').for_user(params[:user]).find(params[:lesson])
     problem = lesson.problem_at params[:problem]
