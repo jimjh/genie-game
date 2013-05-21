@@ -102,6 +102,14 @@ describe Lesson do
 
     end
 
+    describe '#deactivate' do
+      before :each do
+        @lesson.deactivate
+        @lesson.reload
+      end
+      its(:status) { should eq 'deactivated' }
+    end
+
     describe '#failed' do
       before :each do
         @lesson.failed

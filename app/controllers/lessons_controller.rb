@@ -20,7 +20,11 @@ class LessonsController < ApplicationController
   #   here.
   def show
 
-    lesson     = Lesson.select(%w[lessons.id compiled_path]).for_user(params[:user]).find(params[:lesson])
+    lesson = Lesson.select(%w[lessons.id compiled_path status])
+                   .for_user(params[:user])
+                   .find(params[:lesson])
+    not_found unless lesson.published?
+
     lesson_dir = Pathname.new lesson.compiled_path
     path       = lesson_dir + (params[:path] || '')
 
@@ -38,8 +42,22 @@ class LessonsController < ApplicationController
   end
 
   def create
+    # if ID is given, assume that user wants to toggle
+    return toggle if params[:id]
     lesson = current_user.lessons.create params[:lesson]
     respond_with lesson, only: [:slug, :url, :status]
+  end
+
+  # Activate/Deactivate
+  # TODO error handling - should I use save instead of save!?
+  # POST /lessons/:id/toggle
+  def toggle
+    lesson = current_user.lessons.find params[:id]
+    case params[:toggle]
+    when 'off' then lesson.deactivate
+    when 'on'  then lesson.pushed
+    end
+    respond_with lesson, only: [:slug, :url, :status], status: :accepted
   end
 
   # Webhook that is registered with GitHub.
@@ -49,14 +67,15 @@ class LessonsController < ApplicationController
       params[:repository][:owner][:name]
     lesson  = Lesson.find_by_user_id_and_name! auth.user.id,
       params[:repository][:name]
-    lesson.pushed
+    lesson.pushed if lesson.published?
     respond_with lesson, only: [:slug, :url, :status]
   end
 
   # Webhook that is registered with Lamp.
+  # TODO error handling - should I use save instead of save!?
   # POST /lessons/:id/ready
   def ready
-    case params['status']
+    case params[:status]
     when '200'
       payload = params[:payload]
       lesson  = Lesson.find_by_id! params[:id]
@@ -65,7 +84,7 @@ class LessonsController < ApplicationController
       lesson = Lesson.find_by_id! params[:id]
       lesson.failed
     end
-    respond_with lesson, only: [:slug, :url, :status]
+    respond_with lesson, only: [:slug, :url, :status], status: :ok
   end
 
   # Webhook that is registered with Lamp.

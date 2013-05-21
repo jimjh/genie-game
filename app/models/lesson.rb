@@ -20,7 +20,7 @@ class Lesson < ActiveRecord::Base
   extend FriendlyId
   include GitConcern
 
-  STATUSES = %w[publishing published failed]
+  STATUSES = %w[publishing published failed deactivated]
 
   # callbacks ----------------------------------------------------------------
   before_validation :default_values
@@ -49,6 +49,15 @@ class Lesson < ActiveRecord::Base
   # @return [Pathname] path that is suitable for use as lesson path
   def path
     Pathname.new(user.slug) + self.slug
+  end
+
+  def published?
+    self.status == 'published'
+  end
+
+  def deactivate
+    self.status = 'deactivated'
+    save!
   end
 
   def failed
