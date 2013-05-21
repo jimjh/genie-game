@@ -8,20 +8,23 @@ Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
       %th Publishing
   %tbody
     - @repos.each do |repo|
+      - lesson = @lessons[repo.clone_url]
       %tr
         %td= repo.full_name
         %td
-          - if @lessons.has_key? repo.clone_url
-            .status{class: status_class(@lessons[repo.clone_url])}
+          - if lesson
+            .status{class: status_class(lesson)}
         %td
-          - published = 'published' == @lessons[repo.clone_url]
+          - on = %w[published publishing].include?(lesson.try(:status))
           = form_for Lesson.new, remote: true, html: {id: nil, class: 'publish'} do
+            - if lesson
+              %input{type: 'hidden', name: 'id',  value: lesson.id}
             %input{type: 'hidden', name: 'lesson[url]', value: repo.clone_url}
             %input{type: 'hidden', name: 'lesson[name]', value: repo.name}
             .switch.radius.small
-              %input{type: 'radio', checked: !published, name: 'switch-publish'}
+              %input{type: 'radio', checked: !on, name: 'toggle', value: 'off'}
               %label Off
-              %input{type: 'radio', checked: published, name: 'switch-publish'}
+              %input{type: 'radio', checked: on, name: 'toggle', value: 'on'}
               %label On
               %span
 
@@ -37,4 +40,4 @@ Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
     });
 
 - # TODO improve error handling (lamp, github, active record, faye) (with hover messages?)
-- # TODO add reactivity (e.g. update status codes)
+- # TODO add reactivity (e.g. update status codes, ID)

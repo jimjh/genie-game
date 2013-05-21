@@ -15,6 +15,10 @@ FactoryGirl.define do
       status 'deactivated'
     end
 
+    trait :publishing do
+      status 'publishing'
+    end
+
   end
 
 end

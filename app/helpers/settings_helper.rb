@@ -1,10 +1,10 @@
 module SettingsHelper
 
-  def status_class(status)
-    case status
+  def status_class(lesson)
+    case lesson.try(:status)
     when 'published'  then 'green'
     when 'publishing' then 'yellow'
-    when 'failed'     then 'red'
+    when 'failed', 'deactivated' then 'red'
     end
   end
 

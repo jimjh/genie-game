@@ -4,7 +4,7 @@ FactoryGirl.define do
   factory :compiled_lesson, class: OpenStruct do
 
     ignore do
-      association :lesson_record, factory: :lesson
+      association :lesson_record, :published, factory: :lesson
     end
 
     user        { lesson_record.user.slug }
@@ -15,7 +15,6 @@ FactoryGirl.define do
 
     to_create   do |i|
       i.lesson_record.compiled_path = i.lesson_path.to_s
-      i.lesson_record.status = 'published'
       i.lesson_record.save!
       i.lesson_path.mkpath
       IO.write i.lesson_path + LessonsController::INDEX_FILE, i.index_file
