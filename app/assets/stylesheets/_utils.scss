@@ -1,15 +1,24 @@
-.status {
+.lesson-config {
+  a {
+    color: lighten($body-font-color, 40%);
+  }
+  a:hover {
+    color: $primary-color;
+  }
+}
+
+.lesson-status {
   background: url(image_path('status.png')) no-repeat;
   width: 60px;
   height: 20px;
   overflow: hidden;
 }
 
-.status.red {
+.lesson-status.red {
   background-position: 0 -40px;
 }
 
-.status.yellow {
+.lesson-status.yellow {
   background-position: 0 -20px;
 }
 
