@@ -108,7 +108,7 @@ class LessonObserver < ActiveRecord::Observer
   end
 
   # Tells compiler to clone and compile the lesson. If the operation fails,
-  # sets the lesson's status to `failed`.
+  # sets the lesson's status to +failed+.
   # @param [Lesson] lesson
   # @return [void]
   def create_files(lesson)

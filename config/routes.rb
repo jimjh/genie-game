@@ -30,11 +30,15 @@ Genie::Application.routes.draw do
 
   match '/closed_beta' => 'home#closed_beta'
 
-  # add trailing slashes to lessons/jimjh/floating-point so that relative
-  #   links for images resolve to jimjh/floating-point/images.
-  match ':user/:lesson' => redirect('/%{user}/%{lesson}/'),
-    via: :get, constraints: lambda { |r| !r.original_fullpath.ends_with? '/' }
-  match ':user/:lesson/verify/:type/:problem' => 'lessons#verify', via: :post
-  match ':user/:lesson(/*path)' => 'lessons#show', as: 'user_lesson', via: :get
+  scope path: ':user/:lesson', controller: :lessons, as: 'user_lesson' do
+    # add trailing slashes to lessons/jimjh/floating-point so that relative
+    #   links for images resolve to jimjh/floating-point/images.
+    match '' => redirect('/%{user}/%{lesson}/'), via: :get,
+      constraints: lambda { |r| !r.original_fullpath.ends_with? '/' }
+    match '/' => :show
+    match '/verify/:type/:problem' => :verify, via: :post
+    match '/settings' => :settings, as: 'settings', via: :get
+    match '(/*path)' => :show, via: :get
+  end
 
 end

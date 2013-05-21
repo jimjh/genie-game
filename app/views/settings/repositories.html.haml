@@ -3,6 +3,7 @@ Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
 %table
   %thead
     %tr
+      %th
       %th Project
       %th Status
       %th Publishing
@@ -10,10 +11,18 @@ Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
     - @repos.each do |repo|
       - lesson = @lessons[repo.clone_url]
       %tr
-        %td= repo.full_name
+        %td.lesson-config
+          - if lesson
+            = link_to user_lesson_settings_path(current_user, lesson) do
+              %i.foundicon-settings
         %td
           - if lesson
-            .status{class: status_class(lesson)}
+            = link_to repo.full_name, user_lesson_path(current_user, lesson)
+          - else
+            = repo.full_name
+        %td
+          - if lesson
+            .lesson-status{class: status_class(lesson)}
         %td
           - on = %w[published publishing].include?(lesson.try(:status))
           = form_for Lesson.new, remote: true, html: {id: nil, class: 'publish'} do

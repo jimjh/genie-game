@@ -3,22 +3,24 @@ class SettingsController < ApplicationController
 
   before_filter :authenticate_user!
 
-  # TODO:   [github] make this work with private repos.
-  # TODO:   [github] make this work with organization repos.
+  # TODO [github] make this work with private repos.
+  # TODO [github] make this work with organization repos.
 
+  # GET /settings/profile
   def profile
   end
 
+  # GET /settings/repositories
   def repositories
     @repos, @lessons = github_repos, {}
     @last_sync = Rails.cache.read "#{github_repos_key}_last_mod"
-    lessons = current_user.lessons.select([:url, :status, :id])
+    lessons = current_user.lessons.select([:url, :status, :id, :slug])
     lessons.each { |lesson| @lessons[lesson.url] = lesson }
   end
 
   private
 
-  # Get list of repositories from GitHub and cache it.
+  # Gets list of repositories from GitHub and caches it.
   # @return [Array] hash objects
   def github_repos
     opts = { expires_in: 2.days, force: params[:sync].present? }
@@ -29,6 +31,7 @@ class SettingsController < ApplicationController
     end
   end
 
+  # Constructs cache key for the current user.
   # @return [String] cache key for list of repositories
   def github_repos_key
     "github_repositories_for_user_#{current_user.id}"
