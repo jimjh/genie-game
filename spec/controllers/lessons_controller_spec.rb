@@ -141,6 +141,7 @@ describe LessonsController do
     end
 
     it 'handles errors'
+    it 'ignores deactivated lessons'
 
   end
 

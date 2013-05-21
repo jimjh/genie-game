@@ -108,6 +108,16 @@ describe Lesson do
         @lesson.reload
       end
       its(:status) { should eq 'deactivated' }
+      its(:deactivate) { should be true }
+    end
+
+    describe '#activate' do
+      before :each do
+        @lesson.activate
+        @lesson.reload
+      end
+      its(:status) { should eq 'publishing' }
+      its(:activate) { should be true }
     end
 
     describe '#failed' do
@@ -116,6 +126,7 @@ describe Lesson do
         @lesson.reload
       end
       its(:status) { should eq 'failed' }
+      its(:failed) { should be true }
     end
 
     describe '#pushed' do
@@ -124,6 +135,7 @@ describe Lesson do
         @lesson.reload
       end
       its(:status) { should eq 'publishing' }
+      its(:pushed) { should be true }
     end
 
     context 'with some existing problems' do

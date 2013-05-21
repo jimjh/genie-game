@@ -53,11 +53,12 @@ class LessonsController < ApplicationController
   # POST /lessons/:id/toggle
   def toggle
     lesson = current_user.lessons.find params[:id]
-    case params[:toggle]
+    status = case params[:toggle]
     when 'off' then lesson.deactivate
-    when 'on'  then lesson.pushed
+    when 'on'  then lesson.activate
     end
-    respond_with lesson, only: [:slug, :url, :status], status: :accepted
+    status = status ? :accepted : :unprocessable_entity
+    respond_with lesson, only: [:slug, :url, :status], status: status
   end
 
   # Webhook that is registered with GitHub.
@@ -67,24 +68,21 @@ class LessonsController < ApplicationController
       params[:repository][:owner][:name]
     lesson  = Lesson.find_by_user_id_and_name! auth.user.id,
       params[:repository][:name]
-    lesson.pushed if lesson.published?
-    respond_with lesson, only: [:slug, :url, :status]
+    status = lesson.pushed
+    status = status ? :accepted : :unprocessable_entity
+    respond_with lesson, only: [:slug, :url, :status], status: status
   end
 
   # Webhook that is registered with Lamp.
-  # TODO error handling - should I use save instead of save!?
   # POST /lessons/:id/ready
   def ready
-    case params[:status]
-    when '200'
-      payload = params[:payload]
-      lesson  = Lesson.find_by_id! params[:id]
-      lesson.published payload
-    else
-      lesson = Lesson.find_by_id! params[:id]
-      lesson.failed
+    lesson = Lesson.find params[:id]
+    status = case params[:status]
+    when '200' then lesson.published params[:payload]
+    else lesson.failed
     end
-    respond_with lesson, only: [:slug, :url, :status], status: :ok
+    status = status ? :ok : :unprocessable_entity
+    respond_with lesson, only: [:slug, :url, :status], status: status
   end
 
   # Webhook that is registered with Lamp.
