@@ -1,13 +1,11 @@
 module SettingsHelper
 
-  CLASS_STATUS = {
-    'publishing' => 'disabled',
-    'published' => 'disabled',
-    'failed' => 'alert'
-  }
-
   def status_class(status)
-    CLASS_STATUS[status] || ''
+    case status
+    when 'published'  then 'green'
+    when 'publishing' then 'yellow'
+    when 'failed'     then 'red'
+    end
   end
 
   def active_class(path)

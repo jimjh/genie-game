@@ -10,9 +10,9 @@ class SettingsController < ApplicationController
   end
 
   def repositories
-    @repos = github_repos
+    @repos, @lessons = github_repos, {}
     @last_sync = Rails.cache.read "#{github_repos_key}_last_mod"
-    lessons, @lessons = current_user.lessons.select([:url, :status]), {}
+    lessons = current_user.lessons.select([:url, :status])
     lessons.each { |lesson| @lessons[lesson.url] = lesson.status }
   end
 
