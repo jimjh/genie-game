@@ -10,6 +10,7 @@ class LessonsController < ApplicationController
   respond_to    :json
 
   INDEX_FILE    = 'index.inc'
+  SETTINGS_PATH = Rails.root.join('app', 'views', 'lessons', 'settings').to_s
 
   # Renders a single lesson page and its static assets.
   # @note It's important to use +attachment+ for send_file, because the user
@@ -43,6 +44,9 @@ class LessonsController < ApplicationController
 
   # GET /:user/:lesson/settings
   def settings
+    @user, @lesson, @path = params[:user], params[:lesson], params[:path]
+    # security check to prevent directory traversal attacks
+    not_found unless File.expand_path(@path, SETTINGS_PATH).starts_with?(SETTINGS_PATH)
   end
 
   # POST /lessons

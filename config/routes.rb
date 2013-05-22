@@ -37,7 +37,8 @@ Genie::Application.routes.draw do
       constraints: lambda { |r| !r.original_fullpath.ends_with? '/' }
     match '/' => :show
     match '/verify/:type/:problem' => :verify, via: :post
-    match '/settings' => :settings, as: 'settings', via: :get
+    match '/settings(/*path)' => :settings, as: 'settings', via: :get,
+      defaults: { path: 'default' }
     match '(/*path)' => :show, via: :get
   end
 
