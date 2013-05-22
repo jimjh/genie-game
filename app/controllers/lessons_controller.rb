@@ -1,7 +1,4 @@
-require 'aladdin/support/weak_comparator'
-
 class LessonsController < ApplicationController
-  include Aladdin::Support::WeakComparator
 
   protect_from_forgery except: [:push, :ready, :gone]
   before_filter :authenticate_user!, except: [:push, :ready, :gone]
@@ -39,9 +36,11 @@ class LessonsController < ApplicationController
 
   end
 
-  # GET /:user/:lesson/settings
+  # GET /:user/:lesson/settings/:path
   def settings
     @user, @lesson, @path = params[:user], params[:lesson], params[:path]
+    @lesson = Lesson.select(%w[lessons.id lessons.slug])
+                    .for_user(@user).find(@lesson)
     # security check to prevent directory traversal attacks
     not_found unless File.expand_path(@path, SETTINGS_PATH).starts_with?(SETTINGS_PATH)
   end
@@ -98,12 +97,13 @@ class LessonsController < ApplicationController
 
   # POST /:user/:lesson/verify
   def verify
-    lesson  = Lesson.select('lessons.id').for_user(params[:user]).find(params[:lesson])
+    lesson  = Lesson.select('lessons.id')
+                    .for_user(params[:user])
+                    .find(params[:lesson])
     problem = lesson.problem_at params[:problem]
     answer = Answer.upsert current_user.id, problem.id, content: params[:answer]
-    answer.save!
-    result = same? params[:answer], Marshal.load(problem.solution)
-    render json: result
+    status = answer.save ? :ok : :unprocessable_entity
+    respond_with answer, only: [:results], status: status, location: nil
   end
 
   private

@@ -1,0 +1,7 @@
+- problems = @lesson.problems.where('active = ?', true).sort_by {|p| p.position}
+%table
+  %tbody
+    - problems.each do |problem|
+      %tr
+        %td= problem.position
+        %td= problem.answers.count

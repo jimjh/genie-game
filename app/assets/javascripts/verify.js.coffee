@@ -36,13 +36,13 @@ class Problem
       type: 'POST'
       url: @form.attr 'action'
       data: @form.serialize()
-      success: this.update @form
+      success: (answer) => (this.update @form)(answer.results)
 
   # Shows results of last submission at the given form.
   # TODO: refactor
   update: (form) ->
-    (result) =>
-      switch result
+    (results) =>
+      switch results
         when true
           form.removeClass 'error'
           form.addClass 'success'
@@ -50,7 +50,7 @@ class Problem
           form.removeClass 'success'
           form.addClass 'error'
         else
-          for i, row of result
+          for i, row of results
             for j, cell of row
               input = form.find "input[name='answer[#{i}][#{j}]']"
               (this.update input)(cell)
