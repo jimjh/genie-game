@@ -26,19 +26,16 @@ class LessonsController < ApplicationController
                    .find(params[:lesson])
     not_found unless lesson.published?
 
-    lesson_dir = Pathname.new lesson.compiled_path
-    path       = lesson_dir + (params[:path] || '')
+    path = Pathname.new(params[:path] || '').expand_path(lesson.compiled_path)
+    path = path.sub_ext('.' + params[:format]) unless params[:format].blank?
+    not_found unless path.to_s.starts_with?(lesson.compiled_path) and path.exist?
 
-    path  = path.sub_ext('.' + params[:format]) unless params[:format].blank?
-    path += INDEX_FILE if path.directory?
-    not_found unless path.exist?
-
-    # html_safe iff it's at the root - everything else is dangerous static
-    # asset
-    if path.parent == lesson_dir
+    # html_safe iff it's at the root - everything else is dangerous static asset
+    if path.parent.to_s == lesson.compiled_path
       @contents = File.read path
       @answers  = lesson.answers_for current_user
-    else send_file path, disposition: 'attachment' end
+    else send_file path, disposition: 'attachment'
+    end
 
   end
 
