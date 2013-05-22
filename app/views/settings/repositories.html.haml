@@ -16,7 +16,7 @@ Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
             = link_to user_lesson_settings_path(current_user, lesson) do
               %i.foundicon-settings
         %td
-          - if lesson
+          - if lesson.try(:published?)
             = link_to repo.full_name, user_lesson_path(current_user, lesson)
           - else
             = repo.full_name
