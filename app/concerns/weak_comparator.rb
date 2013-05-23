@@ -31,7 +31,8 @@ module WeakComparator
     when TrueClass, FalseClass then saved.to_s[0] == submitted.downcase[0]
     else false
     end
-  rescue false
+  rescue
+    false
   end
 
   private

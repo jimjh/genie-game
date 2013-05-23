@@ -33,6 +33,12 @@ describe WeakComparator do
     it { should be_same(n, n) }
   end
 
+  context 'given invalid string for integer answer' do
+    let(:right) { random_integer }
+    let(:left)  { 'abc' }
+    it { should_not be_same(left, right) }
+  end
+
   context 'given two simple integers that are different' do
     let(:left)  { random_integer }
     let(:right) { random_integer }
