@@ -1,0 +1,13 @@
+- problems = @lesson.problems.where('active = ?', true).sort_by {|p| p.position}
+%table
+  %thead
+    %tr
+      %th ID
+      %th Correct
+      %th Total
+  %tbody
+    - problems.each do |problem|
+      %tr
+        %td= problem.position
+        %td= problem.answers.pluck(:score).inject(0, :+)
+        %td= problem.answers.count

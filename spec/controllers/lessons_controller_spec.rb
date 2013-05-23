@@ -13,7 +13,7 @@ describe LessonsController do
     after(:each)  { @fake.root.rmtree }
 
     it 'assigns index.inc' do
-      get :show, user: @fake.user, lesson: @fake.lesson
+      get :show, user: @fake.user, lesson: @fake.lesson, path: LessonsController::INDEX_FILE
       assigns[:contents].should eql @fake.index_file
     end
 
@@ -38,7 +38,7 @@ describe LessonsController do
     end
 
     it 'protects against traversal attacks in path' do
-      %w[.. ../..].each do |c|
+      %w[.. ../.. ../ / //].each do |c|
         expect { get :show, user: @fake.user, lesson: @fake.lesson, path: c }.to \
           raise_error(ActionController::RoutingError)
       end
@@ -70,11 +70,6 @@ describe LessonsController do
         response.body.should eq @rand_inc
       end
 
-    end
-
-    it 'defaults to index.inc' do
-      get :show, user: @fake.user, lesson: @fake.lesson
-      assigns[:contents].should eq @fake.index_file
     end
 
     it 'raises ActionController::RoutingError if the path does not exist' do
