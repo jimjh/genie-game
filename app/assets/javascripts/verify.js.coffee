@@ -44,11 +44,13 @@ class Problem
     (results) =>
       switch results
         when true
-          form.removeClass 'error'
-          form.addClass 'success'
+          field = form.find 'input[name="answer"]'
+          field.removeClass 'error'
+          field.addClass 'success'
         when false
-          form.removeClass 'success'
-          form.addClass 'error'
+          field = form.find 'input[name="answer"]'
+          field.removeClass 'success'
+          field.addClass 'error'
         else
           for i, row of results
             for j, cell of row
