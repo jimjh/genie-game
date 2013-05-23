@@ -8,13 +8,16 @@
 // Foundation Global Variables
 //
 
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+@import url(http://fonts.googleapis.com/css?family=Roboto);
+
 // This is the default html and body font-size for the base em value.
 // $em-base: 16px;
 
 // We use these to control various global styles
 // $body-bg: #fff;
 // $body-font-color: #222;
-// $body-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+$body-font-family: 'Open Sans', "Helvetica Neue", Arial, sans-serif;
 // $body-font-weight: normal;
 // $body-font-style: normal;
 
@@ -82,7 +85,7 @@
 //
 
 // We use these to control header font styles
-// $header-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+$header-font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
 // $header-font-weight: bold;
 // $header-font-style: normal;
 // $header-font-color: #222;

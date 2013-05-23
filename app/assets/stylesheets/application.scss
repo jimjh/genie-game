@@ -1,7 +1,6 @@
 @import "settings";
 @import "foundation";
 
-
 .highlight {
   @import "pygment";
   @import "github";
@@ -12,6 +11,7 @@
 @import "mathjax";
 @import "forms";
 @import "welcome";
+@import "nav_bar";
 
 //div.meta.panel {
 //  border-top: $fieldset-border-width solid $shiny-edge-color;

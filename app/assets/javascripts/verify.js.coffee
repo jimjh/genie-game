@@ -44,11 +44,11 @@ class Problem
     (results) =>
       switch results
         when true
-          field = form.find 'input[name="answer"]'
+          field = this.extract form
           field.removeClass 'error'
           field.addClass 'success'
         when false
-          field = form.find 'input[name="answer"]'
+          field = this.extract form
           field.removeClass 'success'
           field.addClass 'error'
         else
@@ -57,6 +57,10 @@ class Problem
               input = form.find "input[name='answer[#{i}][#{j}]']"
               (this.update input)(cell)
       null
+
+  extract: (form) ->
+    field = form.find 'input[name="answer"]'
+    if field.length == 0 then form else field
 
 @genie.init_lesson = (options) ->
   answers = []
