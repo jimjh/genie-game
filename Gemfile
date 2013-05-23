@@ -71,5 +71,3 @@ gem 'lamp', git: 'git@github.com:jimjh/genie-compiler.git',
   branch: 'master', require: false
 gem 'spirit', git: 'git@github.com:jimjh/genie-parser.git',
   branch: 'master', require: false
-gem 'aladdin', git: 'git@github.com:jimjh/genie-previewer.git',
-  branch: 'master', require: false

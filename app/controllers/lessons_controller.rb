@@ -1,7 +1,4 @@
-require 'aladdin/support/weak_comparator'
-
 class LessonsController < ApplicationController
-  include Aladdin::Support::WeakComparator
 
   protect_from_forgery except: [:push, :ready, :gone]
   before_filter :authenticate_user!, except: [:push, :ready, :gone]
@@ -10,6 +7,7 @@ class LessonsController < ApplicationController
   respond_to    :json
 
   INDEX_FILE    = 'index.inc'
+  SETTINGS_PATH = Rails.root.join('app', 'views', 'lessons', 'settings').to_s
 
   # Renders a single lesson page and its static assets.
   # @note It's important to use +attachment+ for send_file, because the user
@@ -25,24 +23,26 @@ class LessonsController < ApplicationController
                    .find(params[:lesson])
     not_found unless lesson.published?
 
-    lesson_dir = Pathname.new lesson.compiled_path
-    path       = lesson_dir + (params[:path] || '')
+    path = Pathname.new(params[:path] || '').expand_path(lesson.compiled_path)
+    path = path.sub_ext('.' + params[:format]) unless params[:format].blank?
+    not_found unless path.to_s.starts_with?(lesson.compiled_path) and path.exist?
 
-    path  = path.sub_ext('.' + params[:format]) unless params[:format].blank?
-    path += INDEX_FILE if path.directory?
-    not_found unless path.exist?
-
-    # html_safe iff it's at the root - everything else is dangerous static
-    # asset
-    if path.parent == lesson_dir
+    # html_safe iff it's at the root - everything else is dangerous static asset
+    if path.parent.to_s == lesson.compiled_path
       @contents = File.read path
       @answers  = lesson.answers_for current_user
-    else send_file path, disposition: 'attachment' end
+    else send_file path, disposition: 'attachment'
+    end
 
   end
 
-  # GET /:user/:lesson/settings
+  # GET /:user/:lesson/settings/:path
   def settings
+    @user, @lesson, @path = params[:user], params[:lesson], params[:path]
+    @lesson = Lesson.select(%w[lessons.id lessons.slug])
+                    .for_user(@user).find(@lesson)
+    # security check to prevent directory traversal attacks
+    not_found unless File.expand_path(@path, SETTINGS_PATH).starts_with?(SETTINGS_PATH)
   end
 
   # POST /lessons
@@ -97,12 +97,13 @@ class LessonsController < ApplicationController
 
   # POST /:user/:lesson/verify
   def verify
-    lesson  = Lesson.select('lessons.id').for_user(params[:user]).find(params[:lesson])
+    lesson  = Lesson.select('lessons.id')
+                    .for_user(params[:user])
+                    .find(params[:lesson])
     problem = lesson.problem_at params[:problem]
     answer = Answer.upsert current_user.id, problem.id, content: params[:answer]
-    answer.save!
-    result = same? params[:answer], Marshal.load(problem.solution)
-    render json: result
+    status = answer.save ? :ok : :unprocessable_entity
+    respond_with answer, only: [:results], status: status, location: nil
   end
 
   private

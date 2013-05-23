@@ -35,10 +35,11 @@ Genie::Application.routes.draw do
     #   links for images resolve to jimjh/floating-point/images.
     match '' => redirect('/%{user}/%{lesson}/'), via: :get,
       constraints: lambda { |r| !r.original_fullpath.ends_with? '/' }
-    match '/' => :show
     match '/verify/:type/:problem' => :verify, via: :post
-    match '/settings' => :settings, as: 'settings', via: :get
-    match '(/*path)' => :show, via: :get
+    match '/settings(/*path)' => :settings, as: 'settings', via: :get,
+      defaults: { path: 'default' }
+    match '(/*path)' => :show, via: :get,
+      defaults: { path: LessonsController::INDEX_FILE }
   end
 
 end

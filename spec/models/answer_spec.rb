@@ -8,11 +8,11 @@ describe Answer do
   it { should have_a_valid_factory }
   it { should allow_mass_assignment_of :content }
 
-  %w[problem user content].each do |attr|
+  %w[problem user content results score].each do |attr|
     it { should respond_to attr.to_sym }
   end
 
-  %w[problem problem_id user user_id].each do |attr|
+  %w[problem problem_id user user_id results score].each do |attr|
     it { should_not allow_mass_assignment_of attr.to_sym }
   end
 

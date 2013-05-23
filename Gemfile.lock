@@ -24,16 +24,6 @@ GIT
       redcarpet (~> 2.2)
       sanitize (~> 2.0)
 
-GIT
-  remote: git@github.com:jimjh/genie-previewer.git
-  revision: 26d77d377e8104d26e075ae5634fc45829a6b238
-  branch: master
-  specs:
-    aladdin (0.2)
-      activesupport (~> 3.2.9)
-      sinatra (~> 1.3)
-      spirit
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -248,8 +238,6 @@ GEM
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
-    rack-protection (1.5.0)
-      rack
     rack-ssl (1.3.3)
       rack
     rack-test (0.6.2)
@@ -319,10 +307,6 @@ GEM
     simple_form (2.1.0)
       actionpack (~> 3.0)
       activemodel (~> 3.0)
-    sinatra (1.3.6)
-      rack (~> 1.4)
-      rack-protection (~> 1.3)
-      tilt (~> 1.3, >= 1.3.3)
     slop (3.4.5)
     sprockets (2.2.2)
       hike (~> 1.2)
@@ -361,7 +345,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aladdin!
   capistrano (~> 2.14)
   capistrano-maintenance (= 0.0.3)
   coffee-rails (~> 3.2)
