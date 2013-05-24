@@ -6,6 +6,7 @@ require File.expand_path('../shared', __FILE__)
 set :application, 'genie-game'
 set :repository,  'git@github.com:jimjh/genie-game.git'
 set :user,        'passenger'
+set :default_shell, '/bin/bash -l'
 
 # no idea what this does - could be wrong
 set :normalize_asset_timestamps, false
