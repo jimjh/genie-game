@@ -40,8 +40,8 @@
   -# JAVASCRIPT
   - cdn_js.each do |url|
     %script{src: url}
-  %script{src: faye_js}
-  :javascript
-    var faye_server = "#{faye}";
+  -# %script{src: faye_js}
+  -# :javascript
+  -#  var faye_server = "#{faye}";
   = javascript_include_tag 'application'
   = yield :javascript if content_for? :javascript
