@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:jimjh/genie-compiler.git
-  revision: 1dea2e697f779b75a9fa1673a50a8011add8ec64
+  revision: d4a4af59166e5f64c68bcacd99c7978254d65faf
   branch: master
   specs:
     lamp (0.2)
