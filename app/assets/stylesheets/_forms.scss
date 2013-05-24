@@ -39,3 +39,7 @@ textarea.success {
 small.success {
   @include form-success-message;
 }
+
+form {
+  transition: color 0.5s ease-in-out;
+}

@@ -21,23 +21,26 @@
 //  width: 100%;
 //}
 
-#sections {
-  background: darken(#fff, 5%);
-  padding-top: 10px;
-  width: $row-width;
-  border-bottom: $fieldset-border-width solid $shiny-edge-color;
-  z-index: 3;
-}
-
-//#footer .meter {
-//  color: #fff;
-//  font-weight: 800;
-//  text-align: right;
-//  padding: 2px 2px 0 0;
-//}
-
 /* Styling within lesson */
 section[role='lesson'] {
+
+  .lesson-nav {
+    padding-top: 15px;
+    border-left: 2px solid $hr-border-color;
+    transition: top 0.5s ease-in-out;
+  }
+
+  .lesson-problems {
+    &.sticky {
+      @media #{$small} {
+        position: fixed;
+        top: 56px;
+      }
+    }
+    fieldset legend {
+      background: none;
+    }
+  }
 
   .block-image {
     text-align: center;

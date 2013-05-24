@@ -62,12 +62,44 @@ class Problem
     field = form.find 'input[name="answer"]'
     if field.length == 0 then form else field
 
+init_scroll = ->
+  problems = $('.lesson-problems')
+  y = problems.offset().top
+  w = problems.outerWidth()
+  $(window).scroll ->
+    if window.scrollY >= y - 99
+      problems.addClass 'sticky'
+      problems.css 'width', w
+    else
+      problems.removeClass 'sticky'
+      problems.css 'width', 'auto'
+      w = problems.outerWidth()
+  null
+
+init_pagination = ->
+  problems = $('.lesson-problems')
+  nums     = problems.find('.pagination a[data-page]')
+  ctrls    = problems.find('.pagination a[data-page-nav]')
+  # TODO
+
+  nums.click ->
+    problems.find('.problem-wrapper:not(.hide)').addClass('hide')
+    problems.find('#problem_' + $(this).data('page')).parent().removeClass('hide')
+    problems.find('.pagination li.current a[data-page]').parent().removeClass('current')
+    $(this).parent('li').addClass('current')
+    false
+
+@genie.init_problems = ->
+  init_scroll()
+  init_pagination()
+
 @genie.init_lesson = (options) ->
   answers = []
   answers[a.position] = a.content for a in options.answers
   for form, pos in options.forms
     problem = new Problem form, answers[pos]
     problem.observe()
+  this.init_problems()
   null
 
 @genie.launch = ->
