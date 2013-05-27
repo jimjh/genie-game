@@ -3,5 +3,4 @@
     %h1.header Lessons
     %hr
     - @lessons.each do |lesson|
-      = link_to lesson.name.titleize,
-        user_lesson_path(lesson.user, lesson)
+      = link_to lesson.title, user_lesson_path(lesson.user, lesson)

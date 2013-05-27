@@ -18,7 +18,7 @@ class NavigationBar
       if window.scrollY >= @top
         @ele.css 'top', 0
       else
-        @ele.css 'top', '-50px'
+        @ele.css 'top', ''
 
 class Problem
 

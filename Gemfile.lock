@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git@github.com:jimjh/genie-parser.git
-  revision: 941a235c43e660ca30649e921838c46028a8c1a0
+  revision: a2bc926be4d7b4bcbbf0a911c1a9b8f32ceee510
   branch: master
   specs:
     spirit (0.2)
