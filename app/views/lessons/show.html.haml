@@ -5,6 +5,8 @@
     %h5
       %small
         Updated by #{@lesson.user.name} #{time_ago_in_words @lesson.updated_at} ago.
+      - if @lesson.user_id == current_user.id
+        %small= link_to '[  Settings  ]',  user_lesson_settings_path(current_user, @lesson)
 
 %hr
 %section.row{role: 'lesson'}

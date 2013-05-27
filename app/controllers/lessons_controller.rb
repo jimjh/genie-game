@@ -18,7 +18,7 @@ class LessonsController < ApplicationController
   #   here.
   def show
 
-    @lesson = Lesson.select(%w[lessons.id user_id title description compiled_path status lessons.updated_at])
+    @lesson = Lesson.select(%w[lessons.id user_id title description compiled_path status lessons.updated_at lessons.slug])
                     .for_user(params[:user])
                     .find(params[:lesson])
     not_found unless @lesson.published?
