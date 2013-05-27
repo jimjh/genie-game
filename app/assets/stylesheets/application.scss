@@ -49,7 +49,6 @@ section[role='lesson'] {
   }
 
   .lesson-problems {
-    transition: top 0.15s;
     &.sticky {
       @media #{$small} {
         position: fixed;

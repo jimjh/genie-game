@@ -19,7 +19,15 @@
   :javascript
     $(function() {
         genie.init_lesson({
-          answers: $('#answers').data('preload'),
-          forms:   $('form.problem')
+          answers:  $('#answers').data('preload'),
+          problems: $('form.problem'),
+          navigation: {
+            bar:    '.lesson-nav',
+            anchor: 'section[role="lesson"]'
+          },
+          viewer: {
+            window: '.lesson-problems',
+            paginator: '.jqpagination'
+          }
         });
     });

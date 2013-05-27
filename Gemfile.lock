@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:jimjh/genie-compiler.git
-  revision: d2febdc3515036713b604801032642d274d5d289
+  revision: d1829dd807864bf22d6528904ed080a8685f692d
   branch: master
   specs:
     lamp (0.2)
@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git@github.com:jimjh/genie-parser.git
-  revision: a2bc926be4d7b4bcbbf0a911c1a9b8f32ceee510
+  revision: 73cb022438e70aa426d0e542753f4ff62a79c7cd
   branch: master
   specs:
     spirit (0.2)
@@ -199,7 +199,7 @@ GEM
     mime-types (1.23)
     mocha (0.14.0)
       metaclass (~> 0.0.1)
-    multi_json (1.7.3)
+    multi_json (1.7.4)
     multipart-post (1.2.0)
     net-scp (1.1.1)
       net-ssh (>= 2.6.5)
