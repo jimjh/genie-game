@@ -9,9 +9,9 @@ genie = exports? and @ or @genie = {}
 
 class NavigationBar
 
-  constructor: (bar, anchor) ->
-    @ele = $ bar
-    @top = $(anchor).offset().top - @ele.outerHeight()
+  constructor: (opts) ->
+    @ele = $ opts.bar
+    @top = $(opts.anchor).offset().top - @ele.outerHeight()
 
   stick: ->
     $(window).scroll =>
@@ -19,6 +19,7 @@ class NavigationBar
         @ele.css 'top', 0
       else
         @ele.css 'top', ''
+    this
 
 class Problem
 
@@ -76,46 +77,46 @@ class Problem
     field = form.find 'input[name="answer"]'
     if field.length == 0 then form else field
 
-init_scroll = ->
-  problems = $('.lesson-problems')
-  y = problems.offset().top
-  w = problems.outerWidth()
-  $(window).scroll ->
-    if window.scrollY >= y
-      problems.addClass 'sticky'
-      problems.css 'width', w
-    else
-      problems.removeClass 'sticky'
-      problems.css 'width', 'auto'
-      w = problems.outerWidth()
-  null
+class Viewer
 
-init_pagination = ->
-  problems = $('.lesson-problems')
-  nums     = problems.find('.pagination a[data-page]')
-  ctrls    = problems.find('.pagination a[data-page-nav]')
-  # TODO
+  constructor: (opts) ->
+    @window = $ opts.window
+    @paginator = @window.find opts.paginator
+    @top   = @window.offset().top
+    @width = @window.outerWidth()
 
-  nums.click ->
-    problems.find('.problem-wrapper:not(.hide)').addClass('hide')
-    problems.find('#problem_' + $(this).data('page')).parent().removeClass('hide')
-    problems.find('.pagination li.current a[data-page]').parent().removeClass('current')
-    $(this).parent('li').addClass('current')
-    false
+  scroll: ->
+    $(window).scroll =>
+      if window.scrollY >= @top - 56
+        @window.addClass 'sticky'
+        @window.css 'width', @width
+      else
+        @window.removeClass 'sticky'
+        @window.css 'width', ''
+        @width = @window.outerWidth()
+    this
 
-@genie.init_problems = ->
-  init_scroll()
-  init_pagination()
-  nav = new NavigationBar '.lesson-nav', 'section[role="lesson"]'
-  nav.stick()
+  paginate: ->
+    @paginator.jqPagination
+      page_string: 'Problem {current_page} of {max_page}'
+      paged: (page) =>
+        @window.find('.problem-wrapper:not(.hide)').addClass('hide')
+        @window.find('#problem_' + (page - 1)).parent().removeClass('hide')
+    this
 
 @genie.init_lesson = (options) ->
+  # init each problem
   answers = []
   answers[a.position] = a.content for a in options.answers
-  for form, pos in options.forms
+  for form, pos in options.problems
     problem = new Problem form, answers[pos]
     problem.observe()
-  this.init_problems()
+  # init navigation bar
+  nav = new NavigationBar options.navigation
+  nav.stick()
+  # init viewer
+  viewer = new Viewer options.viewer
+  viewer.scroll().paginate()
   null
 
 # let all AJAX calls include CSRF token
