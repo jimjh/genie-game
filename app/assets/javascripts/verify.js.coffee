@@ -11,7 +11,7 @@ class NavigationBar
 
   constructor: (bar, anchor) ->
     @ele = $ bar
-    @top = $(anchor).offset().top
+    @top = $(anchor).offset().top - @ele.outerHeight()
 
   stick: ->
     $(window).scroll =>
