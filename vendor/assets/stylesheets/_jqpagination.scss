@@ -1,12 +1,7 @@
-.jqpagination {
-  float: left;
-  border: 1px solid #cdcdcd;
-  border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-}
+$paginator-border-color: #cdcdcd;
 
 .jqpagination a {
+
   display: block;
   float: left;
   height: 20px;
@@ -22,14 +17,14 @@
   line-height: 18px;
   vertical-align: middle;
 
-  background: #F3F3F3; /* Old browsers */
-  background: -moz-linear-gradient(top,  #F3F3F3 0%, #D3D3D3 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#F3F3F3), color-stop(100%,#D3D3D3)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top,  #F3F3F3 0%,#D3D3D3 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top,  #F3F3F3 0%,#D3D3D3 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top,  #F3F3F3 0%,#D3D3D3 100%); /* IE10+ */
-  background: linear-gradient(top,  #F3F3F3 0%,#D3D3D3 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F3F3F3', endColorstr='#D3D3D3',GradientType=0 ); /* IE6-9 */
+  background: #f3f3f3; /* Old browsers */
+  background: -moz-linear-gradient(top,  #f3f3f3 0%, #d3d3d3 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f3f3f3), color-stop(100%,#d3d3d3)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #f3f3f3 0%,#d3d3d3 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #f3f3f3 0%,#d3d3d3 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #f3f3f3 0%,#d3d3d3 100%); /* IE10+ */
+  background: linear-gradient(top,  #f3f3f3 0%,#d3d3d3 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3f3f3', endColorstr='#d3d3d3',GradientType=0 ); /* IE6-9 */
 
 }
 
@@ -63,6 +58,12 @@
 
 .jqpagination {
 
+  border: 1px solid $paginator-border-color;
+  display: inline-block;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+
   a:first-child, a:last-child {
     border: none;
   }
@@ -80,8 +81,8 @@
   }
 
   a {
-    border-right: 1px solid #cdcdcd;
-    border-left: 1px solid #cdcdcd;
+    border-right: 1px solid $paginator-border-color;
+    border-left: 1px solid $paginator-border-color;
     width: 8%;
   }
 
@@ -90,10 +91,8 @@
     float: left;
     text-align: center;
     height: 20px;
-    outline: none;
     vertical-align: middle;
     width: 68%;
-    padding: 0;
     margin: 0;
   }
 
