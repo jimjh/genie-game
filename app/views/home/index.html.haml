@@ -1,6 +1,6 @@
 .row
   .large-12.columns
-    %h1.header Lessons
+    %h1 Lessons
     %hr
     - @lessons.each do |lesson|
       = link_to lesson.title, user_lesson_path(lesson.user, lesson)
