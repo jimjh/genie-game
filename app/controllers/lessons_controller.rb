@@ -18,19 +18,19 @@ class LessonsController < ApplicationController
   #   here.
   def show
 
-    lesson = Lesson.select(%w[lessons.id compiled_path status])
-                   .for_user(params[:user])
-                   .find(params[:lesson])
-    not_found unless lesson.published?
+    @lesson = Lesson.select(%w[lessons.id user_id title description compiled_path status lessons.updated_at])
+                    .for_user(params[:user])
+                    .find(params[:lesson])
+    not_found unless @lesson.published?
 
-    path = Pathname.new(params[:path] || '').expand_path(lesson.compiled_path)
+    path = Pathname.new(params[:path] || '').expand_path(@lesson.compiled_path)
     path = path.sub_ext('.' + params[:format]) unless params[:format].blank?
-    not_found unless path.to_s.starts_with?(lesson.compiled_path) and path.exist?
+    not_found unless path.to_s.starts_with?(@lesson.compiled_path) and path.exist?
 
     # html_safe iff it's at the root - everything else is dangerous static asset
-    if path.parent.to_s == lesson.compiled_path
+    if path.parent.to_s == @lesson.compiled_path
       @contents = File.read path
-      @answers  = lesson.answers_for current_user
+      @answers  = @lesson.answers_for current_user
     else send_file path, disposition: 'attachment'
     end
 
