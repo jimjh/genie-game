@@ -10,20 +10,16 @@
 @import "utils";
 @import "mathjax";
 @import "forms";
-@import "welcome";
 @import "nav_bar";
+@import "jqpagination";
 
-//div.meta.panel {
-//  border-top: $fieldset-border-width solid $shiny-edge-color;
-//}
-//
-//a.hero img {
-//  width: 100%;
-//}
+@import "welcome";
 
 .card-wrapper {
   padding: 4px;
   border-radius: 9px;
+  -moz-border-radius: 9px;
+  -webkit-border-radius: 9px;
   background: lighten($primary-color, 45%);
 }
 
@@ -31,6 +27,8 @@
   background: $body-bg;
   border: 1px solid $hr-border-color;
   border-radius: 6px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
   height: 343px;
   padding: 10px;
   font-size: emCalc(13px);
@@ -51,7 +49,6 @@ section[role='lesson'] {
   }
 
   .lesson-problems {
-    transition: top 0.15s;
     &.sticky {
       @media #{$small} {
         position: fixed;
