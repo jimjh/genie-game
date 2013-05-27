@@ -26,12 +26,18 @@
 section[role='lesson'] {
 
   .lesson-nav {
+    max-width: 100%;
+    top: -50px;
+    left: 0;
+    position: fixed;
     padding-top: 15px;
     border-left: 2px solid $hr-border-color;
-    transition: top 0.5s ease-in-out;
+    transition: top 0.15s;
+    margin-bottom: 0;
   }
 
   .lesson-problems {
+    transition: top 0.15s;
     &.sticky {
       @media #{$small} {
         position: fixed;

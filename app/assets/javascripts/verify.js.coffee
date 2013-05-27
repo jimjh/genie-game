@@ -7,7 +7,21 @@ Copyright (c) 2012-2013 Jiunn Haur Lim, Carnegie Mellon University
 
 genie = exports? and @ or @genie = {}
 
+class NavigationBar
+
+  constructor: (bar, anchor) ->
+    @ele = $ bar
+    @top = $(anchor).offset().top
+
+  stick: ->
+    $(window).scroll =>
+      if window.scrollY >= @top
+        @ele.css 'top', 0
+      else
+        @ele.css 'top', '-50px'
+
 class Problem
+
   constructor: (form, @answer) ->
     @form = $ form
     this.preload() if @answer?
@@ -67,7 +81,7 @@ init_scroll = ->
   y = problems.offset().top
   w = problems.outerWidth()
   $(window).scroll ->
-    if window.scrollY >= y - 99
+    if window.scrollY >= y
       problems.addClass 'sticky'
       problems.css 'width', w
     else
@@ -92,6 +106,8 @@ init_pagination = ->
 @genie.init_problems = ->
   init_scroll()
   init_pagination()
+  nav = new NavigationBar '.lesson-nav', 'section[role="lesson"]'
+  nav.stick()
 
 @genie.init_lesson = (options) ->
   answers = []
@@ -102,9 +118,8 @@ init_pagination = ->
   this.init_problems()
   null
 
-@genie.launch = ->
+# let all AJAX calls include CSRF token
+$ ->
   $.ajaxSetup beforeSend: (xhr) ->
       token = $('meta[name="csrf-token"]').attr 'content'
       xhr.setRequestHeader 'X-CSRF-Token', token
-
-$ @genie.launch
