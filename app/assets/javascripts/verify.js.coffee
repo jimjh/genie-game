@@ -92,16 +92,11 @@ init_scroll = ->
 
 init_pagination = ->
   problems = $('.lesson-problems')
-  nums     = problems.find('.pagination a[data-page]')
-  ctrls    = problems.find('.pagination a[data-page-nav]')
-  # TODO
-
-  nums.click ->
-    problems.find('.problem-wrapper:not(.hide)').addClass('hide')
-    problems.find('#problem_' + $(this).data('page')).parent().removeClass('hide')
-    problems.find('.pagination li.current a[data-page]').parent().removeClass('current')
-    $(this).parent('li').addClass('current')
-    false
+  $('.jqpagination').jqPagination
+    page_string: 'Problem {current_page} of {max_page}'
+    paged: (page) ->
+      problems.find('.problem-wrapper:not(.hide)').addClass('hide')
+      problems.find('#problem_' + (page - 1)).parent().removeClass('hide')
 
 @genie.init_problems = ->
   init_scroll()
