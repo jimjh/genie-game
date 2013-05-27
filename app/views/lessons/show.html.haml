@@ -1,3 +1,11 @@
+%section{role: 'title'}
+  %h1= @lesson.title
+  %h4.subheader= @lesson.description
+  %h5
+    %small
+      Updated by #{@lesson.user.name} #{time_ago_in_words @lesson.updated_at} ago.
+
+%hr
 %section{role: 'lesson'}
   = @contents.html_safe
 

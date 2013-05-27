@@ -27,7 +27,7 @@ class Lesson < ActiveRecord::Base
 
   # attributes ---------------------------------------------------------------
   friendly_id       :name, use: :scoped, scope: [:user]
-  attr_accessible   :name, :url
+  attr_accessible   :name, :url, :title, :description
   attr_accessor     :action
 
   # relationships ------------------------------------------------------------
@@ -87,6 +87,8 @@ class Lesson < ActiveRecord::Base
   def published(opts)
     return false if deactivated?
     self.compiled_path = opts[:compiled_path]
+    self.title         = opts[:title]
+    self.description   = opts[:description]
     self.status        = 'published'
     self.problems.update_or_initialize(opts[:problems] || [])
     notify_observers :after_publish if (suc = save)

@@ -17,7 +17,7 @@ describe Lesson do
   # update
   #   - tells faye
 
-  %w(name url path slug compiled_path status action)
+  %w(name url path slug compiled_path status action title description)
   .each do |s|
     it { should respond_to(s.to_sym) }
   end
@@ -30,7 +30,7 @@ describe Lesson do
     it { should validate_presence_of(s.to_sym) }
   end
 
-  %w(name url).each do |s|
+  %w(name url title description).each do |s|
     it { should allow_mass_assignment_of s.to_sym }
   end
 
