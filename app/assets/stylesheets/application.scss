@@ -21,6 +21,21 @@
 //  width: 100%;
 //}
 
+.card-wrapper {
+  padding: 4px;
+  border-radius: 9px;
+  background: lighten($primary-color, 45%);
+}
+
+.card {
+  background: $body-bg;
+  border: 1px solid $hr-border-color;
+  border-radius: 6px;
+  height: 343px;
+  padding: 10px;
+  font-size: emCalc(13px);
+}
+
 /* Styling within lesson */
 section[role='lesson'] {
 
