@@ -1,6 +1,17 @@
-.row
-  .large-12.columns
-    %h1 Lessons
-    %hr
-    - @lessons.each do |lesson|
-      = link_to lesson.title, user_lesson_path(lesson.user, lesson)
+%h1.centered Lessons
+%hr
+- @lessons.each_slice(4) do |row|
+  .row
+    - row.each do |lesson|
+      .large-3.columns
+        .card-wrapper
+          .card
+            %h6
+              = link_to lesson.title, user_lesson_path(lesson.user, lesson)
+            %h6.subheader
+              by #{lesson.user.name}
+              %small= l lesson.updated_at.to_date, format: :long
+            %hr
+            %p= truncate lesson.description, length: 200, separator: '', omission: '…'
+    - (row.count % 4).times do
+      .large-3.columns
