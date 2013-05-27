@@ -1,4 +1,4 @@
-%section{role: 'title'}
+%section.row{role: 'title'}
   %h1= @lesson.title
   %h4.subheader= @lesson.description
   %h5
@@ -6,7 +6,7 @@
       Updated by #{@lesson.user.name} #{time_ago_in_words @lesson.updated_at} ago.
 
 %hr
-%section{role: 'lesson'}
+%section.row{role: 'lesson'}
   = @contents.html_safe
 
 #answers{data: { preload: @answers.sort_by { |a| a.position }.to_json } }
