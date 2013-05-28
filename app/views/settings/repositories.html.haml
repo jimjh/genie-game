@@ -42,6 +42,14 @@ Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
     $(function() {
       $('.publish').each(function() {
         var form = $(this);
+        form.bind('ajax:success', function(event, data, status, xhr) {
+          if (xhr.status == 201) { // add input field for ID
+            var input = $('<input>').attr({
+              name: 'id', type: 'hidden', value: data.id
+            });
+            form.append(input);
+          }
+        });
         form.find('input[type="radio"]').click(function() {
           form.submit();
         });
@@ -49,4 +57,4 @@ Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
     });
 
 - # TODO improve error handling (lamp, github, active record, faye) (with hover messages?)
-- # TODO add reactivity (e.g. update status codes, ID)
+- # TODO add reactivity (e.g. update status codes)
