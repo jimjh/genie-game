@@ -50,5 +50,12 @@
       genie.init_settings({ switches: $('form.publish') });
     });
 
+- content_for :body do
+  #errors.reveal-modal.small
+    %h2 Oops …
+    %p We were unable to clone the repository.
+    %ul
+    %a.close-reveal-modal &#215;
+
 - # TODO improve error handling (lamp, github, active record, faye)
 - # TODO add reactivity (e.g. update status codes)
