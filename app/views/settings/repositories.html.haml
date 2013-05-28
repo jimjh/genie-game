@@ -22,9 +22,10 @@ Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
             = repo.full_name
         %td
           - if lesson
-            .lesson-status{class: status_class(lesson)}
+            .lesson-status{class: status_class_for(lesson)}
+              %span.has-tip.tip-left{title: lesson.status.capitalize, 'data-tooltip' => ''}
         %td
-          - on = %w[published publishing].include?(lesson.try(:status))
+          - on = checked? lesson
           = form_for Lesson.new, remote: true, html: {id: nil, class: 'publish'} do
             - if lesson
               %input{type: 'hidden', name: 'id',  value: lesson.id}
