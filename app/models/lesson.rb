@@ -116,11 +116,26 @@ class Lesson < ActiveRecord::Base
       .where('problems.active=?', true)
   end
 
+  # @param [String] subpath     path to desired file relative to lesson root
+  # @param [String] format      format of desired file e.g. png, inc
+  # @return [Pathname] absolute path to file
+  # @raise [RecordNotFound] if the path is invalid or does not point to an
+  #   existing file.
+  def path_to(subpath, format)
+    path = Pathname.new(subpath || '').expand_path(compiled_path)
+    path = path.sub_ext('.' + format) unless format.blank?
+    unless path.to_s.starts_with?(compiled_path) and path.exist?
+      raise ActiveRecord::RecordNotFound,
+        "Unable to find file with subpath=#{subpath}.#{format}"
+    end
+    path
+  end
+
   private
 
   # Checks if the given url is a valid git URL. Local paths with +file://+ are
   # not supported.
-  # @note This is not foolproof, and a hacker and still supply a carefully
+  # @note This is not bulletproof, and a hacker and still supply a carefully
   #   crafted string to trick us into cloning a local repository.
   # @see http://www.kernel.org/pub/software/scm/git/docs/git-clone.html
   def url_must_be_valid
