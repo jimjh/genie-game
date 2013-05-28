@@ -25,7 +25,11 @@ class RepoSwitch
       this.update_id data.id if xhr.status == 201
 
     @form.bind 'ajax:error', (event, xhr) =>
-      this.update_errors $.parseJSON(xhr.responseText).errors
+      errors = null
+      try
+        errors = $.parseJSON(xhr.responseText).errors
+      finally
+        this.update_errors errors
 
     # submit form when switch is clicked
     @form.find('input[type="radio"]').click =>
