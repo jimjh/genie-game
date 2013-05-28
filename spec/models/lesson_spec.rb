@@ -17,7 +17,8 @@ describe Lesson do
   # update
   #   - tells faye
 
-  %w(name url path slug compiled_path status action title description)
+  %w[name url path slug compiled_path status
+     action title description last_error]
   .each do |s|
     it { should respond_to(s.to_sym) }
   end

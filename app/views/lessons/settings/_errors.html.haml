@@ -1,0 +1,6 @@
+- if @lesson.last_error.blank?
+  .alert-box.success
+    Hurray! We found no errors with your lesson.
+- else
+  %p The following errors were found with your lesson:
+  %p= @lesson.last_error
