@@ -37,11 +37,4 @@
     .large-12.columns
       = content_for?(:content) ? yield(:content) : yield
 
-  -# JAVASCRIPT
-  - cdn_js.each do |url|
-    %script{src: url}
-  -# %script{src: faye_js}
-  -# :javascript
-  -#  var faye_server = "#{faye}";
-  = javascript_include_tag 'application'
-  = yield :javascript if content_for? :javascript
+  = render partial: 'layouts/javascript'

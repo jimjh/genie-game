@@ -1,25 +1,28 @@
 .lesson-config {
-  a {
-    color: lighten($body-font-color, 40%);
-  }
-  a:hover {
-    color: $primary-color;
-  }
+  a { color: lighten($body-font-color, 40%); }
+  a:hover { color: $primary-color; }
 }
 
 .lesson-status {
+
   background: url(image_path('status.png')) no-repeat;
   width: 60px;
   height: 20px;
   overflow: hidden;
-}
 
-.lesson-status.red {
-  background-position: 0 -40px;
-}
+  &.red { background-position: 0 -40px; }
+  &.yellow { background-position: 0 -20px; }
 
-.lesson-status.yellow {
-  background-position: 0 -20px;
+  span.has-tip {
+    border-bottom: none;
+    cursor: auto;
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: relative;
+    top: 0.5em;
+  }
+
 }
 
 td .switch {
