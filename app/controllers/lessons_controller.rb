@@ -50,7 +50,7 @@ class LessonsController < ApplicationController
     # if ID is given, assume that user wants to toggle
     return toggle if params[:id]
     lesson = current_user.lessons.create params[:lesson]
-    respond_with lesson, only: [:slug, :url, :status]
+    respond_with lesson, only: [:slug, :url, :status, :id]
   end
 
   # Activate/Deactivate

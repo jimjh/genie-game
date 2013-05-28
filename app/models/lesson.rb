@@ -32,7 +32,8 @@ class Lesson < ActiveRecord::Base
 
   # relationships ------------------------------------------------------------
   belongs_to :user
-  has_many   :problems, order: 'digest', dependent: :destroy, autosave: true, extend: UpdateProblemsExtension
+  has_many   :problems, order: 'digest', dependent: :destroy, autosave: true,
+    extend: UpdateProblemsExtension
   has_many   :answers, through: :problems
 
   # validations --------------------------------------------------------------
@@ -62,6 +63,7 @@ class Lesson < ActiveRecord::Base
   # Sets status to +deactivated+.
   # @return [Boolean] success
   def deactivate
+    return false if deactivated?
     self.status = 'deactivated'
     save
   end
