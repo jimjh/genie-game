@@ -50,6 +50,9 @@ class LessonsController < ApplicationController
   def create
     # if ID is given, assume that user wants to toggle
     return toggle if params[:id]
+    # FIXME deal with validation errors
+    # FIXME callback errors causing rollback
+    # FIXME callback errors not causing rollback
     lesson = current_user.lessons.create params[:lesson]
     respond_with lesson, only: [:slug, :url, :status, :id]
   end

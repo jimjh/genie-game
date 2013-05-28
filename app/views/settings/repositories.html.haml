@@ -47,36 +47,7 @@
 - content_for :javascript do
   :javascript
     $(function() {
-
-      var codes  = { published: 'green', publishing: 'yellow',
-                     failed: 'red',      deactivated: 'red'};
-      var colors = 'green yellow red hide';
-
-      $('.publish').each(function() {
-
-        var form = $(this);
-
-        form.bind('ajax:success', function(event, data, status, xhr) {
-          form.closest('tr')
-            .find('.lesson-status')
-            .removeClass(colors)
-            .addClass(codes[data.status])     // update color class
-            .find('span.has-tip')             // update tooltip text
-            .attr('title', data.status.capitalize());
-          if (xhr.status == 201) {            // add hidden input field for ID
-            var attrs = { name: 'id', type: 'hidden', value: data.id };
-            var input = $('<input>').attr(attrs);
-            form.append(input);
-          }
-        });
-
-        // submit form when switch is clicked
-        form.find('input[type="radio"]').click(function() {
-          form.submit();
-        });
-
-      });
-
+      genie.init_settings({ switches: $('form.publish') });
     });
 
 - # TODO improve error handling (lamp, github, active record, faye)
