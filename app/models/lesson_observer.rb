@@ -7,6 +7,7 @@
 # hooks or hooks for non-existent lessons. That is fine as long as we ignore
 # these in the listeners.
 #
+# @todo TODO reuse lamp_client
 # @todo TODO updates should also update hooks if the URL changed
 class LessonObserver < ActiveRecord::Observer
 
@@ -117,9 +118,9 @@ class LessonObserver < ActiveRecord::Observer
     lamp_client.create lesson.url,
       lesson.path.to_s,
       ready_lesson_url(lesson.id), {}
-  rescue => e
+  rescue Thrift::Exception => e
     Rails.logger.error 'Unable to create lesson %s using lamp.' % lesson.path
-    lesson.failed
+    lesson.reload.failed 'lesson.lamp.rpc' # reload to abandon create
     raise e
   ensure
     lamp_client.transport.close

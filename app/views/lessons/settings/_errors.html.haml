@@ -1,6 +1,7 @@
 - if @lesson.last_error.blank?
   .alert-box.success
-    Hurray! We found no errors with your lesson.
+    Hurray! No errors were encountered, and your lesson was published successfully.
 - else
-  %p The following errors were found with your lesson:
-  %p= @lesson.last_error
+  .alert-box.alert
+    We encountered an error while publishing your lesson.
+  %p= t @lesson.last_error

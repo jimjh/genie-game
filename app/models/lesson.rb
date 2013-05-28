@@ -77,9 +77,10 @@ class Lesson < ActiveRecord::Base
 
   # Sets status to +failed+ unless lesson has been deactivated.
   # @return [Boolean] success
-  def failed
+  def failed(error = 'lesson.unknown')
     return false if deactivated?
-    self.status = 'failed'
+    self.status     = 'failed'
+    self.last_error = error
     notify_observers :after_fail if (suc = save)
     suc
   end
@@ -93,6 +94,7 @@ class Lesson < ActiveRecord::Base
     self.description   = opts[:description]
     self.status        = 'published'
     self.problems.update_or_initialize(opts[:problems] || [])
+    self.last_error    = nil
     notify_observers :after_publish if (suc = save)
     suc
   end
