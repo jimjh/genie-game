@@ -1,5 +1,8 @@
-= link_to 'Sync', url_for(sync: true), class: 'button secondary'
-Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
+%h2
+  Your Repositories
+%h6.subheader
+  = link_to 'Sync', url_for(sync: true), class: 'button tiny'
+  Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
 %table
   %thead
     %tr
