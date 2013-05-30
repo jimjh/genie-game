@@ -17,7 +17,8 @@ describe Lesson do
   # update
   #   - tells faye
 
-  %w(name url path slug compiled_path status action title description)
+  %w[name url path slug compiled_path status
+     action title description last_error]
   .each do |s|
     it { should respond_to(s.to_sym) }
   end
@@ -34,7 +35,7 @@ describe Lesson do
     it { should allow_mass_assignment_of s.to_sym }
   end
 
-  %w(path slug compiled_path status action)
+  %w(path slug compiled_path status action updated_at created_at)
   .each do |s|
     it { should_not allow_mass_assignment_of s.to_sym }
   end
@@ -108,7 +109,7 @@ describe Lesson do
         @lesson.reload
       end
       its(:status) { should eq 'deactivated' }
-      its(:deactivate) { should be true }
+      its(:deactivate) { should be false }
     end
 
     describe '#activate' do
@@ -136,6 +137,49 @@ describe Lesson do
       end
       its(:status) { should eq 'publishing' }
       its(:pushed) { should be true }
+    end
+
+    describe '#path_to' do
+
+      before :each do
+        @lesson = FactoryGirl.create :lesson, :published
+        IO.write File.join(@lesson.compiled_path, 'x.png'), 'xkcd'
+        IO.write File.join(@lesson.compiled_path, 'x'), 'xkcd'
+      end
+
+      after :each do
+        FileUtils.remove_entry File.join @lesson.compiled_path, 'x.png'
+        FileUtils.remove_entry File.join @lesson.compiled_path, 'x'
+      end
+
+      let(:path)    { @lesson.path_to subpath, format }
+      let(:subpath) { 'x' }
+      let(:format)  { 'png' }
+      subject       { path }
+
+      context 'without format' do
+        let(:format) { nil }
+        it { should eq Pathname.new File.join @lesson.compiled_path, 'x' }
+      end
+
+      context 'with format' do
+        it { should eq Pathname.new File.join @lesson.compiled_path, 'x.png' }
+      end
+
+      context 'given a non-existent file' do
+        let(:subpath) { 'y.xkcd' }
+        it 'raises ActiveRecord::RecordNotFound' do
+          expect { path }.to raise_error ActiveRecord::RecordNotFound
+        end
+      end
+
+      context 'given an attempted directory traversal' do
+        let(:subpath) { '../configu.ru' }
+        it 'raises ActiveRecord::RecordNotFound' do
+          expect { path }.to raise_error ActiveRecord::RecordNotFound
+        end
+      end
+
     end
 
     context 'with some existing problems' do

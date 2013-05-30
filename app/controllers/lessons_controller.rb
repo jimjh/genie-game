@@ -15,17 +15,18 @@ class LessonsController < ApplicationController
   #   Without the attachment disposition, the browser could choose to render
   #   it and execute malicious code.
   # @todo TODO Cache static assets, so that they don't have to pass through
-  #   here.
+  #   here and the database.
+  # @todo TODO Configure X-SendFile with nginx for performance.
   def show
 
-    @lesson = Lesson.select(%w[lessons.id user_id title description compiled_path status lessons.updated_at lessons.slug])
+    fields  = %w[lessons.id lessons.updated_at lessons.slug
+                 user_id title description compiled_path status]
+    @lesson = Lesson.select(fields)
                     .for_user(params[:user])
                     .find(params[:lesson])
     not_found unless @lesson.published?
 
-    path = Pathname.new(params[:path] || '').expand_path(@lesson.compiled_path)
-    path = path.sub_ext('.' + params[:format]) unless params[:format].blank?
-    not_found unless path.to_s.starts_with?(@lesson.compiled_path) and path.exist?
+    path = @lesson.path_to params[:path], params[:format]
 
     # html_safe iff it's at the root - everything else is dangerous static asset
     if path.parent.to_s == @lesson.compiled_path
@@ -39,7 +40,7 @@ class LessonsController < ApplicationController
   # GET /:user/:lesson/settings/:path
   def settings
     @user, @lesson, @path = params[:user], params[:lesson], params[:path]
-    @lesson = Lesson.select(%w[lessons.id lessons.slug])
+    @lesson = Lesson.select(%w[lessons.id lessons.slug title last_error])
                     .for_user(@user).find(@lesson)
     # security check to prevent directory traversal attacks
     not_found unless File.expand_path(@path, SETTINGS_PATH).starts_with?(SETTINGS_PATH)
@@ -83,6 +84,7 @@ class LessonsController < ApplicationController
     lesson = Lesson.find params[:id]
     status = case params[:status]
     when '200' then lesson.published params[:payload]
+    when '422' then lesson.failed params[:errors]
     else lesson.failed
     end
     status = status ? :ok : :unprocessable_entity

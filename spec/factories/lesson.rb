@@ -8,7 +8,8 @@ FactoryGirl.define do
     user
 
     trait :published do
-      status 'published'
+      status          'published'
+      compiled_path   Rails.root.join('tmp').to_s
     end
 
     trait :deactivated do

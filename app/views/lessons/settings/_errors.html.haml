@@ -1,0 +1,9 @@
+- if @lesson.last_error.blank?
+  .alert-box.success
+    Hurray! No errors were encountered, and your lesson was published successfully.
+- else
+  .alert-box.alert
+    We encountered an error while publishing your lesson.
+
+  - @lesson.last_error_messages.each do |msg|
+    %p= msg
