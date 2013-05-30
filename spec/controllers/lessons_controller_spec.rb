@@ -21,14 +21,14 @@ describe LessonsController do
       expect { get :show, user: '', lesson: @fake.lesson }.to \
         raise_error(ActiveRecord::RecordNotFound)
       expect { get :show, lesson: @fake.lesson }.to \
-        raise_error(ActiveRecord::RecordNotFound)
+        raise_error(ActionController::RoutingError)
     end
 
     it 'requires lesson' do
       expect { get :show, user: @fake.user, lesson: '' }.to \
         raise_error(ActiveRecord::RecordNotFound)
       expect { get :show, user: @fake.user}.to \
-        raise_error(ActiveRecord::RecordNotFound)
+        raise_error(ActionController::RoutingError)
     end
 
     it 'requires published lesson' do
@@ -40,7 +40,7 @@ describe LessonsController do
     it 'protects against traversal attacks in path' do
       %w[.. ../.. ../ / //].each do |c|
         expect { get :show, user: @fake.user, lesson: @fake.lesson, path: c }.to \
-          raise_error(ActionController::RoutingError)
+          raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
@@ -75,7 +75,7 @@ describe LessonsController do
     it 'raises ActionController::RoutingError if the path does not exist' do
       expect do
         get :show, user: @fake.user, lesson: @fake.lesson, path: 'xyz'
-      end.to raise_error(ActionController::RoutingError)
+      end.to raise_error(ActiveRecord::RecordNotFound)
     end
 
   end

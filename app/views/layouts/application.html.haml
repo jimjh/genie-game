@@ -28,6 +28,7 @@
 %body
 
   = render partial: 'layouts/nav_bar'
+  = yield :body if content_for? :body
 
   .row
     .large-12.columns

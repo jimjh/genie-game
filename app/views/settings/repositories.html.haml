@@ -1,5 +1,8 @@
-= link_to 'Sync', url_for(sync: true), class: 'button secondary'
-Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
+%h2
+  Your Repositories
+%h6.subheader
+  = link_to 'Sync', url_for(sync: true), class: 'button tiny'
+  Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
 %table
   %thead
     %tr
@@ -44,37 +47,15 @@ Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
 - content_for :javascript do
   :javascript
     $(function() {
-
-      var codes  = { published: 'green', publishing: 'yellow',
-                     failed: 'red',      deactivated: 'red'};
-      var colors = 'green yellow red hide';
-
-      $('.publish').each(function() {
-
-        var form = $(this);
-
-        form.bind('ajax:success', function(event, data, status, xhr) {
-          form.closest('tr')
-            .find('.lesson-status')
-            .removeClass(colors)
-            .addClass(codes[data.status])     // update color class
-            .find('span.has-tip')             // update tooltip text
-            .attr('title', data.status.capitalize());
-          if (xhr.status == 201) {            // add hidden input field for ID
-            var attrs = { name: 'id', type: 'hidden', value: data.id };
-            var input = $('<input>').attr(attrs);
-            form.append(input);
-          }
-        });
-
-        // submit form when switch is clicked
-        form.find('input[type="radio"]').click(function() {
-          form.submit();
-        });
-
-      });
-
+      genie.init_settings({ switches: $('form.publish') });
     });
+
+- content_for :body do
+  #errors.reveal-modal.small
+    %h2 Oops …
+    %p We are unable to clone the repository at this time.
+    %ul
+    %a.close-reveal-modal &#215;
 
 - # TODO improve error handling (lamp, github, active record, faye)
 - # TODO add reactivity (e.g. update status codes)

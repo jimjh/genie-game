@@ -77,9 +77,10 @@ class Lesson < ActiveRecord::Base
 
   # Sets status to +failed+ unless lesson has been deactivated.
   # @return [Boolean] success
-  def failed
+  def failed(error = { base: ['lesson.unknown'] })
     return false if deactivated?
-    self.status = 'failed'
+    self.status     = 'failed'
+    self.last_error = error
     notify_observers :after_fail if (suc = save)
     suc
   end
@@ -93,6 +94,7 @@ class Lesson < ActiveRecord::Base
     self.description   = opts[:description]
     self.status        = 'published'
     self.problems.update_or_initialize(opts[:problems] || [])
+    self.last_error    = nil
     notify_observers :after_publish if (suc = save)
     suc
   end
@@ -116,11 +118,33 @@ class Lesson < ActiveRecord::Base
       .where('problems.active=?', true)
   end
 
+  # @param [String] subpath     path to desired file relative to lesson root
+  # @param [String] format      format of desired file e.g. png, inc
+  # @return [Pathname] absolute path to file
+  # @raise [RecordNotFound] if the path is invalid or does not point to an
+  #   existing file.
+  def path_to(subpath, format)
+    path = Pathname.new(subpath || '').expand_path(compiled_path)
+    path = path.sub_ext('.' + format) unless format.blank?
+    unless path.to_s.starts_with?(compiled_path) and path.exist?
+      raise ActiveRecord::RecordNotFound,
+        "Unable to find file with subpath=#{subpath}.#{format}"
+    end
+    path
+  end
+
+  def last_error_messages
+    errors = last_error.is_a?(String) ? YAML.load(last_error) : last_error
+    errors.map do |field, value|
+      I18n.t value.shift, field: field, args: value.first
+    end
+  end
+
   private
 
   # Checks if the given url is a valid git URL. Local paths with +file://+ are
   # not supported.
-  # @note This is not foolproof, and a hacker and still supply a carefully
+  # @note This is not bulletproof, and a hacker and still supply a carefully
   #   crafted string to trick us into cloning a local repository.
   # @see http://www.kernel.org/pub/software/scm/git/docs/git-clone.html
   def url_must_be_valid

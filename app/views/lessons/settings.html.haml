@@ -1,3 +1,5 @@
+%h1= @lesson.title
+%hr
 .row
   .large-9.push-3.columns
     = render partial: "lessons/settings/#{File.basename @path}"
@@ -11,3 +13,7 @@
       %section.section{class: active_class(path)}
         %p.title
           = link_to 'Data', path
+      - path = user_lesson_settings_path(@user, @lesson, 'errors')
+      %section.section{class: active_class(path)}
+        %p.title
+          = link_to 'Errors', path

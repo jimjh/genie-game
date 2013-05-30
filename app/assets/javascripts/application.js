@@ -3,6 +3,8 @@
 //= require foundation
 //= require ./term
 //= require ./tty
-//= require ./verify
+//= require ./utils
+//= require ./lesson
+//= require ./settings
 
 $(document).foundation();
