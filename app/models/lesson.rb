@@ -77,7 +77,7 @@ class Lesson < ActiveRecord::Base
 
   # Sets status to +failed+ unless lesson has been deactivated.
   # @return [Boolean] success
-  def failed(error = 'lesson.unknown')
+  def failed(error = { base: ['lesson.unknown'] })
     return false if deactivated?
     self.status     = 'failed'
     self.last_error = error
@@ -131,6 +131,13 @@ class Lesson < ActiveRecord::Base
         "Unable to find file with subpath=#{subpath}.#{format}"
     end
     path
+  end
+
+  def last_error_messages
+    errors = last_error.is_a?(String) ? YAML.load(last_error) : last_error
+    errors.map do |field, value|
+      I18n.t value.shift, field: field, args: value.first
+    end
   end
 
   private

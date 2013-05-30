@@ -3,3 +3,7 @@ en:
     lamp:
       rpc: It appears at this time that there is an issue with our servers. We
         are looking into it and will get back to you as soon as we can.
+      missing: We were uable to locate the %{field} file in the repository.
+        Make sure it is checked in and is readable.
+      syntax: We found the following syntax errors in the %{field} file.
+        %{args}

@@ -84,6 +84,7 @@ class LessonsController < ApplicationController
     lesson = Lesson.find params[:id]
     status = case params[:status]
     when '200' then lesson.published params[:payload]
+    when '422' then lesson.failed params[:errors]
     else lesson.failed
     end
     status = status ? :ok : :unprocessable_entity

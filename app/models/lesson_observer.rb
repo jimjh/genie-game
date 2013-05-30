@@ -120,7 +120,7 @@ class LessonObserver < ActiveRecord::Observer
       ready_lesson_url(lesson.id), {}
   rescue Thrift::Exception => e
     Rails.logger.error 'Unable to create lesson %s using lamp.' % lesson.path
-    lesson.reload.failed 'lesson.lamp.rpc' # reload to abandon create
+    lesson.reload.failed base: ['lesson.lamp.rpc'] # abandon create
     raise e
   ensure
     lamp_client.transport.close

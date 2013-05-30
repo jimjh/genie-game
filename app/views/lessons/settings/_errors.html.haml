@@ -4,4 +4,6 @@
 - else
   .alert-box.alert
     We encountered an error while publishing your lesson.
-  %p= t @lesson.last_error
+
+  - @lesson.last_error_messages.each do |msg|
+    %p= msg
