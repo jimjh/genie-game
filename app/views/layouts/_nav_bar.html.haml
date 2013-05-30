@@ -8,14 +8,20 @@
   %section.top-bar-section
     %ul.right
       - if user_signed_in?
-        %li= link_to current_user.name, settings_path
-        %li.divider
-        %li
-          =link_to settings_path, class: 'icon' do
-            %i.foundicon-settings
-        %li
-          =link_to destroy_session_path, method: :delete, class: 'icon' do
-            %i.foundicon-right-arrow
+        %li.has-dropdown
+          %a{href: '#'}
+            %i.foundicon-smiley
+              %p= current_user.name
+          %ul.dropdown
+            %li
+              =link_to settings_path, class: 'icon' do
+                %i.foundicon-settings
+                  %p Settings
+            %li.divider
+            %li
+              =link_to destroy_session_path, method: :delete, class: 'icon' do
+                %i.foundicon-right-arrow
+                  %p Sign Out
       - else
         %li.has-form
           = link_to 'Sign In', user_omniauth_authorize_path(:github), class: 'button small'

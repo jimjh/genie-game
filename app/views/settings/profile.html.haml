@@ -1,4 +1,22 @@
-%table
+%h2 About You
+%hr
+%table.profile
   %tbody
-    %td member for
-    %td= time_ago_in_words current_user.created_at
+    %tr
+      %td seen
+      %td #{time_ago_in_words current_user.last_sign_in_at} ago
+    %tr
+      %td member for
+      %td= time_ago_in_words current_user.created_at
+%h5 Authorizations
+%table.authorizations
+  %tbody
+    - current_user.authorizations.each do |auth|
+      %tr
+        %th= auth.provider
+        %td nickname
+        %td= link_to auth.nickname, auth.link
+      %tr
+        %th
+        %td name
+        %td= auth.name

@@ -15,12 +15,12 @@
 
   %title= content_for?(:title) ? yield(:title) + '⋅ Genie' : 'Genie'
 
+  = stylesheet_link_tag 'application'
   -# icons
   %link{rel: 'stylesheet', href: '/assets/general_foundicons.css'}
   /[if lt IE8]
     %link{rel: 'stylesheet', href: '/assets/general_foundicons_ie7.css'}
 
-  = stylesheet_link_tag 'application'
   = javascript_include_tag 'vendor/custom.modernizr'
   = csrf_meta_tags
   = render partial: 'layouts/mathjax'
