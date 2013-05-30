@@ -41,6 +41,7 @@ class Problem
 
   # Adds click listeners to the submit forms.
   observe: ->
+    @form.find('input[type="radio"]:checked').next('span.custom.radio').addClass 'checked'
     @form.submit (e) =>
       this.submit()
       false
@@ -52,20 +53,15 @@ class Problem
       url: @form.attr 'action'
       data: @form.serialize()
       success: (answer) => (this.update @form)(answer.results)
+      error: => (this.update @form)(false)
 
   # Shows results of last submission at the given form.
   # TODO: refactor
   update: (form) ->
     (results) =>
       switch results
-        when true
-          field = this.extract form
-          field.removeClass 'error'
-          field.addClass 'success'
-        when false
-          field = this.extract form
-          field.removeClass 'success'
-          field.addClass 'error'
+        when true, false
+          this.toggle form, results
         else
           for i, row of results
             for j, cell of row
@@ -73,8 +69,19 @@ class Problem
               (this.update input)(cell)
       null
 
+  toggle:  (form, result) ->
+    field = this.extract form
+    field.removeClass 'success error'
+    buttons = field.filter 'span.custom.radio.checked'
+    if buttons.length == 0
+      field.toggleClass 'success', result
+      field.toggleClass 'error', !result
+    else
+      buttons.toggleClass 'success', result
+      buttons.toggleClass 'error',   !result
+
   extract: (form) ->
-    field = form.find 'input[name="answer"]'
+    field = form.find 'input[name="answer"], span.custom.radio'
     if field.length == 0 then form else field
 
 class Viewer

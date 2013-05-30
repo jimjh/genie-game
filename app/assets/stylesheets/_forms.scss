@@ -28,10 +28,15 @@ label.success {
   @include form-label-success-color;
 }
 
+input[type='radio'] + span.custom.radio.error {
+  @include form-error-color;
+}
+
 .success input:not([type='submit']),
 input.success,
 .success textarea,
-textarea.success {
+textarea.success,
+input[type='radio'] + span.custom.radio.success {
   @include form-success-color;
 }
 
@@ -40,6 +45,6 @@ small.success {
   @include form-success-message;
 }
 
-form {
-  transition: color 0.5s ease-in-out;
+form input, form.custom span.custom {
+  transition: background-color 0.5s ease-in-out;
 }
