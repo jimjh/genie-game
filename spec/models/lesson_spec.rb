@@ -40,7 +40,6 @@ describe Lesson do
     it { should_not allow_mass_assignment_of s.to_sym }
   end
 
-  it { should validate_uniqueness_of(:name).scoped_to(:user_id) }
   it { should allow_git_urls.for(:url) }
 
   # should not allow local
