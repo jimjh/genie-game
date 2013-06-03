@@ -3,7 +3,6 @@ class LessonsController < ApplicationController
   protect_from_forgery except: [:push, :ready, :gone]
   before_filter :authenticate_user!, except: [:push, :ready, :gone]
   before_filter :authenticate_github!, only: [:push]
-  skip_filter   :protect_closed_beta,  only: [:push, :ready, :gone]
   respond_to    :json, :html
 
   INDEX_FILE    = 'index.inc'
