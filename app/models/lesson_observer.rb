@@ -45,7 +45,7 @@ class LessonObserver < ActiveRecord::Observer
 
   def before_create(lesson)
     lesson.action = :create
-    create_hook  lesson
+    create_hook lesson
   end
 
   def after_publish(lesson)

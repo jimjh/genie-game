@@ -1,1 +1,5 @@
 en:
+  messages:
+    settings:
+      failures:
+        github_service: We are unable to reach the Github at this time.
