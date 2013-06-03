@@ -19,18 +19,14 @@ ul { list-style-position: inside; }
 
 .card-wrapper {
   padding: 4px;
-  border-radius: 9px;
-  -moz-border-radius: 9px;
-  -webkit-border-radius: 9px;
+  @include radius(9px);
   background: lighten($primary-color, 45%);
 }
 
 .card {
   background: $body-bg;
   border: 1px solid $hr-border-color;
-  border-radius: 6px;
-  -moz-border-radius: 6px;
-  -webkit-border-radius: 6px;
+  @include radius(6px);
   height: 343px;
   padding: 10px;
   font-size: emCalc(13px);

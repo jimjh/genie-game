@@ -1,0 +1,50 @@
+// Adapted from foundation/blob/master/scss/foundation/components/_forms.scss
+
+@mixin form-label-success-color($color:$success-color) { color: $color; }
+
+@mixin form-success-color($color:$success-color) {
+  border-color: $color;
+  background-color: rgba($color, 0.1);
+  &:focus {
+    background: $input-focus-bg-color;
+    border-color: $input-focus-border-color;
+  }
+}
+
+@mixin form-success-message($bg:$success-color) {
+  display: block;
+  padding: $input-error-message-padding;
+  margin-top: $input-error-message-top;
+  margin-bottom: $form-spacing;
+  font-size: $input-error-message-font-size;
+  font-weight: $input-error-message-font-weight;
+  $bg-lightness: lightness($bg);
+  background: $bg;
+  color: #fff;
+}
+
+.success label,
+label.success {
+  @include form-label-success-color;
+}
+
+input[type='radio'] + span.custom.radio.error {
+  @include form-error-color;
+}
+
+.success input:not([type='submit']),
+input.success,
+.success textarea,
+textarea.success,
+input[type='radio'] + span.custom.radio.success {
+  @include form-success-color;
+}
+
+.success small,
+small.success {
+  @include form-success-message;
+}
+
+form input, form.custom span.custom {
+  transition: background-color 0.5s ease-in-out;
+}
