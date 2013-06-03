@@ -1,0 +1,4 @@
+en:
+  time:
+    formats:
+      short_dt: '%a, %b %e at %l:%M %p'

@@ -150,7 +150,7 @@ class Lesson < ActiveRecord::Base
   def url_must_be_valid
     url.blank? ||
       (url_is_remote? and url_has_suffix? and url_matches?) ||
-      errors.add(:url, 'is not a valid git URL.')
+      errors.add(:url, :invalid)
   end
 
   # Sets default values.

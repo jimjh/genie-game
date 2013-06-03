@@ -2,8 +2,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   skip_filter :protect_closed_beta # TODO: remove
 
-  # TODO: I18n strings
-
   # GET /users/auth/github/callbacks
   def github
     oauthorize 'github'

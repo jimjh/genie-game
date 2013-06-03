@@ -36,6 +36,7 @@ end
 group :test, :development do
   gem 'sqlite3'
   gem 'debugger-pry'
+  gem 'brakeman'
   gem 'rspec-rails', '~> 2.12'
   gem 'debugger',    '~> 1.3'
   gem 'pry',         '~> 0.9'

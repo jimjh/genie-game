@@ -30,7 +30,7 @@ class Answer < ActiveRecord::Base
 
   def lesson_must_be_published
     if problem.present? and problem.lesson.present? and !problem.lesson.published?
-      errors.add(:base, 'Lesson must be published')
+      errors.add(:base, :not_published)
     end
   end
 

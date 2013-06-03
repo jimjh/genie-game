@@ -4,7 +4,7 @@ class LessonsController < ApplicationController
   before_filter :authenticate_user!, except: [:push, :ready, :gone]
   before_filter :authenticate_github!, only: [:push]
   skip_filter   :protect_closed_beta,  only: [:push, :ready, :gone]
-  respond_to    :json
+  respond_to    :json, :html
 
   INDEX_FILE    = 'index.inc'
   SETTINGS_PATH = Rails.root.join('app', 'views', 'lessons', 'settings').to_s

@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    errors:
+      models:
+        lesson:
+          attributes:
+            url:
+              invalid: is not a valid git URL
+        answer:
+          attributes:
+            base:
+              not_published: lesson is not published
