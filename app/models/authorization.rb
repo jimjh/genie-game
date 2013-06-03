@@ -16,7 +16,6 @@ class Authorization < ActiveRecord::Base
   belongs_to :user
 
   # validations --------------------------------------------------------------
-  validates_presence_of  :provider, :uid, :user_id, :token, :nickname
-  validates_existence_of :user
+  validates_presence_of  :provider, :uid, :user, :token, :nickname
 
 end

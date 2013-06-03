@@ -18,8 +18,7 @@ class Problem < ActiveRecord::Base
   attr_accessible :solution, :digest, :position, :active
 
   # validations --------------------------------------------------------------
-  validates_existence_of :lesson
-  validates_presence_of  :digest, :position
+  validates_presence_of  :digest, :position, :lesson
   validates_numericality_of :position
 
   # callbacks ----------------------------------------------------------------

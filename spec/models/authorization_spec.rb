@@ -7,7 +7,7 @@ describe Authorization do
     it { should respond_to(attr.to_sym) }
   end
 
-  %w(provider uid user_id token nickname).each do |attr|
+  %w(provider uid token nickname).each do |attr|
     it { should validate_presence_of(attr.to_sym) }
   end
 

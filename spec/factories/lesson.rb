@@ -5,6 +5,7 @@ FactoryGirl.define do
 
     name      { Faker::Company.name }
     url       'git@github.com:jimjh/xyz.git'
+    owner     { Faker::Internet.user_name }
     user
 
     trait :published do

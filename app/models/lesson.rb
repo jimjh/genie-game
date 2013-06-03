@@ -39,10 +39,9 @@ class Lesson < ActiveRecord::Base
   has_many   :answers, through: :problems
 
   # validations --------------------------------------------------------------
-  validates_presence_of   :name, :url, :user_id, :owner
+  validates_presence_of   :name, :url, :user_id, :owner, :user
   validates_uniqueness_of :name, scope: :user_id # FIXME do we need this
   validates_inclusion_of  :status, in: STATUSES
-  validates_existence_of  :user
   validate                :url_must_be_valid
 
   # scopes -------------------------------------------------------------------

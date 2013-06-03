@@ -17,9 +17,8 @@ describe LessonObserver do
 
   before(:each)  do
     Rails.application.routes.default_url_options[:host] = 'test.host'
-    @auth  = lesson.user.authorizations.first
     observer.stubs(:lamp_client).returns(lamp_client)
-    observer.stubs(:github).returns([@auth, github_client])
+    observer.stubs(:github).returns(github_client)
     ActiveRecord::Observer.enable_observers
   end
 
@@ -33,14 +32,14 @@ describe LessonObserver do
 
     it 'creates a web hook' do
       github_hooks.expects(:create).once
-        .with(@auth.nickname, lesson.name, has_key(:config) & has_entry(:name, 'web'))
+        .with(lesson.owner, lesson.name, has_key(:config) & has_entry(:name, 'web'))
         .returns(Hashie::Mash.new id: hook_id)
       lesson.save!
     end
 
     it 'deletes the web hook if a rollback was issued' do
       github_hooks.expects(:delete).once
-        .with(@auth.nickname, lesson.name, hook_id)
+        .with(lesson.owner, lesson.name, hook_id)
       Lesson.transaction do
         lesson.save!
         raise ActiveRecord::Rollback, 'to force a rollback'
@@ -84,7 +83,7 @@ describe LessonObserver do
 
     it 'deletes the web hook' do
       github_hooks.expects(:delete).once
-        .with(@auth.nickname, lesson.name, lesson.hook)
+        .with(lesson.owner, lesson.name, lesson.hook)
       lesson.destroy
     end
 
