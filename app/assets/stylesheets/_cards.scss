@@ -1,0 +1,17 @@
+$card-radius: 9px;
+
+.card-wrapper {
+  padding: 4px;
+  @include radius($card-radius);
+  background: lighten($primary-color, 45%);
+  margin-bottom: 30px;
+}
+
+.card {
+  background: $body-bg;
+  border: 1px solid $hr-border-color;
+  @include radius($card-radius);
+  height: 343px;
+  padding: 10px;
+  font-size: emCalc(13px);
+}
