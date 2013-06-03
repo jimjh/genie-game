@@ -7,4 +7,4 @@
 //= require ./lesson
 //= require ./settings
 
-$(document).foundation();
+$(function(){ $(document).foundation(); });
