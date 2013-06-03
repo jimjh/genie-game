@@ -38,6 +38,7 @@
               %input{type: 'hidden', name: 'id',  value: lesson.id}
             %input{type: 'hidden', name: 'lesson[url]', value: repo.clone_url}
             %input{type: 'hidden', name: 'lesson[name]', value: repo.name}
+            %input{type: 'hidden', name: 'lesson[owner]', value: repo.owner.login}
             .switch.radius.small
               %input{type: 'radio', checked: !on, name: 'toggle', value: 'off'}
               %label Off

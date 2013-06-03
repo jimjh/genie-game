@@ -18,7 +18,7 @@ describe Lesson do
   #   - tells faye
 
   %w[name url path slug compiled_path status
-     action title description last_error]
+     action title description last_error owner]
   .each do |s|
     it { should respond_to(s.to_sym) }
   end
@@ -27,11 +27,11 @@ describe Lesson do
   it { should have_many(:problems).order('digest').dependent(:destroy) }
   it { should have_many(:answers).through(:problems) }
 
-  %w(name url user_id).each do |s|
+  %w(name url user_id owner).each do |s|
     it { should validate_presence_of(s.to_sym) }
   end
 
-  %w(name url title description).each do |s|
+  %w(name url title description owner).each do |s|
     it { should allow_mass_assignment_of s.to_sym }
   end
 
