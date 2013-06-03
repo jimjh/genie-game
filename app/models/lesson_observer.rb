@@ -66,10 +66,10 @@ class LessonObserver < ActiveRecord::Observer
 
   # Reads the user's authorization (from omniauth) and creates a Github client.
   # @param [Lesson] lesson
-  # @return [Authorization, Github] authorization and github client
+  # @return [Github::Client] github client
   def github(lesson)
     auth = lesson.user.authorizations.find_by_provider! 'github'
-    return auth, Github.new(oauth_token: auth.token)
+    Github.new(oauth_token: auth.token)
   end
 
   # Deletes a webhook from the GitHub repository. If the operation failed, the
@@ -78,8 +78,8 @@ class LessonObserver < ActiveRecord::Observer
   # @return [void]
   def delete_hook(lesson)
     return if lesson.hook.blank?
-    auth, client = github lesson
-    client.repos.hooks.delete auth.nickname, lesson.name, lesson.hook
+    client = github lesson
+    client.repos.hooks.delete lesson.owner, lesson.name, lesson.hook
   end
 
   # Tells compiler to delete lesson files.
@@ -103,8 +103,8 @@ class LessonObserver < ActiveRecord::Observer
   # @todo FIXME make this work with organizations
   # @return [void]
   def create_hook(lesson)
-    auth, client = github lesson
-    resp = client.repos.hooks.create auth.nickname, lesson.name, hook_params
+    client = github lesson
+    resp = client.repos.hooks.create lesson.owner, lesson.name, hook_params
     lesson.hook = resp.id
   end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130528162606) do
+ActiveRecord::Schema.define(:version => 20130603162051) do
 
   create_table "answers", :force => true do |t|
     t.integer  "problem_id"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(:version => 20130528162606) do
     t.string   "title"
     t.text     "description"
     t.string   "last_error"
+    t.string   "owner"
   end
 
   add_index "lessons", ["slug"], :name => "index_lessons_on_slug", :unique => true
