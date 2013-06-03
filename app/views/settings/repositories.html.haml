@@ -18,7 +18,7 @@
         %td.lesson-config
           - if lesson
             = link_to user_lesson_settings_path(current_user, lesson) do
-              %i.foundicon-settings
+              %i.icon-cog
         %td
           - if lesson.try(:published?)
             = link_to repo.full_name, user_lesson_path(current_user, lesson)

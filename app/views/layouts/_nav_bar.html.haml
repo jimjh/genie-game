@@ -9,19 +9,22 @@
     %ul.right
       - if user_signed_in?
         %li.has-dropdown
-          %a{href: '#'}
-            %i.foundicon-smiley
-              %p= current_user.name
+          %a{href: '#'}= current_user.name
           %ul.dropdown
             %li
+              %label
+                %i.icon-user
+                My Account
+            %li.divider
+            %li
               =link_to settings_path, class: 'icon' do
-                %i.foundicon-settings
-                  %p Settings
+                %i.icon-cog
+                Settings
             %li.divider
             %li
               =link_to destroy_session_path, method: :delete, class: 'icon' do
-                %i.foundicon-right-arrow
-                  %p Sign Out
+                %i.icon-signout
+                Sign Out
       - else
         %li.has-form
           = link_to 'Sign In', user_omniauth_authorize_path(:github), class: 'button small'

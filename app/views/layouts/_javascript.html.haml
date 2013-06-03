@@ -1,5 +1,5 @@
 - cdn_js.each do |url|
-  %script{src: url}
+  = javascript_include_tag url
 -# %script{src: faye_js}
 -# :javascript
 -#  var faye_server = "#{faye}";

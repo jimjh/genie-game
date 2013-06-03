@@ -53,7 +53,7 @@ Genie::Application.configure do
   # config.action_controller.asset_host = "http://assets.example.com"
 
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-  config.assets.precompile += %w[general_foundicons.css general_foundicons_ie7.css]
+  config.assets.precompile += %w[]
 
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_url_options = { host: HOST }

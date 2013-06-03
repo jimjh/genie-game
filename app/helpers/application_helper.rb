@@ -28,4 +28,10 @@ module ApplicationHelper
     ]
   end
 
+  def cdn_css
+    %w[
+      //netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css
+    ]
+  end
+
 end

@@ -1,26 +1,5 @@
 nav.top-bar {
 
-  @media only screen and (min-width:"#{$topbar-breakpoint}") {
-    ul:not(.dropdown) > li > a > i[class*="foundicon"] {
-      line-height: emCalc(42px);
-    }
-  }
-
-  i[class*="foundicon"] {
-
-    font-style: normal;
-
-    p {
-      display: inline;
-      position: relative;
-      top: emCalc(-2px);
-      margin-left: emCalc(10px);
-    }
-
-  }
-
-  a.icon:hover {
-    color: lighten($primary-color, 10%);
-  }
+  a.icon:hover { color: lighten($primary-color, 10%); }
 
 }
