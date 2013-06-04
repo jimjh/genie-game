@@ -11,7 +11,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130603162051) do
+ActiveRecord::Schema.define(:version => 20130604022847) do
+
+  create_table "access_requests", :force => true do |t|
+    t.integer  "requester_id"
+    t.integer  "requestee_id"
+    t.datetime "granted_on"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "access_requests", ["requestee_id"], :name => "index_access_requests_on_requestee_id"
+  add_index "access_requests", ["requester_id"], :name => "index_access_requests_on_requester_id"
 
   create_table "answers", :force => true do |t|
     t.integer  "problem_id"

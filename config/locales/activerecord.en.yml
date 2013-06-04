@@ -10,3 +10,7 @@ en:
           attributes:
             base:
               not_published: lesson is not published
+        access_request:
+          attributes:
+            base:
+              already_granted: request has already been granted

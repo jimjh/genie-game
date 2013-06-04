@@ -1,7 +1,6 @@
 # == Answer
 # An answer is a student's attempt at a problem.
 class Answer < ActiveRecord::Base
-
   include WeakComparator
 
   serialize :content, Marshal
