@@ -10,7 +10,9 @@
 # - +uid+ is the user's primary key at the provider
 class Authorization < ActiveRecord::Base
 
+  # attributes ---------------------------------------------------------------
   attr_accessible :link, :name, :nickname, :provider, :secret, :token, :uid
+  attr_readonly :user_id
 
   # relationships ------------------------------------------------------------
   belongs_to :user
