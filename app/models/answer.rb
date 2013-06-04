@@ -11,6 +11,7 @@ class Answer < ActiveRecord::Base
 
   # attributes ---------------------------------------------------------------
   attr_accessible :content
+  attr_readonly   :problem_id, :user_id
 
   # validations --------------------------------------------------------------
   validates_presence_of :content, :problem, :user
