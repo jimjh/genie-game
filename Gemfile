@@ -60,7 +60,6 @@ gem 'omniauth-github',  '~> 1.0'
 
 gem 'simple_form',         '~> 2.0'
 gem 'friendly_id',         '~> 4.0'
-gem 'validates_existence', '~> 0.8'
 
 # GitHub Adapter
 gem 'github_api',   '~> 0.8'
