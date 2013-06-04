@@ -7,7 +7,7 @@
 # hooks or hooks for non-existent lessons. That is fine as long as we ignore
 # these in the listeners.
 #
-# @todo TODO reuse lamp_client
+# @todo TODO reconnect lamp_client on failure
 # @todo TODO updates should also update hooks if the URL changed
 class LessonObserver < ActiveRecord::Observer
 

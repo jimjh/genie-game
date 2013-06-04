@@ -17,8 +17,8 @@ describe Lesson do
   # update
   #   - tells faye
 
-  %w[name url path slug compiled_path status
-     action title description last_error owner]
+  %w[name url path slug compiled_path status action
+     title description last_error owner]
   .each do |s|
     it { should respond_to(s.to_sym) }
   end
@@ -27,17 +27,18 @@ describe Lesson do
   it { should have_many(:problems).order('digest').dependent(:destroy) }
   it { should have_many(:answers).through(:problems) }
 
-  %w(name url user_id owner).each do |s|
-    it { should validate_presence_of(s.to_sym) }
-  end
-
-  %w(name url title description owner).each do |s|
+  %w[name url title description owner].each do |s|
     it { should allow_mass_assignment_of s.to_sym }
   end
 
-  %w(path slug compiled_path status action updated_at created_at)
-  .each do |s|
+  %w[path slug compiled_path status action updated_at created_at].each do |s|
     it { should_not allow_mass_assignment_of s.to_sym }
+  end
+
+  it { should have_readonly_attribute :user_id }
+
+  %w[name url user owner].each do |s|
+    it { should validate_presence_of(s.to_sym) }
   end
 
   it { should allow_git_urls.for(:url) }
@@ -53,17 +54,12 @@ describe Lesson do
   it { should ensure_inclusion_of(:status).in_array(Lesson::STATUSES) }
 
   it { should have_a_valid_factory }
-  it { should validate_existence_of :user }
 
   context 'created with default values' do
-
-    before(:each) { @lesson = FactoryGirl.create(:lesson, name: nil) }
-    after(:each)  { @lesson.destroy }
-    subject { @lesson }
-
+    subject { lesson }
+    let(:lesson) { lesson = FactoryGirl.create(:lesson, name: nil) }
     its(:status) { should eq 'publishing' }
-    its(:name)   { should eq File.basename @lesson.url, '.git' }
-
+    its(:name)   { should eq File.basename lesson.url, '.git' }
   end
 
   context 'given an existing lesson' do

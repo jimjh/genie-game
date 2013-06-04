@@ -16,6 +16,7 @@ class Problem < ActiveRecord::Base
 
   # attributes ---------------------------------------------------------------
   attr_accessible :solution, :digest, :position, :active
+  attr_readonly   :lesson_id
 
   # validations --------------------------------------------------------------
   validates_presence_of  :digest, :position, :lesson

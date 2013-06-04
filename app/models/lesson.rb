@@ -31,6 +31,7 @@ class Lesson < ActiveRecord::Base
   friendly_id       :name, use: :scoped, scope: [:user]
   attr_accessible   :name, :url, :title, :description, :owner
   attr_accessor     :action
+  attr_readonly     :user_id
 
   # relationships ------------------------------------------------------------
   belongs_to :user, inverse_of: :lessons
@@ -43,7 +44,7 @@ class Lesson < ActiveRecord::Base
   has_many   :answers, through: :problems
 
   # validations --------------------------------------------------------------
-  validates_presence_of   :name, :url, :user_id, :owner, :user
+  validates_presence_of   :name, :url, :owner, :user
   validates_inclusion_of  :status, in: STATUSES
   validate                :url_must_be_valid
 
