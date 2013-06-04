@@ -7,8 +7,8 @@ class AccessRequest < ActiveRecord::Base
   attr_readonly :requester_id, :requestee_id
 
   # validations --------------------------------------------------------------
-  # TODO validate uniqueness
   validates_presence_of :requester, :requestee
+  validates_uniqueness_of :requestee_id, scope: :requester_id
   validate :must_not_have_granted_on, if: :granted_on_changed?
 
   def granted?

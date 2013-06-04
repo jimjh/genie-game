@@ -17,6 +17,7 @@ describe AccessRequest do
 
   it { should validate_presence_of :requester }
   it { should validate_presence_of :requestee }
+  it { should validate_uniqueness_of(:requestee_id).scoped_to(:requester_id) }
 
   context 'creating an access request' do
 
