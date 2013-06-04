@@ -8,9 +8,6 @@ test: &test
   <<: *sqlite
   database: db/test.sqlite3
 
-cucumber:
-  <<: *test
-
 production:
   adapter: postgresql
   encoding: unicode

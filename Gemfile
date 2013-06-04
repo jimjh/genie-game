@@ -20,8 +20,6 @@ group :test do
   gem 'no_peeping_toms',    '~> 2.1'
   gem 'faker',              '~> 1.1'
   gem 'mocha',              '~> 0.10', require: false
-  gem 'cucumber-rails',     '~> 1.3',  require: false
-  gem 'database_cleaner',   '~> 0.9'
   gem 'shoulda',            '~> 3.3'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'simplecov',          '~> 0.7',  require: false
