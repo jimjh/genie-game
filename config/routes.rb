@@ -22,6 +22,8 @@ Genie::Application.routes.draw do
     match '/repositories' => :repositories, :as => 'repositories'
   end
 
+  resources :access_requests
+
   # Home
   root :to => 'home#index'
 

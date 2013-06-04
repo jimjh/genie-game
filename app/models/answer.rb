@@ -6,8 +6,8 @@ class Answer < ActiveRecord::Base
   serialize :content, Marshal
 
   # relationships ------------------------------------------------------------
-  belongs_to :problem
-  belongs_to :user
+  belongs_to :problem, inverse_of: :answers
+  belongs_to :user, inverse_of: :answers
 
   # attributes ---------------------------------------------------------------
   attr_accessible :content

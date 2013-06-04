@@ -33,9 +33,13 @@ class Lesson < ActiveRecord::Base
   attr_accessor     :action
 
   # relationships ------------------------------------------------------------
-  belongs_to :user
-  has_many   :problems, order: 'digest', dependent: :destroy, autosave: true,
-    extend: UpdateProblemsExtension
+  belongs_to :user, inverse_of: :lessons
+  has_many   :problems,
+    order: 'digest',
+    dependent: :destroy,
+    autosave: true,
+    extend: UpdateProblemsExtension,
+    inverse_of: :lesson
   has_many   :answers, through: :problems
 
   # validations --------------------------------------------------------------

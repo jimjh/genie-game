@@ -19,13 +19,24 @@ class User < ActiveRecord::Base
   devise :rememberable, :trackable, :omniauthable
   friendly_id :nickname, use: :slugged
 
+  # attributes ---------------------------------------------------------------
   attr_accessible :remember_me, :nickname
   attr_accessor   :nickname
 
   # relationships ------------------------------------------------------------
-  has_many :authorizations, dependent: :destroy
-  has_many :lessons, dependent: :destroy
-  has_many :answers, dependent: :destroy
+  has_many :authorizations, dependent: :destroy, inverse_of: :user
+  has_many :lessons, dependent: :destroy, inverse_of: :user
+  has_many :answers, dependent: :destroy, inverse_of: :user
+  has_many :sent_access_requests,
+    class_name: AccessRequest,
+    foreign_key: :requester_id,
+    dependent:   :destroy,
+    inverse_of:  :requester
+  has_many :received_access_requests,
+    class_name: AccessRequest,
+    foreign_key: :requestee_id,
+    dependent:   :destroy,
+    inverse_of:  :requestee
 
   # validations --------------------------------------------------------------
   validates_presence_of   :nickname

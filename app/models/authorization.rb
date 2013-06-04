@@ -15,7 +15,7 @@ class Authorization < ActiveRecord::Base
   attr_readonly :user_id
 
   # relationships ------------------------------------------------------------
-  belongs_to :user
+  belongs_to :user, inverse_of: :authorizations
 
   # validations --------------------------------------------------------------
   validates_presence_of  :provider, :uid, :user, :token, :nickname

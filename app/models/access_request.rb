@@ -1,12 +1,13 @@
 class AccessRequest < ActiveRecord::Base
 
   # relationships ------------------------------------------------------------
-  belongs_to :requester, class_name: User
-  belongs_to :requestee, class_name: User
+  belongs_to :requester, class_name: User, inverse_of: :sent_access_requests
+  belongs_to :requestee, class_name: User, inverse_of: :received_access_requests
 
   attr_readonly :requester_id, :requestee_id
 
   # validations --------------------------------------------------------------
+  # TODO validate uniqueness
   validates_presence_of :requester, :requestee
   validate :must_not_have_granted_on, if: :granted_on_changed?
 
