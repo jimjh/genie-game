@@ -23,29 +23,12 @@ describe AccessRequest do
 
     subject { request }
 
-    context 'without a granted_on date' do
+    context 'that is pending' do
       let(:request) { FactoryGirl.create :access_request }
-      it { should_not be_granted }
+      its(:status)  { should eq 'pending' }
       it 'grants' do
         request.grant.should be true
-        request.reload.granted_on.should <= Time.now
-      end
-    end
-
-    context 'with a granted_on date in the past' do
-      let(:request) { FactoryGirl.create :access_request, :granted }
-      it { should be_granted }
-      it 'does not grant' do
-        request.grant.should be false
-      end
-    end
-
-    context 'with a granted_on date in the future' do
-      let(:request) { FactoryGirl.create :access_request, granted_on: 1.month.from_now }
-      it { should_not be_granted }
-      it 'does not grant' do
-        request.grant.should be false
-      end
+     end
     end
 
   end

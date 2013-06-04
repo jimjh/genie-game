@@ -55,4 +55,9 @@ class User < ActiveRecord::Base
     authorizations.first.try(:name) || 'Account'
   end
 
+  def to_s
+    auth = authorizations.first
+    auth.name || auth.nickname
+  end
+
 end

@@ -1,5 +1,7 @@
 class AccessRequest < ActiveRecord::Base
 
+  STATUSES = %w[pending granted denied]
+
   # relationships ------------------------------------------------------------
   belongs_to :requester, class_name: User, inverse_of: :sent_access_requests
   belongs_to :requestee, class_name: User, inverse_of: :received_access_requests
@@ -9,27 +11,25 @@ class AccessRequest < ActiveRecord::Base
   # validations --------------------------------------------------------------
   validates_presence_of :requester, :requestee
   validates_uniqueness_of :requestee_id, scope: :requester_id
-  validate :must_not_have_granted_on, if: :granted_on_changed?
+  validates_inclusion_of  :status, in: STATUSES
 
-  def granted?
-    granted_on != nil and granted_on <= Time.now
-  end
-
-  # Sets +granted_on+ to now and saves.
+  # Sets +status+ to granted and saves.
   # @return [Boolean] #save
   def grant
-    self.granted_on = Time.now
+    self.status = 'granted'
     save
   end
 
-  private
-
-  # If +granted_on+ will be changed to a non-nil value, then previous value
-  # must be be nil.
-  def must_not_have_granted_on
-    if granted_on.present? and granted_on_was != nil
-      errors.add :base, :already_granted
-    end
+  # Builds a request for requester to requestee with the given nickname.
+  # @raise [ActiveRecord::RecordNotFound] if nickname does not exist.
+  # @return [AccessRequest] request
+  def self.build_with_nickname(requester, nickname)
+    user = Authorization.find_by_nickname!(nickname).user
+    req  = requester.sent_access_requests.build
+    req.requestee = user
+    req
   end
+
+  private
 
 end

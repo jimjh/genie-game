@@ -10,5 +10,8 @@
         %section.section{class: active_class(settings_repositories_path)}
           %p.title
             = link_to 'Repositories', settings_repositories_path
+        %section.section{class: active_class(settings_authorizations_path)}
+          %p.title
+            = link_to 'Authorizations', settings_authorizations_path
 
 = render template: 'layouts/application'

@@ -5,9 +5,8 @@ class CreateAccessRequests < ActiveRecord::Migration
     create_table :access_requests do |t|
       t.references :requester
       t.references :requestee
-      t.datetime :granted_on
+      t.string     :status, default: 'pending'
       t.timestamps
-
     end
 
     add_index :access_requests, :requester_id

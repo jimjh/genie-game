@@ -20,6 +20,10 @@ class SettingsController < ApplicationController
     flash[:error] = I18n.t('messages.settings.failures.github_service')
   end
 
+  def authorizations
+    @sent_access_requests = current_user.sent_access_requests
+  end
+
   private
 
   # Gets list of repositories from GitHub and caches it.

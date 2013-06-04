@@ -1,0 +1,74 @@
+%h2= t 'headings.settings.authorizations.sent_requests'
+%h6.subheader= t 'subheadings.settings.authorizations.sent_requests'
+%hr
+= form_tag({controller: 'access_requests', action: 'create'}, {remote: true, id: 'access_request'}) do
+  .row.collapse
+    .large-3.columns
+      = label_tag :logins, t('simple_form.labels.access_request.csv'),
+        class: 'right inline', style: 'padding-right: 0.9375em'
+    .large-7.columns
+      = text_field_tag :logins, nil, placeholder: 'jimjh,snowstorm,...',
+        autofocus: true
+    .large-2.columns
+      = submit_tag 'Send', class: 'button postfix radius'
+
+- if @sent_access_requests.any?
+  %table
+    %thead
+      %tr
+        %th Requestee
+        %th Status
+    %tbody
+      - @sent_access_requests.each do |req|
+        %tr
+          %td= req.requestee
+          %td
+            .request-status{class: status_class_for(req) }
+              %span.has-tip.tip-left{title: req.status.capitalize, 'data-tooltip' => ''}
+
+%h2= t 'headings.settings.authorizations.received_requests'
+%hr
+
+- content_for :javascript do
+  :javascript
+    $(function (){
+
+      var form = $('form#access_request');
+      var errors_id = 'access_request_errors';
+      var button = form.find('input[type="submit"]');
+
+      var loading =  function() {
+        button.val('Sending...');
+        button.addClass('secondary');
+      };
+
+      var complete = function() {
+        button.val('Send');
+        button.removeClass('secondary');
+      };
+
+      var success = function() { location.reload(); }
+
+      // construct table of error messages
+      var error = function(evt, xhr, status, error) {
+        var errors = $.parseJSON(xhr.responseText);
+        $('#' + errors_id).remove();
+        var alert = $('<div>').attr('id', errors_id);
+        var table = $('<table>');
+        $.each(errors, function(login, error) {
+          var row = $('<tr>');
+          row.append($('<td>').html(login));
+          var full_error = $.map(error, function(v) { return v; }).join(' ');
+          row.append($('<td>').html(full_error));
+          table.append(row);
+        });
+        form.after(alert.append(table));
+      };
+
+      form
+        .bind('ajax:beforeSend', loading)
+        .bind('ajax:complete', complete)
+        .bind('ajax:success',  success)
+        .bind('ajax:error', error);
+
+    });

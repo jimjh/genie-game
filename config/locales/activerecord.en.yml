@@ -14,3 +14,7 @@ en:
           attributes:
             base:
               already_granted: request has already been granted
+            requestee:
+              not_found: is not a registered user
+            requestee_id:
+              taken: already has a pending request

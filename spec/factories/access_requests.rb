@@ -4,7 +4,7 @@ FactoryGirl.define do
     requester
     requestee
     trait :granted do
-      granted_on { 1.day.ago }
+      status 'granted'
     end
   end
 
