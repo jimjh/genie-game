@@ -24,6 +24,7 @@ group :test do
   gem 'database_cleaner',   '~> 0.9'
   gem 'shoulda',            '~> 3.3'
   gem 'factory_girl_rails', '~> 4.0'
+  gem 'simplecov',          '~> 0.7',  require: false
 end
 
 group :development do
