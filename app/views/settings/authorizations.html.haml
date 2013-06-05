@@ -48,16 +48,18 @@
               %span.has-tip.tip-left{title: req.status.capitalize, 'data-tooltip' => ''}
           %td= time_ago_or_format req.updated_at
           %td
-            %ul.button-group.round
+            %ul.button-group.radius
               %li
                 - classes = %w[small success button]
                 - classes << 'disabled' if req.granted?
-                = link_to grant_access_request_path(req), remote: true, class: classes, method: :post do
+                = link_to grant_access_request_path(req), remote: true,
+                  class: classes, method: :post, id: "grant_#{req.id}" do
                   %i.icon-ok
               %li
                 - classes = %w[small alert button]
                 - classes << 'disabled' if req.denied?
-                = link_to deny_access_request_path(req), remote: true, class: classes, method: :post do
+                = link_to deny_access_request_path(req), remote: true,
+                  class: classes, method: :post, id: "deny_#{req.id}" do
                   %i.icon-remove
 
 - content_for :javascript do
