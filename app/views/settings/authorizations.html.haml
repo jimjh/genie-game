@@ -1,7 +1,7 @@
 %h2= t 'headings.settings.authorizations.sent_requests'
 %h6.subheader= t 'subheadings.settings.authorizations.sent_requests'
 %hr
-= form_tag({controller: 'access_requests', action: 'create'}, {remote: true, id: 'access_request'}) do
+= form_tag({controller: 'access_requests', action: 'create'}, {remote: true, id: 'send_request'}) do
   .row.collapse
     .large-3.columns
       = label_tag :logins, t('simple_form.labels.access_request.csv'),
@@ -32,11 +32,39 @@
 %h6.subheader= t 'subheadings.settings.authorizations.received_requests'
 %hr
 
+- if @received_access_requests.any?
+  %table#received_requests
+    %thead
+      %tr
+        %th Requester
+        %th Status
+        %th Updated
+    %tbody
+      - @received_access_requests.each do |req|
+        %tr
+          %td= req.requester
+          %td
+            .request-status{class: status_class_for(req) }
+              %span.has-tip.tip-left{title: req.status.capitalize, 'data-tooltip' => ''}
+          %td= time_ago_or_format req.updated_at
+          %td
+            %ul.button-group.round
+              %li
+                - classes = %w[small success button]
+                - classes << 'disabled' if req.granted?
+                = link_to grant_access_request_path(req), remote: true, class: classes, method: :post do
+                  %i.icon-ok
+              %li
+                - classes = %w[small alert button]
+                - classes << 'disabled' if req.denied?
+                = link_to deny_access_request_path(req), remote: true, class: classes, method: :post do
+                  %i.icon-remove
+
 - content_for :javascript do
   :javascript
     $(function (){
 
-      var form = $('form#access_request');
+      var form = $('form#send_request');
       var errors_id = 'access_request_errors';
       var button = form.find('input[type="submit"]');
 
@@ -73,5 +101,15 @@
         .bind('ajax:complete', complete)
         .bind('ajax:success',  success)
         .bind('ajax:error', error);
+
+      var table = $('table#received_requests');
+      table.bind('ajax:beforeSend', function(e) {
+        if ($(e.target).hasClass('disabled')) return false;
+        $(e.target).removeClass('success').addClass('secondary');
+      }).bind('ajax:complete', function(e) {
+        $(e.target).removeClass('secondary').addClass('success');
+      }).bind('ajax:success', function() {
+        location.reload();
+      });
 
     });

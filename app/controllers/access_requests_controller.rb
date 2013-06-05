@@ -15,6 +15,18 @@ class AccessRequestsController < ApplicationController
     render json: errors, status: status
   end
 
+  def grant
+    @req = current_user.received_access_requests.find params[:id]
+    status = @req.grant ? :ok : :unprocessable_entity
+    respond_with @req, status: status
+  end
+
+  def deny
+    @req = current_user.received_access_requests.find params[:id]
+    status = @req.deny ? :ok : :unprocessable_entity
+    respond_with @req, status: status
+  end
+
   private
 
   def make_request(nickname)

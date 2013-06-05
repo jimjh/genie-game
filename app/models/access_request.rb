@@ -6,6 +6,7 @@ class AccessRequest < ActiveRecord::Base
   belongs_to :requester, class_name: User, inverse_of: :sent_access_requests
   belongs_to :requestee, class_name: User, inverse_of: :received_access_requests
 
+  # attributes ---------------------------------------------------------------
   attr_readonly :requester_id, :requestee_id
 
   # validations --------------------------------------------------------------
@@ -18,6 +19,21 @@ class AccessRequest < ActiveRecord::Base
   def grant
     self.status = 'granted'
     save
+  end
+
+  # Sets +status+ to denied and saves.
+  # @return [Boolean] #save
+  def deny
+    self.status = 'denied'
+    save
+  end
+
+  def granted?
+    status == 'granted'
+  end
+
+  def denied?
+    status == 'denied'
   end
 
   # Builds a request for requester to requestee with the given nickname.
