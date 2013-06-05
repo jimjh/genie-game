@@ -12,16 +12,16 @@ describe Problem do
   it { should validate_presence_of :position     }
   it { should validate_numericality_of :position }
 
-  %w[lesson solution digest position active].each do |attr|
-    it { should respond_to attr.to_sym }
+  %i[lesson solution digest position active].each do |attr|
+    it { should respond_to attr }
   end
 
-  %w[solution digest position active].each do |attr|
-    it { should allow_mass_assignment_of attr.to_sym }
+  %i[solution digest position active].each do |attr|
+    it { should allow_mass_assignment_of attr }
   end
 
-  %w[lesson lesson_id].each do |attr|
-    it { should_not allow_mass_assignment_of attr.to_sym }
+  %i[lesson lesson_id].each do |attr|
+    it { should_not allow_mass_assignment_of attr }
   end
 
   it { should have_readonly_attribute :lesson_id }

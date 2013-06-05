@@ -17,28 +17,27 @@ describe Lesson do
   # update
   #   - tells faye
 
-  %w[name url path slug compiled_path status action
-     title description last_error owner]
-  .each do |s|
-    it { should respond_to(s.to_sym) }
+  %i[name url path slug compiled_path status action
+     title description last_error owner].each do |s|
+    it { should respond_to s }
   end
 
   it { should belong_to(:user) }
   it { should have_many(:problems).order('digest').dependent(:destroy) }
   it { should have_many(:answers).through(:problems) }
 
-  %w[name url title description owner].each do |s|
-    it { should allow_mass_assignment_of s.to_sym }
+  %i[name url title description owner].each do |s|
+    it { should allow_mass_assignment_of s }
   end
 
-  %w[path slug compiled_path status action updated_at created_at].each do |s|
-    it { should_not allow_mass_assignment_of s.to_sym }
+  %i[path slug compiled_path status action updated_at created_at].each do |s|
+    it { should_not allow_mass_assignment_of s }
   end
 
   it { should have_readonly_attribute :user_id }
 
-  %w[name url user owner].each do |s|
-    it { should validate_presence_of(s.to_sym) }
+  %i[name url user owner].each do |s|
+    it { should validate_presence_of s }
   end
 
   it { should allow_git_urls.for(:url) }

@@ -31,12 +31,14 @@ class User < ActiveRecord::Base
     class_name: AccessRequest,
     foreign_key: :requester_id,
     dependent:   :destroy,
-    inverse_of:  :requester
+    inverse_of:  :requester,
+    order:       'created_at desc'
   has_many :received_access_requests,
     class_name: AccessRequest,
     foreign_key: :requestee_id,
     dependent:   :destroy,
-    inverse_of:  :requestee
+    inverse_of:  :requestee,
+    order:       'created_at desc'
 
   # validations --------------------------------------------------------------
   validates_presence_of   :nickname

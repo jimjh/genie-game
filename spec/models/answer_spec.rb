@@ -10,12 +10,12 @@ describe Answer do
   it { should have_readonly_attribute :problem_id }
   it { should have_readonly_attribute :user_id }
 
-  %w[problem user content results score].each do |attr|
-    it { should respond_to attr.to_sym }
+  %i[problem user content results score].each do |attr|
+    it { should respond_to attr }
   end
 
-  %w[problem problem_id user user_id results score].each do |attr|
-    it { should_not allow_mass_assignment_of attr.to_sym }
+  %i[problem problem_id user user_id results score].each do |attr|
+    it { should_not allow_mass_assignment_of attr }
   end
 
   it { should validate_presence_of :content }

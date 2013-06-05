@@ -23,3 +23,53 @@ feature 'Creating new access request' do
   end
 
 end
+
+feature 'Granting' do
+
+  background do
+    sign_in
+    @user = User.first
+    @req  = FactoryGirl.create :access_request, requestee: @user
+    visit settings_authorizations_path
+  end
+
+  scenario 'a pending request', :js do
+    click_link "grant_#{@req.id}"
+    page.should have_content @user.to_s
+    @req.reload.status.should == 'granted'
+  end
+
+  scenario 'a denied request', :js do
+    @req.deny
+    visit settings_authorizations_path
+    click_link "grant_#{@req.id}"
+    page.should have_content @user.to_s
+    @req.reload.status.should == 'granted'
+  end
+
+end
+
+feature 'Denying' do
+
+  background do
+    sign_in
+    @user = User.first
+    @req  = FactoryGirl.create :access_request, requestee: @user
+    visit settings_authorizations_path
+  end
+
+  scenario 'a pending request', :js do
+    click_link "deny_#{@req.id}"
+    page.should have_content @user.to_s
+    @req.reload.status.should == 'denied'
+  end
+
+  scenario 'a granted request', :js do
+    @req.grant
+    visit settings_authorizations_path
+    click_link "deny_#{@req.id}"
+    page.should have_content @user.to_s
+    @req.reload.status.should == 'denied'
+  end
+
+end

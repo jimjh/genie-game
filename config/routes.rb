@@ -23,7 +23,10 @@ Genie::Application.routes.draw do
     match '/authorizations' => :authorizations, as: 'authorizations'
   end
 
-  resources :access_requests
+  resources :access_requests do
+    post :grant, on: :member
+    post :deny,  on: :member
+  end
 
   # Home
   root :to => 'home#index'

@@ -8,9 +8,9 @@ Copyright (c) 2012-2013 Jiunn Haur Lim, Carnegie Mellon University
 class RepoSwitch
 
   CODES:
-    published: 'green'
-    publishing: 'yellow'
-    failed: 'red'
+    published:   'green'
+    publishing:  'yellow'
+    failed:      'red'
     deactivated: 'red'
 
   CLASSES: 'green yellow red hide'
