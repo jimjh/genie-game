@@ -1,9 +1,7 @@
 require 'spec_helper'
 require 'lamp/rpc/client'
 
-describe LessonObserver do
-
-  self.use_transactional_fixtures = false
+describe LessonObserver, :truncate do
 
   let(:lesson)   { FactoryGirl.build :lesson }
   let(:observer) { LessonObserver.any_instance }
@@ -13,7 +11,6 @@ describe LessonObserver do
   let(:lamp_client)   { stub(create: true, transport: stub(open: 0, close: 0), remove: true) }
   let(:github_hooks)  { stub(create: stub(id: hook_id), delete: true) }
   let(:github_client) { stub(repos: stub(hooks: github_hooks))  }
-
 
   before(:each)  do
     Rails.application.routes.default_url_options[:host] = 'test.host'
@@ -25,7 +22,6 @@ describe LessonObserver do
   after(:each) do
     ActiveRecord::Observer.disable_observers
     lesson.user.destroy
-    lesson.destroy if lesson.persisted?
   end
 
   describe 'create' do

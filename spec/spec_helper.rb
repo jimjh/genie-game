@@ -1,11 +1,7 @@
-require 'simplecov'
-SimpleCov.start 'rails'
-
-ENV['RAILS_ENV'] ||= 'test'
+ENV['RAILS_ENV'] = 'test'
 
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-require 'rspec/autorun'
 require 'capybara/rspec'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -16,7 +12,7 @@ RSpec.configure do |config|
 
   config.mock_with :mocha
 
-  config.use_transactional_fixtures                 = true
+  config.use_transactional_fixtures                 = false
   config.infer_base_class_for_anonymous_controllers = false
 
   config.order = 'random'
@@ -33,14 +29,24 @@ RSpec.configure do |config|
   config.include Features::I18nHelpers,       type: :feature
   config.include Features::SimpleFormHelpers, type: :feature
 
-  config.before(:suite, type: :feature) do
-    config.use_transactional_fixtures = false
-    DatabaseCleaner.strategy = :truncation
+  config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.before(:each, type: :feature) { DatabaseCleaner.start }
-  config.after(:each, type: :feature)  { DatabaseCleaner.clean }
+  config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:each, js: true) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:each, truncate: true) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:each) { DatabaseCleaner.start }
+  config.after(:each)  { DatabaseCleaner.clean }
 
 end
 

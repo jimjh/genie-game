@@ -22,9 +22,8 @@ group :test do
   gem 'mocha',              '~> 0.10', require: false
   gem 'shoulda',            '~> 3.3'
   gem 'factory_girl_rails', '~> 4.0'
-  gem 'simplecov',          '~> 0.7',  require: false
+  gem 'capybara',           '~> 2.1'
   gem 'database_cleaner'
-  gem 'capybara'
   gem 'capybara-webkit'
 end
 

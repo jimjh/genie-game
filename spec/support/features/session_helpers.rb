@@ -14,7 +14,7 @@ module Features
     RSpec::Matchers.define :be_signed_in do
 
       match do |actual|
-        actual.has_content?(I18n.t 'nav.sign_out')
+        actual.has_content? :all, I18n.t('nav.sign_out')
       end
 
       failure_message_for_should do |actual|
@@ -38,7 +38,7 @@ module Features
     RSpec::Matchers.define :be_signed_out do
 
       match do |actual|
-        actual.has_content? I18n.t 'nav.sign_in'
+        actual.has_content? :all, I18n.t('nav.sign_in')
       end
 
       failure_message_for_should do |actual|
