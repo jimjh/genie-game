@@ -50,14 +50,6 @@ $> cap deploy:restart
 ```
 
 ## Postgresql
-I did a standard install using `aptitude`, then configured `/etc/postgresql/9.1/main/pg_hba.conf` and changed the following line:
-
-  local all   all   peer
-
-to
-
-  local all   all   md5
-
 The root user is `postgres`. I don't remember the password, but you can login using
 
 ```sh
@@ -65,7 +57,7 @@ $> sudo -u postgres psql
 ```
 
 from an appropriate sudoer. The confidential authentication details should be
-stored in `config/environments/locals.d` and left out of git.
+kept in Figaro.
 
 ## Redis
 Configuration files are at `/etc/redis/redis.conf`. For more information, refer
@@ -74,12 +66,7 @@ to [redis documentation](http://redis.io/topics/config).
 If the port is changed, please update `config/shared.rb`.
 
 ## Lamp
-Lamp is currently launched manually at port 3300 without any monitoring.
-
-```sh
-$> git clone ...
-$> bundle install --path vendor/bundle --without development test
-```
+Lamp is also deployed using `cap:deploy` with monitoring by Upstart.
 
 ## Installation
 These are the steps I took to set up the Ubuntu server.
@@ -163,6 +150,14 @@ remote> psql genie
 psql>   ALTER DATABASE genie OWNER TO genie;
 ```
 
+Configure `/etc/postgresql/9.1/main/pg_hba.conf` and changed the following line:
+
+  local all   all   peer
+
+to
+
+  local all   all   md5
+
 ### 6. Capistrano
 
 Follow the fresh deploy instructions given below.
@@ -180,10 +175,7 @@ To do a fresh deploy, edit `config/deploy.rb` to disable `after deploy:update, d
 
 1. Setup directories with `cap deploy:setup`. Then login to the remote server and adjust permissions using `chown -R passenger:passenger /u/apps/genie-game`.
 2. Setup passwords and API keys by creating the following files:
-    - `shared/config/environments/locals.d`
-    - `shared/config/environments/locals.d/path.rb`
-    - `shared/config/environments/locals.d/api_keys.rb`
-    - `shared/config/environments/locals.d/postgresql.rb`
+    - `shared/config/application.yml`
 3. Setup codebase with `cap deploy:update`
 4. Setup database with `cap deploy:load_schema`
 5. Run a simple check with `cap deploy:check`
@@ -201,8 +193,7 @@ and are monitored with Upstart. Passenger monitors all rails processes.
 ### Security
 Need to restrict permissions on locals.d. Need to restrict permissions on
 /u/apps/genie-game and genie-compiler. Need to restrict privileges for
-`passenger`. Can we do without passwords for Postgres and use ident or peer?
-Permissions for `/mnt/genie/*`?
+`passenger`. Permissions for `/mnt/genie/*`?
 
   [capistrano-guide]: https://github.com/capistrano/capistrano/wiki/2.x-from-the-beginning
   [pull-21]: https://github.com/rails/sprockets-rails/pull/21
