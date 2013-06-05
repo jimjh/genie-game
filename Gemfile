@@ -58,8 +58,9 @@ gem 'devise',           '~> 2.2'
 gem 'omniauth',         '~> 1.1'
 gem 'omniauth-github',  '~> 1.0'
 
-gem 'simple_form',         '~> 2.0'
-gem 'friendly_id',         '~> 4.0'
+gem 'simple_form',      '~> 2.0'
+gem 'friendly_id',      '~> 4.0'
+gem 'figaro',           '~> 0.6'
 
 # GitHub Adapter
 gem 'github_api',   '~> 0.8'

@@ -61,9 +61,17 @@ module Genie
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
-    # Secrets from locals.d
-    config.github     = {}
-    config.postgresql = {}
+    config.github = {
+      api_key: ENV['GITHUB_KEY'],
+      api_secret: ENV['GITHUB_SECRET'],
+      username: 'github',
+      password: ENV['GITHUB_PASSWORD']
+    }
+
+    config.postgresql = {
+      username: ENV['POSTGRES_USERNAME'],
+      password: ENV['POSTGRES_PASSWORD']
+    }
 
     config.generators do |g|
       g.template_engine :haml
@@ -73,5 +81,3 @@ module Genie
 
   end
 end
-
-require File.expand_path('../environments/locals', __FILE__)

@@ -1,5 +1,4 @@
 # Deployment
-
 Deployment is done using [Capistrano][capistrano-guide]. A usual deployment workflow should be as follows:
 
 ```sh
@@ -10,14 +9,14 @@ $> cap deploy
 `cap deploy` will clone the repository to `/u/apps/genie-game/releases/current`, execute `rake db:migrate`, and `rake assets:precompile`. The assets compilation step will take a while, but I am waiting on progress at [Pull Request #21][pull-21].
 
 ## EC2 Instance
-The current deployment server is `beta.geniehub.org`, running Ubuntu 12.04.1.
+The current deployment server is `beta.geniehub.org`, running Ubuntu 13.
 For the rest of this README, `genie.ec2` refers to the above host. If the host
 is changed, please update `config/shared.rb`.
 
 The root user is `ubuntu`. To login as the root user,
 
 ```sh
-$> ssh -i ~/.ssh/square.pem ubuntu@genie.ec2
+$> ssh -i ~/.ssh/amiller.pem ubuntu@genie.ec2
 ```
 
 A safer, less powerful sudoer is `codex`. It's setup to allow passwordless login with my private  SSH key at `~/.ssh/id_rsa`.
@@ -50,17 +49,14 @@ $> cap deploy:stop
 $> cap deploy:restart
 ```
 
-## RVM
-The server currently has a system-wide install of rvm using ruby 1.9.3.
-
 ## Postgresql
 I did a standard install using `aptitude`, then configured `/etc/postgresql/9.1/main/pg_hba.conf` and changed the following line:
 
-	local	all		all		peer
+  local all   all   peer
 
 to
 
-	local	all		all 	md5
+  local all   all   md5
 
 The root user is `postgres`. I don't remember the password, but you can login using
 
@@ -91,29 +87,49 @@ These are the steps I took to set up the Ubuntu server.
 ### 1. UNIX
 
 ```sh
+remote> sudo useradd -m codex
+remote> sudo usermod -G admin codex
+remote> sudo usermod -s /bin/bash codex
 remote> sudo useradd -m passenger
 remote> sudo usermod -s /bin/bash passenger
-remote> sudo passwd passenger
 ```
 
-Finally, setup passwordless login using public/private key exchange.
+Setup passwordless login using public/private key exchange for codex and
+passenger.
 
 ```sh
 local> ssh-keygen -t rsa # output to ~/.ssh/genie_deploy
 ```
 
-### 2. Ruby + RVM
-Follow instructions on [rvm.io](http://rvm.io/) to setup a system-wide install and add `www-data` and `passenger` to the `rvm` group. Logout, then login again.
+Install software packages as follows:
 
-Execute `sudo aptitude install` on the list of libraries required by rvm.
+```sh
+$> sudo apt-get install git
+$> sudo apt-get install build-essential
+```
+
+Upload genie-ec2 deploy keys.
+
+### 2. Ruby + rbenv
+Follow instructions on [github](https://github.com/sstephenson/rbenv) to setup
+a system-wide install of rbenv to `/usr/local/rbenv`, then follow instructions for
+[ruby-build](https://github.com/sstephenson/ruby-build). Set paths and evals in
+`/etc/profile.d/rbenv.sh`.
+
+```sh
+# /etc/profile.d/rbenv.sh
+export RBENV_ROOT=/usr/local/rbenv
+export PATH="$RBENV_ROOT/bin:$PATH"
+eval "$(rbenv init -)"
+```
 
 Install Ruby as follows:
 
 ```sh
-remote> sudo rvm install ruby-1.9.3-head
-remote> sudo rvm use --default 1.9.3
-remote> sudo aptitude install rubygems
-remote> sudo gem install bundler
+remote> sudo su
+remote> . /etc/profile
+remote> rbenv install 2.0.0-p195
+remote> rbenv rehash
 ```
 
 ### 3. Passenger
@@ -132,11 +148,20 @@ Create directory at `/mnt/genie`.
 ```sh
 remote> chown passenger /mnt/genie
 remote> chmod o-rx /mnt/genie
+local>  cap deploy
 ```
 
 ### 5. Postgres
 
-Follow instructions from Ubuntu. Create `passenger` user and `genie` database.
+Follow [instructions][postgres] from Ubuntu. Create `genie` user and `genie` database.
+
+```sh
+remote> sudo su postgres
+remote> createuser genie
+remote> createdb genie
+remote> psql genie
+psql>   ALTER DATABASE genie OWNER TO genie;
+```
 
 ### 6. Capistrano
 
@@ -155,9 +180,9 @@ To do a fresh deploy, edit `config/deploy.rb` to disable `after deploy:update, d
 
 1. Setup directories with `cap deploy:setup`. Then login to the remote server and adjust permissions using `chown -R passenger:passenger /u/apps/genie-game`.
 2. Setup passwords and API keys by creating the following files:
-	- `shared/config/environments/locals.d`
-		- `shared/config/environments/locals.d/path.rb`
-		- `shared/config/environments/locals.d/api_keys.rb`
+    - `shared/config/environments/locals.d`
+    - `shared/config/environments/locals.d/path.rb`
+    - `shared/config/environments/locals.d/api_keys.rb`
     - `shared/config/environments/locals.d/postgresql.rb`
 3. Setup codebase with `cap deploy:update`
 4. Setup database with `cap deploy:load_schema`
@@ -173,14 +198,12 @@ $> cap deploy
 nginx, postgresql, and redis are installed with System V scripts in `/etc/init.d`.
 and are monitored with Upstart. Passenger monitors all rails processes.
 
-I think Passenger is started by nginx, but I am not sure.
-
-### Capistrano templates
-Should probably use some of these for locals.d, database.d, and pg_hba.conf.
-
 ### Security
 Need to restrict permissions on locals.d. Need to restrict permissions on
-/u/apps/genie-game and genie-compiler. Need to restrict privileges for `passenger`. Can we do without passwords for Postgres and use ident or peer? Remove UNIX password for `passenger`? Permissions for `/mnt/genie/*`?
+/u/apps/genie-game and genie-compiler. Need to restrict privileges for
+`passenger`. Can we do without passwords for Postgres and use ident or peer?
+Permissions for `/mnt/genie/*`?
 
   [capistrano-guide]: https://github.com/capistrano/capistrano/wiki/2.x-from-the-beginning
   [pull-21]: https://github.com/rails/sprockets-rails/pull/21
+  [postgres]: https://help.ubuntu.com/community/PostgreSQL

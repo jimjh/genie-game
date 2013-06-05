@@ -19,3 +19,7 @@ config/environments/locals.d
 *.vim
 *.swo
 coverage
+
+# Ignore application configuration
+/config/application.yml
+/config/deploy_keys
