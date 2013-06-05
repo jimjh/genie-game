@@ -6,8 +6,28 @@ describe User do
   it { should respond_to(:nickname) }
   it { should respond_to(:slug) }
 
+  it { should allow_mass_assignment_of :remember_me }
+  it { should allow_mass_assignment_of :nickname }
+
+  %w[created_at updated_at slug].each do |f|
+    it { should_not allow_mass_assignment_of f.to_sym }
+  end
+
   it { should have_many(:authorizations).dependent(:destroy) }
   it { should have_many(:lessons).dependent(:destroy) }
+  it { should have_many(:answers).dependent(:destroy) }
+  it {
+    should have_many(:sent_access_requests)
+      .class_name(AccessRequest)
+      .dependent(:destroy)
+      .with_foreign_key(:requester_id)
+  }
+  it {
+    should have_many(:received_access_requests)
+      .class_name(AccessRequest)
+      .dependent(:destroy)
+      .with_foreign_key(:requestee_id)
+  }
 
   it { should validate_presence_of(:nickname) }
   it { should have_a_valid_factory }
@@ -22,43 +42,32 @@ describe User do
 
   describe '#register!' do
 
-    before :each do
-      @user = User.register! 'a nickname'
-    end
+    let(:user) { User.register! 'a nickname' }
+    subject { user }
 
-    after :each do
-      @user.destroy
-    end
-
+    its(:nickname) { should eq 'a nickname' }
+    its(:slug) { should eq 'a-nickname' }
     it 'creates a single user' do
-      @user.nickname.should eq 'a nickname'
-      @user.slug.should eq 'a-nickname'
-      User.find(@user.slug).id.should eq @user.id
+      User.find(user.slug).id.should eq user.id
     end
 
   end
 
   context 'given a single user' do
 
-    before :each do
-      @user = FactoryGirl.create :user
-    end
-
-    after :each do
-      @user.destroy
-    end
+    let(:user) { FactoryGirl.create :user }
 
     describe '::find' do
       it 'finds the user by slug' do
-        user = User.find @user.slug, select: 'id'
-        user.id.should eq @user.id
+        found = User.find user.slug, select: 'id'
+        found.id.should eq user.id
       end
     end
 
     describe '#name' do
-      it 'returns the user\'s full name' do
-        auth = @user.authorizations.first
-        @user.name.should eq auth.name
+      it "returns the user's full name" do
+        auth = user.authorizations.first
+        user.name.should eq auth.name
       end
     end
 

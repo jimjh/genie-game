@@ -7,12 +7,13 @@ describe Authorization do
     it { should respond_to(attr.to_sym) }
   end
 
-  %w(provider uid token nickname).each do |attr|
+  %w(provider uid token nickname user).each do |attr|
     it { should validate_presence_of(attr.to_sym) }
   end
 
   it { should belong_to(:user) }
   it { should have_a_valid_factory }
-  it { should validate_existence_of :user }
+
+  it { should have_readonly_attribute :user_id }
 
 end

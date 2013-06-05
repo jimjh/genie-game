@@ -18,3 +18,4 @@ config/environments/locals.d
 
 *.vim
 *.swo
+coverage

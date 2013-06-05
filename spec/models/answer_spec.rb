@@ -7,6 +7,8 @@ describe Answer do
 
   it { should have_a_valid_factory }
   it { should allow_mass_assignment_of :content }
+  it { should have_readonly_attribute :problem_id }
+  it { should have_readonly_attribute :user_id }
 
   %w[problem user content results score].each do |attr|
     it { should respond_to attr.to_sym }
@@ -20,42 +22,24 @@ describe Answer do
 
   context 'given an answer' do
 
-    subject { Answer.new content: 'x' }
+    subject { answer }
+    let(:lesson)  { FactoryGirl.create :lesson }
+    let(:problem) { FactoryGirl.create :problem, lesson: lesson }
+    let(:answer)  { FactoryGirl.build :answer, problem: problem }
 
-    it { should validate_existence_of :user }
-    it { should validate_existence_of :problem }
+    it { should validate_presence_of :user }
+    it { should validate_presence_of :problem }
 
     context 'and a published lesson' do
-
-      before :each do
-        @problem = FactoryGirl.create :problem
-        subject.problem_id = @problem.id
-        subject.user_id = @problem.lesson.user_id
-      end
-
-      after(:each)  { @problem.lesson.destroy }
-
-      it 'allows the answer to be saved' do
-        subject.save.should be true
-      end
-
+      let(:lesson)  { FactoryGirl.create :lesson, :published }
+      it { should be_valid }
+      its(:save) { should be true }
     end
 
     context 'and a deactivated lesson' do
-
-      before :each do
-        @problem = FactoryGirl.create :problem
-        @problem.lesson.deactivate
-        subject.problem_id = @problem.id
-        subject.user_id = @problem.lesson.user_id
-      end
-
-      after(:each) { @problem.lesson.destroy }
-
-      it 'does not allow the answer to be saved' do
-        subject.save.should be false
-      end
-
+      let(:lesson)  { FactoryGirl.create :lesson, :deactivated }
+      it { should_not be_valid }
+      its(:save) { should be false }
     end
 
   end
@@ -114,8 +98,7 @@ describe Answer, '.upsert' do
     end
 
     it 'updates the existing answer' do
-      @first.reload
-      @first.content.should eq(@second.content)
+      @first.reload.content.should eq(@second.content)
     end
 
   end

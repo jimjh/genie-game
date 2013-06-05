@@ -3,9 +3,11 @@ require 'spec_helper'
 describe Problem do
 
   it { should belong_to :lesson    }
+  it { should have_many(:answers).dependent(:destroy) }
+
   it { should have_a_valid_factory }
 
-  it { should validate_existence_of :lesson      }
+  it { should validate_presence_of :lesson      }
   it { should validate_presence_of :digest       }
   it { should validate_presence_of :position     }
   it { should validate_numericality_of :position }
@@ -22,17 +24,18 @@ describe Problem do
     it { should_not allow_mass_assignment_of attr.to_sym }
   end
 
-  context 'given an existing problem' do
+  it { should have_readonly_attribute :lesson_id }
 
-    before(:each) do
-      @solution = Faker::Lorem.sentence
-      @problem  = FactoryGirl.create :problem, solution: Base64.urlsafe_encode64(@solution)
-    end
-    after(:each) { @problem.destroy }
+  context 'given an existing problem and an encoded solution' do
 
-    it 'decodes the solution before create' do
-      @problem.solution.should eq @solution
+    subject { problem }
+    let(:solution) { Faker::Lorem.sentence }
+    let(:problem)  do
+      FactoryGirl.create :problem, solution: Base64.urlsafe_encode64(solution)
     end
+
+    # it decodes the solution before create
+    its(:solution) { should eq solution }
 
   end
 
