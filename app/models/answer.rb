@@ -1,17 +1,17 @@
 # == Answer
 # An answer is a student's attempt at a problem.
 class Answer < ActiveRecord::Base
-
   include WeakComparator
 
   serialize :content, Marshal
 
   # relationships ------------------------------------------------------------
-  belongs_to :problem
-  belongs_to :user
+  belongs_to :problem, inverse_of: :answers
+  belongs_to :user, inverse_of: :answers
 
   # attributes ---------------------------------------------------------------
   attr_accessible :content
+  attr_readonly   :problem_id, :user_id
 
   # validations --------------------------------------------------------------
   validates_presence_of :content, :problem, :user

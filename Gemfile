@@ -20,10 +20,11 @@ group :test do
   gem 'no_peeping_toms',    '~> 2.1'
   gem 'faker',              '~> 1.1'
   gem 'mocha',              '~> 0.10', require: false
-  gem 'cucumber-rails',     '~> 1.3',  require: false
-  gem 'database_cleaner',   '~> 0.9'
   gem 'shoulda',            '~> 3.3'
   gem 'factory_girl_rails', '~> 4.0'
+  gem 'capybara',           '~> 2.1'
+  gem 'database_cleaner'
+  gem 'capybara-webkit'
 end
 
 group :development do
@@ -59,7 +60,6 @@ gem 'omniauth-github',  '~> 1.0'
 
 gem 'simple_form',         '~> 2.0'
 gem 'friendly_id',         '~> 4.0'
-gem 'validates_existence', '~> 0.8'
 
 # GitHub Adapter
 gem 'github_api',   '~> 0.8'

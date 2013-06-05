@@ -11,11 +11,12 @@
 class Problem < ActiveRecord::Base
 
   # relationships ------------------------------------------------------------
-  belongs_to :lesson
-  has_many   :answers, dependent: :destroy
+  belongs_to :lesson, inverse_of: :problems
+  has_many   :answers, dependent: :destroy, inverse_of: :problem
 
   # attributes ---------------------------------------------------------------
   attr_accessible :solution, :digest, :position, :active
+  attr_readonly   :lesson_id
 
   # validations --------------------------------------------------------------
   validates_presence_of  :digest, :position, :lesson

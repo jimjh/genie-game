@@ -1,4 +1,4 @@
-%h2 About You
+%h2= t 'headings.settings.profile'
 %hr
 %table.profile
   %tbody
@@ -8,7 +8,7 @@
     %tr
       %td member for
       %td= time_ago_in_words current_user.created_at
-%h5 Authorizations
+%h3 OAuth Tokens
 %table.authorizations
   %tbody
     - current_user.authorizations.each do |auth|

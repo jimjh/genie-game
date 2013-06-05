@@ -1,7 +1,7 @@
 # ~*~ encoding: utf-8 ~*~
 FactoryGirl.define do
 
-  factory :user do
+  factory :user, aliases: [:requester, :requestee] do
     nickname  { Faker::Name.first_name }
     ignore do
       authorizations_count 1

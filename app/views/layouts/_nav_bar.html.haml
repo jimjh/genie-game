@@ -24,7 +24,7 @@
             %li
               =link_to destroy_session_path, method: :delete, class: 'icon' do
                 %i.icon-signout
-                Sign Out
+                = t 'nav.sign_out'
       - else
         %li.has-form
-          = link_to 'Sign In', user_omniauth_authorize_path(:github), class: 'button small'
+          = link_to t('nav.sign_in'), user_omniauth_authorize_path(:github), class: 'button small'

@@ -1,4 +1,20 @@
 en:
+  nav:
+    sign_in: Sign In
+    sign_out: Sign Out
+  subheadings:
+    settings:
+      authorizations:
+        sent_requests: If you are using Genie to teach a course, you may send
+          requests to your students (using their GitHub usernames) for
+          permission to access their participation information.
+  headings:
+    settings:
+      profile: About Me
+      repositories: My Repositories
+      authorizations:
+        sent_requests: My Sent Requests
+        received_requests: My Received Requests
   messages:
     settings:
       failures:

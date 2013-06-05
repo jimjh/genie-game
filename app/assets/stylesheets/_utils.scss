@@ -1,18 +1,10 @@
-.lesson-config {
-  a { color: lighten($body-font-color, 40%); }
-  a:hover { color: $primary-color; }
-}
-
-.lesson-status {
-
+@mixin traffic-lights {
   background: url(image_path('status.png')) no-repeat;
   width: 60px;
   height: 20px;
   overflow: hidden;
-
   &.red { background-position: 0 -40px; }
   &.yellow { background-position: 0 -20px; }
-
   span.has-tip {
     border-bottom: none;
     cursor: auto;
@@ -22,17 +14,17 @@
     position: relative;
     top: 0.5em;
   }
-
 }
 
-td .switch {
-  font-size: 1.1429em;
+.request-status { @include traffic-lights; }
+
+.lesson-config {
+  a { color: lighten($body-font-color, 40%); }
+  a:hover { color: $primary-color; }
 }
 
-.row.full-width {
-  max-width: 100%;
-}
+.lesson-status { @include traffic-lights; }
 
-.centered {
-  text-align: center;
-}
+td .switch { font-size: 1.1429em; }
+.row.full-width { max-width: 100%; }
+.centered { text-align: center; }
