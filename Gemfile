@@ -23,6 +23,9 @@ group :test do
   gem 'shoulda',            '~> 3.3'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'simplecov',          '~> 0.7',  require: false
+  gem 'database_cleaner'
+  gem 'capybara'
+  gem 'capybara-webkit'
 end
 
 group :development do

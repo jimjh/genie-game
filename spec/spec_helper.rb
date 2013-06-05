@@ -33,7 +33,17 @@ RSpec.configure do |config|
   config.include Features::I18nHelpers,       type: :feature
   config.include Features::SimpleFormHelpers, type: :feature
 
+  config.before(:suite, type: :feature) do
+    config.use_transactional_fixtures = false
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.before(:each, type: :feature) { DatabaseCleaner.start }
+  config.after(:each, type: :feature)  { DatabaseCleaner.clean }
+
 end
 
 OmniAuth.config.test_mode = true
 ActiveRecord::Observer.disable_observers
+Capybara.javascript_driver = :webkit

@@ -13,7 +13,7 @@ FactoryGirl.define do
 
   factory :auth_hash_info, class: Hash do
     name            { Faker::Name.name }
-    nickname        { Faker::Name.first_name }
+    nickname        { Faker::Internet.user_name }
     initialize_with { attributes }
     to_create       {}
   end
