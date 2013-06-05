@@ -9,8 +9,8 @@ describe User do
   it { should allow_mass_assignment_of :remember_me }
   it { should allow_mass_assignment_of :nickname }
 
-  %w[created_at updated_at slug].each do |f|
-    it { should_not allow_mass_assignment_of f.to_sym }
+  %i[created_at updated_at slug].each do |f|
+    it { should_not allow_mass_assignment_of f }
   end
 
   it { should have_many(:authorizations).dependent(:destroy) }

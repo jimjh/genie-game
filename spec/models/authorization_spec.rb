@@ -3,12 +3,12 @@ require 'spec_helper'
 
 describe Authorization do
 
-  %w(link name nickname provider secret token uid).each do |attr|
-    it { should respond_to(attr.to_sym) }
+  %i[link name nickname provider secret token uid].each do |attr|
+    it { should respond_to attr }
   end
 
-  %w(provider uid token nickname user).each do |attr|
-    it { should validate_presence_of(attr.to_sym) }
+  %i[provider uid token nickname user].each do |attr|
+    it { should validate_presence_of attr }
   end
 
   it { should belong_to(:user) }

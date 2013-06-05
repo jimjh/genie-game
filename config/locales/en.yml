@@ -8,6 +8,9 @@ en:
         sent_requests: If you are using Genie to teach a course, you may send
           requests to your students (using their GitHub usernames) for
           permission to access their participation information.
+        received_requests: The following are requests from other users
+          (possibly instructors) to access your participation information on
+          Genie. Grant or decline them as you wish.
   headings:
     settings:
       profile: About Me
