@@ -13,6 +13,7 @@ class LessonObserver < ActiveRecord::Observer
 
   include LampConcern
   include FayeConcern
+  include HookConcern
   include Rails.application.routes.url_helpers
 
   # Parameters sent to GitHub when creating the hook.
@@ -104,7 +105,7 @@ class LessonObserver < ActiveRecord::Observer
   # @return [void]
   def create_hook(lesson)
     client = github lesson
-    resp = client.repos.hooks.create lesson.owner, lesson.name, hook_params
+    resp = client.repos.hooks.create lesson.owner, lesson.name, hook_params(lesson)
     lesson.hook = resp.id
   end
 
@@ -128,9 +129,9 @@ class LessonObserver < ActiveRecord::Observer
 
   # Lazily adds {#push_lessons_url} to {HOOK_PARAMS}.
   # @return [Hash] parameters suitable for +github_api+.
-  def hook_params
+  def hook_params(lesson)
     user     = Rails.application.config.github[:username]
-    password = Rails.application.config.github[:password]
+    password = create_hook_access_token lesson.owner, lesson.name
     params   = HOOK_PARAMS.clone
     params[:config].merge! url: push_lessons_url(user: user, password: password)
     params

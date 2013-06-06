@@ -1,5 +1,7 @@
 class LessonsController < ApplicationController
 
+  include HookConcern
+
   protect_from_forgery except: [:push, :ready, :gone]
   before_filter :authenticate_user!, except: [:push, :ready, :gone]
   before_filter :authenticate_github!, only: [:push]
@@ -112,7 +114,7 @@ class LessonsController < ApplicationController
   def authenticate_github!
     authenticate_or_request_with_http_basic do |username, password|
       username == Rails.application.config.github[:username] &&
-        password == Rails.application.config.github[:password]
+        verify_hook_access_token(password, params[:repository][:owner][:name], params[:repository][:name])
     end
   end
 
