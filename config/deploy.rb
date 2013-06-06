@@ -28,7 +28,7 @@ after  'deploy:restart',   'deploy:cleanup'
 after  'deploy:restart',   'deploy:web:enable'
 
 before 'deploy:assets:precompile', 'deploy:secrets'
-# after  'deploy:assets:precompile', 'deploy:clean_expired' # for turbo-sprockets
+after  'deploy:assets:precompile', 'deploy:clean_expired' # for turbo-sprockets
 
 # If you are using Passenger mod_rails uncomment this:
 namespace :deploy do
@@ -41,7 +41,7 @@ namespace :deploy do
     run "cd #{current_path}; bundle exec rake RAILS_ENV=production db:schema:load"
   end
   task :secrets do
-    run "ln -fs -- #{shared_path}/config/application.yml #{current_path}/config"
+    run "ln -fs -- #{shared_path}/config/application.yml #{release_path}/config"
   end
   task :clean_expired do
     run "cd #{release_path}; bundle exec rake RAILS_ENV=production RAILS_GROUPS=assets assets:clean_expired"
