@@ -1,8 +1,8 @@
 module Genie
   module SharedConstants
 
-    HOST  = 'beta.geniehub.org'
-    IP    = '54.245.18.137'
+    HOST  = 'ec2-54-225-0-30.compute-1.amazonaws.com'
+    IP    = '54.225.0.30'
 
     REDIS = { host: 'localhost', port: 6379 }
     REDIS_URL = "redis://#{REDIS[:host]}:#{REDIS[:port]}/0/cache"

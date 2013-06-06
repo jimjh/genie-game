@@ -12,7 +12,7 @@ production:
   adapter: postgresql
   encoding: unicode
   database: genie
-  username: <%= Rails.application.config.postgresql[:username] %>
-  password: <%= Rails.application.config.postgresql[:password] %>
+  username: <%= ENV['POSTGRES_USERNAME'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
   pool: 5
   timeout: 5000

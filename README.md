@@ -68,6 +68,11 @@ If the port is changed, please update `config/shared.rb`.
 ## Lamp
 Lamp is also deployed using `cap:deploy` with monitoring by Upstart.
 
+## SSL
+The SSL cert was issued by startssl.com. I don't have a password for the
+account (?), but have a enrollment certificate (?) installed on my Chrome
+browser (?).
+
 ## Installation
 These are the steps I took to set up the Ubuntu server.
 
@@ -91,8 +96,8 @@ local> ssh-keygen -t rsa # output to ~/.ssh/genie_deploy
 Install software packages as follows:
 
 ```sh
-$> sudo apt-get install git
-$> sudo apt-get install build-essential
+$> sudo apt-get install git build-essential
+$> sudo apt-get install libssl-dev libxslt-dev libxml2-dev libpq-dev nodejs
 ```
 
 Upload genie-ec2 deploy keys.
@@ -113,11 +118,16 @@ eval "$(rbenv init -)"
 Install Ruby as follows:
 
 ```sh
-remote> sudo su
-remote> . /etc/profile
-remote> rbenv install 2.0.0-p195
-remote> rbenv rehash
+remote:codex> sudo su
+remote:root> . /etc/profile
+remote:root> rbenv install 2.0.0-p195
+remote:root> chmod -R g+w /usr/local/rbenv
+remote:root> chgrp -R admin /usr/local/rbenv
+remote:codex> rbenv global 2.0.0-p195
+remote:codex> rbenv rehash
 ```
+
+Install rubygems and bundler.
 
 ### 3. Passenger
 

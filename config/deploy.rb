@@ -1,4 +1,3 @@
-require 'rvm/capistrano'
 require 'bundler/capistrano'
 require 'capistrano/maintenance'
 require File.expand_path('../shared', __FILE__)
@@ -14,10 +13,6 @@ set :normalize_asset_timestamps, false
 set :scm,        :git
 set :deploy_via, :remote_cache # don't re-clone every time
 set :use_sudo,   false
-
-# force cap to use rvm
-set :rvm_ruby_string, 'ruby-1.9.3-p362'
-set :rvm_type,        :system
 
 set :keep_releases, 5
 
@@ -46,7 +41,7 @@ namespace :deploy do
     run "cd #{current_path}; bundle exec rake RAILS_ENV=production db:schema:load"
   end
   task :secrets do
-    run "ln -fs -- #{shared_path}/config/locals.d #{release_path}/config/environments"
+    run "ln -fs -- #{shared_path}/config/application.yml #{current_path}/config"
   end
   task :clean_expired do
     run "cd #{release_path}; bundle exec rake RAILS_ENV=production RAILS_GROUPS=assets assets:clean_expired"
