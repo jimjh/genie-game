@@ -70,7 +70,7 @@ class LessonsController < ApplicationController
   def push
     auth    = Authorization.find_by_provider_and_nickname! 'github',
       params[:repository][:owner][:name]
-    lesson  = Lesson.find_by_user_id_and_name! auth.user.id,
+    lesson  = Lesson.find_by_user_id_and_name! auth.user_id,
       params[:repository][:name]
     status = lesson.pushed
     status = status ? :accepted : :unprocessable_entity
