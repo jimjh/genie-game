@@ -1,66 +1,9 @@
-%h2= t 'headings.settings.authorizations.sent_requests'
-%h6.subheader= t 'subheadings.settings.authorizations.sent_requests'
-%hr
-= form_tag({controller: 'access_requests', action: 'create'}, {remote: true, id: 'send_request'}) do
-  .row.collapse
-    .large-3.columns
-      = label_tag :logins, t('simple_form.labels.access_request.csv'),
-        class: 'right inline', style: 'padding-right: 0.9375em'
-    .large-7.columns
-      = text_field_tag :logins, nil, placeholder: 'jimjh,snowstorm,...',
-        autofocus: true
-    .large-2.columns
-      = submit_tag 'Send', class: 'button postfix radius'
+= render partial: 'sent_requests', locals: { sent_requests: @sent_requests }
+= link_to export_access_requests_path, class: 'small button' do
+  %i.icon-download-alt
+  Export
 
-- if @sent_access_requests.any?
-  %table
-    %thead
-      %tr
-        %th Requestee
-        %th Status
-        %th Updated
-    %tbody
-      - @sent_access_requests.each do |req|
-        %tr
-          %td= req.requestee
-          %td
-            .request-status{class: status_class_for(req) }
-              %span.has-tip.tip-left{title: req.status.capitalize, 'data-tooltip' => ''}
-          %td= time_ago_or_format req.updated_at
-
-%h2= t 'headings.settings.authorizations.received_requests'
-%h6.subheader= t 'subheadings.settings.authorizations.received_requests'
-%hr
-
-- if @received_access_requests.any?
-  %table#received_requests
-    %thead
-      %tr
-        %th Requester
-        %th Status
-        %th Updated
-    %tbody
-      - @received_access_requests.each do |req|
-        %tr
-          %td= req.requester
-          %td
-            .request-status{class: status_class_for(req) }
-              %span.has-tip.tip-left{title: req.status.capitalize, 'data-tooltip' => ''}
-          %td= time_ago_or_format req.updated_at
-          %td
-            %ul.button-group.radius
-              %li
-                - classes = %w[small success button]
-                - classes << 'disabled' if req.granted?
-                = link_to grant_access_request_path(req), remote: true,
-                  class: classes, method: :post, id: "grant_#{req.id}" do
-                  %i.icon-ok
-              %li
-                - classes = %w[small alert button]
-                - classes << 'disabled' if req.denied?
-                = link_to deny_access_request_path(req), remote: true,
-                  class: classes, method: :post, id: "deny_#{req.id}" do
-                  %i.icon-remove
+= render partial: 'received_requests', locals: { received_requests: @received_requests }
 
 - content_for :javascript do
   :javascript

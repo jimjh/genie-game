@@ -251,7 +251,7 @@ end
 describe Lesson, '.published' do
 
   it 'includes published lessons' do
-    lesson = FactoryGirl.create :lesson, status: 'published'
+    lesson = FactoryGirl.create :lesson, :published
     Lesson.published.should include(lesson)
   end
 

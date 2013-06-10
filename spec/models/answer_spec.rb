@@ -1,3 +1,4 @@
+require 'csv'
 require 'spec_helper'
 
 describe Answer do
@@ -46,7 +47,32 @@ describe Answer do
 
 end
 
-describe Answer, '.upsert' do
+describe Answer, '::to_csv' do
+
+  let(:output) { Answer.to_csv }
+
+  shared_examples 'a proper CSV file' do
+    it 'contains valid CSV' do
+      expect { CSV.parse output }.to_not raise_error(CSV::MalformedCSVError)
+    end
+    it 'has a header row and the expected columns' do
+      first_row = CSV.parse(output).first
+      first_row.should eq %w[id lesson_slug problem_position user_slug score]
+    end
+  end
+
+  context 'with several answers' do
+    before(:each) { 10.times { FactoryGirl.create :answer } }
+    it_behaves_like 'a proper CSV file'
+  end
+
+  context 'with no answers' do
+    it_behaves_like 'a proper CSV file'
+  end
+
+end
+
+describe Answer, '::upsert' do
 
   before(:each) { @first = FactoryGirl.create :answer }
   after(:each)  { @first.destroy }

@@ -6,6 +6,9 @@ FactoryGirl.define do
     trait :granted do
       status 'granted'
     end
+    trait :denied do
+      status 'denied'
+    end
   end
 
 end

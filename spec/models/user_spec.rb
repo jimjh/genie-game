@@ -1,4 +1,3 @@
-# ~*~ encoding: utf-8 ~*~
 require 'spec_helper'
 
 describe User do
@@ -32,8 +31,6 @@ describe User do
   it { should validate_presence_of(:nickname) }
   it { should have_a_valid_factory }
 
-  its(:name) { should eq 'Account' }
-
   it 'uses the parameterized nickname in to_param' do
     u = FactoryGirl.create :user, nickname: 'a b c x/z'
     u.to_param.should eq 'a-b-c-x-z'
@@ -61,13 +58,6 @@ describe User do
       it 'finds the user by slug' do
         found = User.find user.slug, select: 'id'
         found.id.should eq user.id
-      end
-    end
-
-    describe '#name' do
-      it "returns the user's full name" do
-        auth = user.authorizations.first
-        user.name.should eq auth.name
       end
     end
 
