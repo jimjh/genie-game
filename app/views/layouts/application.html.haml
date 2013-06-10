@@ -26,9 +26,6 @@
   = yield :body if content_for? :body
 
   = render partial: 'layouts/flash', locals: { flash: flash }
-
-  .row
-    .large-12.columns
-      = content_for?(:content) ? yield(:content) : yield
+  = content_for?(:content) ? yield(:content) : yield
 
   = render partial: 'layouts/javascript'

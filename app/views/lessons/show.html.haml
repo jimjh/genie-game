@@ -9,7 +9,7 @@
         %small= link_to '[  Settings  ]',  user_lesson_settings_path(current_user, @lesson)
 
 %hr
-%section.row{role: 'lesson'}
+%section.row.full-width{role: 'lesson'}
   .large-12.columns
     = @contents.html_safe
 

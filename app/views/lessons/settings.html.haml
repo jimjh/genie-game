@@ -1,5 +1,7 @@
-%h1= @lesson.title
-%hr
+.row
+  .large-12.columns
+    %h1= @lesson.title
+    %hr
 .row
   .large-9.push-3.columns
     = render partial: "lessons/settings/#{File.basename @path}"

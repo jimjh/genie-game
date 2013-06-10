@@ -5,6 +5,9 @@ http://github.com/jimjh/genie-game
 Copyright (c) 2012-2013 Jiunn Haur Lim, Carnegie Mellon University
 ###
 
+@genie = {} unless @genie?
+genie = @genie
+
 class NavigationBar
 
   constructor: (opts) ->
