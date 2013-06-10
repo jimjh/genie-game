@@ -20,6 +20,7 @@ class SettingsController < ApplicationController
     flash[:error] = I18n.t('messages.settings.failures.github_service')
   end
 
+  # GET /settings/authorizations
   def authorizations
     @sent_requests = current_user.sent_access_requests
     @received_requests = current_user.received_access_requests

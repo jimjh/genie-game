@@ -8,7 +8,7 @@
         class: 'right inline', style: 'padding-right: 0.9375em'
     .large-7.columns
       = text_field_tag :logins, nil, placeholder: 'jimjh,snowstorm,...',
-        autofocus: true
+        autofocus: true, required: true
     .large-2.columns
       = submit_tag 'Send', class: 'button postfix radius'
 

@@ -6,6 +6,7 @@ class AccessRequestsController < ApplicationController
   def create
     csv = params[:logins] || ''
     nicknames, errors = csv.split(/,\s*/), {}
+    # create individually but keep track of errors
     status = nicknames.reduce(true) do |memo, nickname|
       ok, errs = make_request nickname
       errors[nickname] = errs unless ok
