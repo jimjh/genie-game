@@ -98,6 +98,7 @@ class LessonsController < ApplicationController
   end
 
   # POST /:user/:lesson/verify
+  # FIXME move to AnswersController, check for mass assignment violations
   def verify
     lesson  = Lesson.select('lessons.id')
                     .for_user(params[:user])

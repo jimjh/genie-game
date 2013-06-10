@@ -34,3 +34,17 @@ describe AccessRequest do
   end
 
 end
+
+describe AccessRequest, '.granted' do
+
+  it 'includes granted requests' do
+    request = FactoryGirl.create :access_request, :granted
+    AccessRequest.granted.should include(request)
+  end
+
+  it 'excludes non-granted requests' do
+    request = FactoryGirl.create :access_request
+    AccessRequest.granted.should_not include(request)
+  end
+
+end

@@ -24,15 +24,15 @@ Genie::Application.routes.draw do
   end
 
   resources :access_requests do
-    post :grant, on: :member
-    post :deny,  on: :member
+    post :grant,  on: :member
+    post :deny,   on: :member
+    get  :export, on: :collection
   end
 
   # Home
   root :to => 'home#index'
 
   # Pretty URLs --------------------------------------------------------------
-
   scope path: ':user/:lesson', controller: :lessons, as: 'user_lesson' do
     # add trailing slashes to lessons/jimjh/floating-point so that relative
     #   links for images resolve to jimjh/floating-point/images.

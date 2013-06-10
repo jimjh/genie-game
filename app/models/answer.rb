@@ -1,3 +1,4 @@
+require 'csv'
 # == Answer
 # An answer is a student's attempt at a problem.
 class Answer < ActiveRecord::Base
@@ -17,6 +18,9 @@ class Answer < ActiveRecord::Base
   validates_presence_of :content, :problem, :user
   validate :lesson_must_be_published
 
+  # scope --------------------------------------------------------------------
+  scope :for_users, lambda { |ids| where(user_id: ids) }
+
   # callbacks ----------------------------------------------------------------
   before_save :verify_attempt
 
@@ -24,6 +28,15 @@ class Answer < ActiveRecord::Base
     ans = Answer.where(user_id: user_id, problem_id: problem_id).first_or_initialize
     ans.attributes = attributes
     ans
+  end
+
+  def self.to_csv(options={})
+    CSV.generate(options) do |csv|
+      csv << %w[id lesson_slug problem_position user_slug score]
+      all.each do |a|
+        csv << [a.id, a.problem.lesson.name, a.problem.position, a.user.slug, a.score]
+      end
+    end
   end
 
   private

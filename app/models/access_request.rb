@@ -14,6 +14,9 @@ class AccessRequest < ActiveRecord::Base
   validates_uniqueness_of :requestee_id, scope: :requester_id
   validates_inclusion_of  :status, in: STATUSES
 
+  # scopes -------------------------------------------------------------------
+  scope :granted, where(status: 'granted')
+
   # Sets +status+ to granted and saves.
   # @return [Boolean] #save
   def grant
@@ -39,8 +42,8 @@ class AccessRequest < ActiveRecord::Base
   # Builds a request for requester to requestee with the given nickname.
   # @raise [ActiveRecord::RecordNotFound] if nickname does not exist.
   # @return [AccessRequest] request
-  def self.build_with_nickname(requester, nickname)
-    user = Authorization.find_by_nickname!(nickname).user
+  def self.build_with_nickname(requester, nickname) # TODO specs
+    user = User.find_by_slug! nickname
     req  = requester.sent_access_requests.build
     req.requestee = user
     req

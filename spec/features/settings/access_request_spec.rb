@@ -14,7 +14,7 @@ feature 'Creating new access request' do
   scenario 'with duplicate requestees'
 
   scenario 'with valid requestees', :js do
-    logins = @users.map { |u| u.authorizations.first.nickname }
+    logins = @users.map(&:slug)
     fill_in 'logins',
       with: "#{logins[1]}, #{logins[2]},#{logins[3]},   #{logins[4]},,"
     click_button 'Send'
