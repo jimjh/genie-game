@@ -8,11 +8,17 @@ Copyright (c) 2012-2013 Jiunn Haur Lim, Carnegie Mellon University
 @genie = {} unless @genie?
 genie = @genie
 
+class Lesson
+  SELECTOR: 'section[role="lesson"]'
+
 class NavigationBar
 
+  SELECTOR: Lesson::SELECTOR + ' .lesson-nav'
+  ANCHOR:   Lesson::SELECTOR
+
   constructor: (opts) ->
-    @ele = $ opts.bar
-    @top = $(opts.anchor).offset().top - @ele.outerHeight()
+    @ele = opts.bar
+    @top = opts.anchor.offset().top - @ele.outerHeight()
 
   stick: ->
     $(window).scroll =>
@@ -22,10 +28,23 @@ class NavigationBar
         @ele.css 'top', ''
     this
 
+  @prepare: ->
+    bar = $ NavigationBar::SELECTOR
+    anc = $ NavigationBar::ANCHOR
+    nav = new NavigationBar bar: bar, anchor: anc
+    nav.stick()
+
 class Problem
 
-  constructor: (form, @answer) ->
-    @form = $ form
+  SELECTOR:  Lesson::SELECTOR + ' form.problem'
+
+  @prepare: (opts) ->
+    problems = $ Problem::SELECTOR
+    for form, pos in problems
+      problem = new Problem $(form), opts.answers[pos], opts.lesson
+      problem.observe()
+
+  constructor: (@form, @answer, @lesson) ->
     this.preload() if @answer?
 
   preload: ->
@@ -43,7 +62,11 @@ class Problem
   # Adds click listeners to the submit forms.
   observe: ->
     @form.find('input[type="radio"]:checked').next('span.custom.radio').addClass 'checked'
-    @form.submit (e) =>
+    input = $('<input>').attr
+      type: 'hidden'
+      name: 'lesson_id'
+      value: @lesson
+    @form.append(input).submit (e) =>
       this.submit()
       false
 
@@ -51,7 +74,7 @@ class Problem
   submit: =>
     $.ajax
       type: 'POST'
-      url: @form.attr 'action'
+      url:  '/answers'
       data: @form.serialize()
       success: (answer) => (this.update @form)(answer.results)
       error: => (this.update @form)(false)
@@ -87,9 +110,14 @@ class Problem
 
 class Viewer
 
+  WINDOW_SELECTOR:    Lesson::SELECTOR + ' .lesson-problems'
+  PAGINATOR_SELECTOR: Viewer::WINDOW_SELECTOR + ' .jqpagination'
+  PROBLEM_PREFIX:     '#problem_'
+  PROBLEM_WRAPPER:    '.problem-wrapper'
+
   constructor: (opts) ->
-    @window = $ opts.window
-    @paginator = @window.find opts.paginator
+    @window    = opts.window
+    @paginator = opts.paginator
     @top   = @window.offset().top
     @width = @window.outerWidth()
 
@@ -108,21 +136,23 @@ class Viewer
     @paginator.jqPagination
       page_string: 'Problem {current_page} of {max_page}'
       paged: (page) =>
-        @window.find('.problem-wrapper:not(.hide)').addClass('hide')
-        @window.find('#problem_' + (page - 1)).parent().removeClass('hide')
+        @window.find("#{Viewer::PROBLEM_WRAPPER}:not(.hide)")
+          .addClass('hide')
+        @window.find(Viewer::PROBLEM_PREFIX + (page - 1))
+          .parent()
+          .removeClass('hide')
     this
 
+  @prepare: ->
+    window    = $ Viewer::WINDOW_SELECTOR
+    paginator = $ Viewer::PAGINATOR_SELECTOR
+    viewer = new Viewer window: window, paginator: paginator
+    viewer.scroll().paginate()
+
 @genie.init_lesson = (options) ->
-  # init each problem
+
   answers = []
   answers[a.position] = a.content for a in options.answers
-  for form, pos in options.problems
-    problem = new Problem form, answers[pos]
-    problem.observe()
-  # init navigation bar
-  nav = new NavigationBar options.navigation
-  nav.stick()
-  # init viewer
-  viewer = new Viewer options.viewer
-  viewer.scroll().paginate()
-  null
+  Problem.prepare answers: answers, lesson: options.lesson
+  NavigationBar.prepare()
+  Viewer.prepare()

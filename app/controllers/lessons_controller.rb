@@ -97,18 +97,6 @@ class LessonsController < ApplicationController
     head :ok
   end
 
-  # POST /:user/:lesson/verify
-  # FIXME move to AnswersController, check for mass assignment violations
-  def verify
-    lesson  = Lesson.select('lessons.id')
-                    .for_user(params[:user])
-                    .find(params[:lesson])
-    problem = lesson.problem_at params[:problem]
-    answer = Answer.upsert current_user.id, problem.id, content: params[:answer]
-    status = answer.save ? :ok : :unprocessable_entity
-    respond_with answer, only: [:results], status: status, location: nil
-  end
-
   private
 
   def authenticate_github!

@@ -16,17 +16,19 @@ Genie::Application.routes.draw do
       constraints: lambda { |r| Rails.configuration.lamp[:ips].include? r.remote_ip }
   end
 
+  resources :access_requests do
+    post :grant,  on: :member
+    post :deny,   on: :member
+    get  :export, on: :collection
+  end
+
+  resources :answers
+
   # Settings Controller ------------------------------------------------------
   scope path: 'settings', controller: :settings, as: 'settings' do
     match '/'             => :profile
     match '/repositories' => :repositories, as: 'repositories'
     match '/authorizations' => :authorizations, as: 'authorizations'
-  end
-
-  resources :access_requests do
-    post :grant,  on: :member
-    post :deny,   on: :member
-    get  :export, on: :collection
   end
 
   # Home
@@ -38,7 +40,6 @@ Genie::Application.routes.draw do
     #   links for images resolve to jimjh/floating-point/images.
     match '' => redirect('/%{user}/%{lesson}/'), via: :get,
       constraints: lambda { |r| !r.original_fullpath.ends_with? '/' }
-    match '/verify/:type/:problem' => :verify, via: :post
     match '/settings(/*path)' => :settings, as: 'settings', via: :get,
       defaults: { path: 'default' }
     match '(/*path)' => :show, via: :get,

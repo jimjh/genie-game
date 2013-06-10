@@ -9,15 +9,7 @@
   :javascript
     $(function() {
         genie.init_lesson({
+          lesson:   #{@lesson.id},
           answers:  $('#answers').data('preload'),
-          problems: $('form.problem'),
-          navigation: {
-            bar:    '.lesson-nav',
-            anchor: 'section[role="lesson"]'
-          },
-          viewer: {
-            window: '.lesson-problems',
-            paginator: '.jqpagination'
-          }
         });
     });
