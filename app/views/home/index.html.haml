@@ -11,7 +11,7 @@
                 %h6
                   = link_to lesson.title, user_lesson_path(lesson.user, lesson)
                 %h6.subheader
-                  by #{lesson.user.name}
+                  by #{lesson.user}
                   %small= l lesson.updated_at.to_date, format: :long
                 %hr
                 %p= truncate lesson.description, length: 200, separator: '', omission: '…'

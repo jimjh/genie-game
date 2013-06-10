@@ -4,7 +4,7 @@
     %h4.subheader= lesson.description
     %h5
       %small
-        Updated by #{lesson.user.name} #{time_ago_or_format lesson.updated_at}.
+        Updated by #{lesson.user} #{time_ago_or_format lesson.updated_at}.
       - if lesson.user_id == current_user.id
         %small= link_to '[  Settings  ]',  user_lesson_settings_path(current_user, lesson)
     %hr

@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
 
   def to_s
     auth = authorizations.first
-    auth.name || auth.nickname
+    auth.try(:name) || auth.try(:nickname) || 'Account'
   end
 
 end

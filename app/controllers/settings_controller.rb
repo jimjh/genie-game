@@ -21,8 +21,8 @@ class SettingsController < ApplicationController
   end
 
   def authorizations
-    @sent_access_requests = current_user.sent_access_requests
-    @received_access_requests = current_user.received_access_requests
+    @sent_requests = current_user.sent_access_requests
+    @received_requests = current_user.received_access_requests
   end
 
   private
