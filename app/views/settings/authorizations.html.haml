@@ -1,5 +1,8 @@
 = render partial: 'sent_requests', locals: { sent_requests: @sent_requests }
-= link_to 'Export', export_access_requests_path
+= link_to export_access_requests_path, class: 'small button' do
+  %i.icon-download-alt
+  Export
+
 = render partial: 'received_requests', locals: { received_requests: @received_requests }
 
 - content_for :javascript do
