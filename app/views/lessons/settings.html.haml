@@ -1,7 +1,4 @@
-.row
-  .large-12.columns
-    %h1= @lesson.title
-    %hr
+= render partial: 'header', locals: { lesson: @lesson }
 .row
   .large-9.push-3.columns
     = render partial: "lessons/settings/#{File.basename @path}"

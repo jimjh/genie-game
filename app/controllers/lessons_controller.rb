@@ -41,8 +41,7 @@ class LessonsController < ApplicationController
   # GET /:user/:lesson/settings/:path
   def settings
     @user, @lesson, @path = params[:user], params[:lesson], params[:path]
-    @lesson = Lesson.select(%w[lessons.id lessons.slug title last_error])
-                    .for_user(@user).find(@lesson)
+    @lesson = Lesson.for_user(@user).find(@lesson)
     # security check to prevent directory traversal attacks
     not_found unless File.expand_path(@path, SETTINGS_PATH).starts_with?(SETTINGS_PATH)
   end
