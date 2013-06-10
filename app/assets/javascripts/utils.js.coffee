@@ -5,15 +5,17 @@ http://github.com/jimjh/genie-game
 Copyright (c) 2012-2013 Jiunn Haur Lim, Carnegie Mellon University
 ###
 
+genie = exports? and @ or @genie = {}
+
 # capitalize a word
 String::capitalize = -> @substr(0, 1).toUpperCase() + @substr(1)
 
-# let all AJAX calls include CSRF token
 $ ->
+  # let all AJAX calls include CSRF token
   $.ajaxSetup beforeSend: (xhr) ->
       token = $('meta[name="csrf-token"]').attr 'content'
       xhr.setRequestHeader 'X-CSRF-Token', token
-  # Set Content-Type on XHR POST requests so Qt stops complaining
+  # set Content-Type on XHR POST requests so Qt stops complaining
   $('a[data-remote="true"]').bind 'ajax:beforeSend', (event, xhr, settings) ->
     if settings.type == 'POST'
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+      xhr.setRequestHeader 'Content-Type', 'application/x-www-form-urlencoded'
