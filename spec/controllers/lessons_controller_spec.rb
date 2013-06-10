@@ -100,10 +100,9 @@ describe LessonsController do
     it 'handles errors'
 
     it 'sets status to publishing' do
-      github_http_login
+      github_http_login(auth.nickname, @lesson.name)
       post :push, repository: { owner: { name: auth.nickname }, name: @lesson.name }
-      @lesson.reload
-      @lesson.status.should eq 'publishing'
+      @lesson.reload.status.should eq 'publishing'
     end
 
     it 'requires basic http auth' do

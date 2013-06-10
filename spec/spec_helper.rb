@@ -1,12 +1,14 @@
 ENV['RAILS_ENV'] = 'test'
-
 require File.expand_path("../../config/environment", __FILE__)
+
 require 'rspec/rails'
 require 'capybara/rspec'
+require 'factory_girl_rails'
+require 'shoulda-matchers'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 RSpec.configure do |config|
 
@@ -18,7 +20,6 @@ RSpec.configure do |config|
   config.order = 'random'
 
   config.treat_symbols_as_metadata_keys_with_true_values = true
-  config.run_all_when_everything_filtered = true
 
   config.include Test::Matchers,            type: :model
 
@@ -31,6 +32,9 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
+    OmniAuth.config.test_mode = true
+    ActiveRecord::Observer.disable_observers
+    Capybara.javascript_driver = :webkit
   end
 
   config.before(:each) do
@@ -49,7 +53,3 @@ RSpec.configure do |config|
   config.after(:each)  { DatabaseCleaner.clean }
 
 end
-
-OmniAuth.config.test_mode = true
-ActiveRecord::Observer.disable_observers
-Capybara.javascript_driver = :webkit

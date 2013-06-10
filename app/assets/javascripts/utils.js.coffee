@@ -13,4 +13,7 @@ $ ->
   $.ajaxSetup beforeSend: (xhr) ->
       token = $('meta[name="csrf-token"]').attr 'content'
       xhr.setRequestHeader 'X-CSRF-Token', token
-
+  # Set Content-Type on XHR POST requests so Qt stops complaining
+  $('a[data-remote="true"]').bind 'ajax:beforeSend', (event, xhr, settings) ->
+    if settings.type == 'POST'
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')

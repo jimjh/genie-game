@@ -1,4 +1,5 @@
 module HookConcern
+  extend self
 
   # @return [Boolean] true if signature is valid and matches expected params
   def verify_hook_access_token(token, github_login, repo_name)

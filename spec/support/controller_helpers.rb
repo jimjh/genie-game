@@ -13,11 +13,11 @@ module Test
       rand
     end
 
-    def github_http_login
+    def github_http_login(login, repo)
       user = Rails.application.config.github[:username]
-      pw =   Rails.application.config.github[:password]
+      pass = HookConcern.create_hook_access_token login, repo
       request.env['HTTP_AUTHORIZATION'] = \
-        ActionController::HttpAuthentication::Basic.encode_credentials(user,pw)
+        ActionController::HttpAuthentication::Basic.encode_credentials(user, pass)
     end
 
   end

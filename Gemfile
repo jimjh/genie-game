@@ -20,7 +20,7 @@ group :test do
   gem 'no_peeping_toms',    '~> 2.1'
   gem 'faker',              '~> 1.1'
   gem 'mocha',              '~> 0.10', require: false
-  gem 'shoulda',            '~> 3.3'
+  gem 'shoulda-matchers',   '~> 2.1',  require: false
   gem 'factory_girl_rails', '~> 4.0'
   gem 'capybara',           '~> 2.1'
   gem 'database_cleaner'
