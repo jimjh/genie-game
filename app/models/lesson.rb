@@ -145,6 +145,10 @@ class Lesson < ActiveRecord::Base
     end
   end
 
+  def to_s
+    title
+  end
+
   private
 
   # Checks if the given url is a valid git URL. Local paths with +file://+ are

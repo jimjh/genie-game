@@ -1,14 +1,4 @@
-%section.row{role: 'title'}
-  .large-12.columns
-    %h1= @lesson.title
-    %h4.subheader= @lesson.description
-    %h5
-      %small
-        Updated by #{@lesson.user.name} #{time_ago_or_format @lesson.updated_at}.
-      - if @lesson.user_id == current_user.id
-        %small= link_to '[  Settings  ]',  user_lesson_settings_path(current_user, @lesson)
-
-%hr
+= render partial: 'header', locals: { lesson: @lesson }
 %section.row.full-width{role: 'lesson'}
   .large-12.columns
     = @contents.html_safe

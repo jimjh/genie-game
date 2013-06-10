@@ -7,6 +7,13 @@ module Features
       click_link 'Sign In'
     end
 
+    def sign_in_as(user)
+      OmniAuth.config.add_mock :github,
+        FactoryGirl.create(:auth_hash, uid: user.authorizations.first.uid)
+      visit root_path
+      click_link 'Sign In'
+    end
+
     def sign_out
       click_link 'Sign Out'
     end

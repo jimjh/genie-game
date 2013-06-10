@@ -8,7 +8,7 @@
     %tr
       %td member for
       %td= time_ago_in_words current_user.created_at
-%h3 OAuth Tokens
+%h3 OAuth Providers
 %table.authorizations
   %tbody
     - current_user.authorizations.each do |auth|
