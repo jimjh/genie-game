@@ -26,50 +26,83 @@ end
 
 feature 'Granting' do
 
+  let(:user) { User.first }
+  let(:req)  { FactoryGirl.create :access_request, requestee: user }
+
   background do
     sign_in
-    @user = User.first
-    @req  = FactoryGirl.create :access_request, requestee: @user
+    req
     visit settings_authorizations_path
+    click_link "grant_#{req.id}"
   end
 
-  scenario 'a pending request', :js do
-    click_link "grant_#{@req.id}"
-    page.should have_content @user.to_s
-    @req.reload.status.should == 'granted'
+  shared_examples 'grants the request' do
+    scenario 'grants the request', :js do
+      page.should have_content user.to_s
+      req.reload.status.should == 'granted'
+    end
   end
 
-  scenario 'a denied request', :js do
-    @req.deny
-    visit settings_authorizations_path
-    click_link "grant_#{@req.id}"
-    page.should have_content @user.to_s
-    @req.reload.status.should == 'granted'
+  context 'a pending request' do
+    include_examples 'grants the request'
+  end
+
+  context 'a denied request' do
+    let(:req)  { FactoryGirl.create :access_request, :denied, requestee: user }
+    include_examples 'grants the request'
   end
 
 end
 
 feature 'Denying' do
 
+  let(:user) { User.first }
+  let(:req)  { FactoryGirl.create :access_request, requestee: user }
+
   background do
     sign_in
-    @user = User.first
-    @req  = FactoryGirl.create :access_request, requestee: @user
+    req
     visit settings_authorizations_path
+    click_link "deny_#{req.id}"
   end
 
-  scenario 'a pending request', :js do
-    click_link "deny_#{@req.id}"
-    page.should have_content @user.to_s
-    @req.reload.status.should == 'denied'
+  shared_examples 'denies the request' do
+    scenario 'denies the request', :js do
+      page.should have_content user.to_s
+      req.reload.status.should == 'denied'
+    end
   end
 
-  scenario 'a granted request', :js do
-    @req.grant
+  context 'a pending request' do
+    include_examples 'denies the request'
+  end
+
+  context 'a granted request' do
+    let(:req) { FactoryGirl.create :access_request, :granted, requestee: user }
+    include_examples 'denies the request'
+  end
+
+end
+
+feature 'Exporting' do
+
+  let(:user)     { FactoryGirl.create :user }
+  let(:requests) { (1..10).to_a.map { FactoryGirl.create :access_request, :granted, requester: user } }
+  let(:answers)  { requests.map(&:requestee).map { |user| FactoryGirl.create :answer, user: user } }
+
+  background do
+    sign_in_as user
+    answers
     visit settings_authorizations_path
-    click_link "deny_#{@req.id}"
-    page.should have_content @user.to_s
-    @req.reload.status.should == 'denied'
+    click_link 'Export'
+  end
+
+  scenario 'exports the data as csv' do
+    page.response_headers['Content-Disposition'].should include 'attachment'
+    page.response_headers['Content-Disposition'].should include '.csv'
+    data = CSV.parse(page.source)
+    data.should be_kind_of Array
+    data.length.should be 11
   end
 
 end

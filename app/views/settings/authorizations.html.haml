@@ -1,4 +1,5 @@
 = render partial: 'sent_requests', locals: { sent_requests: @sent_requests }
+= link_to 'Export', export_access_requests_path
 = render partial: 'received_requests', locals: { received_requests: @received_requests }
 
 - content_for :javascript do

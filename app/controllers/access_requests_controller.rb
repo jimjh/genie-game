@@ -32,7 +32,7 @@ class AccessRequestsController < ApplicationController
   def export
     user_ids = current_user.sent_access_requests.granted.pluck(:requestee_id)
     answers  = Answer.for_users(user_ids)
-    send_data answers.to_csv
+    send_data answers.to_csv, type: 'text/csv', filename: 'genie_data.csv'
   end
 
   private
