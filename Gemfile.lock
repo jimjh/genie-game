@@ -1,9 +1,9 @@
 GIT
   remote: git@github.com:jimjh/genie-compiler.git
-  revision: 5de732ef8f2f9fa098da6cebebf4741dc3902c40
+  revision: 5cd8352df6b2e4fee216cd47f864a3c7e8cfee12
   branch: master
   specs:
-    lamp (0.2)
+    lamp (0.5)
       activesupport (~> 3.2)
       faraday (~> 0.8)
       grit (~> 2.5)
@@ -14,10 +14,10 @@ GIT
 
 GIT
   remote: git@github.com:jimjh/genie-parser.git
-  revision: 6bac1dd4008d567dd1eea26b44c23ce19ebaa31e
+  revision: d69e31bc3cd051d9ed078b30ced48b2fd76ba8d7
   branch: master
   specs:
-    spirit (0.2)
+    spirit (0.5)
       activesupport (~> 3.2)
       haml (~> 4.0)
       pygments.rb (~> 0.5)
@@ -385,7 +385,6 @@ DEPENDENCIES
   omniauth-github (~> 1.0)
   pg (~> 0.14.1)
   pry (~> 0.9)
-  pygments.rb
   rails (~> 3.2.13)
   redis-rails (~> 3.2)
   rspec-rails (~> 2.12)

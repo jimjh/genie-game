@@ -31,7 +31,6 @@ group :development do
   gem 'capistrano',     '~> 2.14', require: false
   gem 'foreman',        '~> 0.61', require: false
   gem 'capistrano-maintenance', '0.0.3', require: false
-  gem 'pygments.rb'
 end
 
 group :test, :development do
