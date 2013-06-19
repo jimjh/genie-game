@@ -108,8 +108,11 @@
 
     root = tty.elements.root;
 
+    tty.socket.bind('transport:up', function() {
+      $.each(tty.terms, function(_, term) { term.emit('connected'); });
+    });
+
     tty.socket.bind('transport:down', function() {
-      tty.socket.off('callback', tty.socket.fayec);
       $.each(tty.terms, function(_, term) { term.emit('disconnected'); });
     });
 
@@ -138,7 +141,6 @@
       }
     });
 
-    tty.emit('load');
     tty.emit('open');
 
   };
@@ -287,9 +289,7 @@
 
   Window.prototype.each = function(func) {
     var i = this.tabs.length;
-    while (i--) {
-      func(this.tabs[i], i);
-    }
+    while (i--) { func(this.tabs[i], i); }
   };
 
   Window.prototype.createTab = function() {
@@ -367,8 +367,8 @@
     // this.hookKeys();
 
     this.setProcessName('Connecting ...');
-    this.on('open', function() {
-      this.setProcessName('Connected');
+    this.on('connected', function() {
+      if (this.pty) { this.setProcessName('Connected'); }
     });
     this.on('disconnected', function() {
       this.setProcessName('Disconnected');
@@ -391,6 +391,7 @@
     tty.terms[this.id] = this;
     tty.emit('open tab', this);
     this.emit('open');
+    this.emit('connected');
   };
 
   // We could just hook in `tab.on('data', ...)`
