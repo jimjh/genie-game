@@ -469,7 +469,6 @@
 
     if (this.window.focused === this) {
       this.window.bar.title = title;
-      // this.setProcessName(this.process);
     }
   };
 
@@ -703,15 +702,6 @@
     });
 
     return this._bindMouse();
-  };
-
-  Tab.prototype.pollProcessName = function(func) {
-    var self = this;
-    this.socket.emit('process', this.id, function(err, name) {
-      if (err) { return func && func(err); }
-      self.setProcessName(name);
-      return func && func(null, name);
-    });
   };
 
   Tab.prototype.setProcessName = function(name) {
