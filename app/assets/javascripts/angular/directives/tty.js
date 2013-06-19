@@ -19,7 +19,9 @@
     var URL = '/terminals';
 
     function httpError(win) {
-      return win.tabs[0].disconnected;
+      return function() {
+        win.tabs[0].disconnected();
+      }
     }
 
     function httpSuccess(win) {

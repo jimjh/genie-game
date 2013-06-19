@@ -29,7 +29,7 @@ GIT
   revision: 2a607ae1e83048d8bd7d6239816272034353199a
   branch: master
   specs:
-    tangle (0.0.1)
+    tangle (0.5)
       activesupport (~> 3.2)
       em-ssh (~> 0.5.1)
       faye (~> 0.8)
@@ -143,7 +143,7 @@ GEM
       em-socksify
       eventmachine (>= 1.0.0.beta.4)
       http_parser.rb (>= 0.5.3)
-    em-socksify (0.2.1)
+    em-socksify (0.3.0)
       eventmachine (>= 1.0.0.beta.4)
     em-ssh (0.5.1)
       eventmachine
@@ -220,7 +220,7 @@ GEM
     mime-types (1.23)
     mocha (0.14.0)
       metaclass (~> 0.0.1)
-    multi_json (1.7.6)
+    multi_json (1.7.7)
     multipart-post (1.2.0)
     net-scp (1.1.1)
       net-ssh (>= 2.6.5)

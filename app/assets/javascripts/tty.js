@@ -3,7 +3,7 @@
  * Adapted from
  * Copyright (c) 2012-2013, Christopher Jeffrey (MIT License)
  */
-/* global jQuery:true, Terminal:true, Faye:true */
+/* global jQuery:true, Terminal:true, Faye:true, console:true */
 
 (function($, Terminal, Faye) {
   'use strict';
@@ -91,15 +91,21 @@
 
     // wrapper for faye publish
     tty.socket.emit = function() {
-      var args  = $.makeArray(arguments);
-      var event = args.shift();
-      var data  = { args: args };
+      var args  = $.makeArray(arguments),
+          event = args.shift(),
+          id    = args.shift(),
+          data  = { id: id, args: args };
       // register callback if given
       if ($.isFunction(args.slice(-1)[0])) {
         var callback = args.pop();
         data.callback = tty.socket.fayep(callback);
       }
-      tty.socket.publish('/'+userID+'/' + event, data);
+      tty.socket.
+        publish('/'+userID+'/' + event, data).
+        errback(function(error) {
+          if (console && console.error) { console.error(error); }
+          tty.terms[id].emit('disconnected');
+        });
     };
 
     tty.elements = {
@@ -121,10 +127,10 @@
       tty.terms[msg.id].write(msg.data);
     });
 
-    tty.socket.on('kill', function(id) {
-      if (!tty.terms[id]) { return; }
-      // tty.terms[id]._destroy();
-      tty.terms[id].emit('disconnected');
+    tty.socket.on('kill', function(msg) {
+      if (!tty.terms[msg.id]) { return; }
+      // tty.terms[msg.id]._destroy();
+      tty.terms[msg.id].emit('disconnected');
     });
 
     // Keep windows maximized.
@@ -492,7 +498,7 @@
 
   Tab.prototype.destroy = function() {
     if (this.destroyed) { return; }
-    this.socket.emit('kill', this.id);
+    this.socket.emit('kill', { id: this.id });
     this._destroy();
     tty.emit('close tab', this);
     this.emit('close');
