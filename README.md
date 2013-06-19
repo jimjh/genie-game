@@ -86,8 +86,7 @@ remote> sudo useradd -m passenger
 remote> sudo usermod -s /bin/bash passenger
 ```
 
-Setup passwordless login using public/private key exchange for codex and
-passenger.
+Setup passwordless login using public/private key exchange for passenger.
 
 ```sh
 local> ssh-keygen -t rsa # output to ~/.ssh/genie-passenger
