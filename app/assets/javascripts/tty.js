@@ -87,6 +87,8 @@
       tty.socket.subscribe('/'+userID+'/' + event, callback);
     };
 
+    tty.socket.on('callback', tty.socket.fayec);
+
     // wrapper for faye publish
     tty.socket.emit = function() {
       var args  = $.makeArray(arguments);
@@ -105,10 +107,6 @@
     };
 
     root = tty.elements.root;
-
-    tty.socket.bind('transport:up', function() {
-      tty.socket.on('callback', tty.socket.fayec);
-    });
 
     tty.socket.bind('transport:down', function() {
       tty.socket.off('callback', tty.socket.fayec);
