@@ -1,27 +1,39 @@
-/* Binds a TTY object */
 (function(angular, tty) {
   'use strict';
 
+  if (typeof angular === 'undefined') {
+    throw new ReferenceError('angular is undefined');
+  }
+
+  if (angular.isUndefined(tty)) {
+    throw new ReferenceError('tty is undefined');
+  }
+
+  /**
+   * Binds a TTY object
+   * @example
+   *  <div data-tty></div>
+   */
   function TTYDirective($http) {
 
     var URL = '/terminals';
 
-    function httpError() {
-      // TODO
+    function httpError(win) {
+      return win.tabs[0].disconnected;
     }
 
-    function httpSuccess(elem) {
+    function httpSuccess(win) {
       return function(data) {
-        tty.open(data.user_id);
-        var win = new tty.Window(elem[0]);
         win.tabs[0].ready(data.terminal_id);
       };
     }
 
-    function buildTTY(scope, elem) {
+    function buildTTY(scope, elem, attrs) {
+      tty.open(attrs.userId);
+      var win = new tty.Window(elem[0]);
       $http.post(URL).
-        success(httpSuccess(elem)).
-        error(httpError);
+        success(httpSuccess(win)).
+        error(httpError(win));
     }
 
     return {
