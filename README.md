@@ -21,7 +21,7 @@ $> ssh -i ~/.ssh/amiller.pem ubuntu@genie.ec2
 
 A safer, less powerful sudoer is `codex`. It's setup to allow passwordless login with my private  SSH key at `~/.ssh/id_rsa`.
 
-Capistrano deploys using `passenger`. It's setup to use passwordless login using the deployment key at `~/.ssh/genie_deploy`.
+Capistrano deploys using `passenger`. It's setup to use passwordless login using the deployment key at `~/.ssh/genie-passenger`.
 
 ## NGINX
 We are using a Rails-Passenger-Nginx setup. Nginx is started using `start-stop-daemon`, which does PID management for us. The main process runs as the `root` user, but worker processes are launched under `www-data`. All of the configuration files are available at `/opt/nginx/conf`.
@@ -90,7 +90,7 @@ Setup passwordless login using public/private key exchange for codex and
 passenger.
 
 ```sh
-local> ssh-keygen -t rsa # output to ~/.ssh/genie_deploy
+local> ssh-keygen -t rsa # output to ~/.ssh/genie-passenger
 ```
 
 Install software packages as follows:
