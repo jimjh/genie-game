@@ -2,9 +2,6 @@
 //= require jquery.jqpagination
 //= require foundation
 //= require term
-//= require ./tty
-//= require ./utils
-//= require ./lesson
-//= require ./settings
+//= require_tree .
 
 $(function(){ $(document).foundation(); });

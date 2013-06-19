@@ -2,6 +2,6 @@
   = javascript_include_tag url
 %script{src: faye_js}
 :javascript
-  var faye_server = "#{faye_url}";
+  var fayeServer = "#{faye_url}";
 = javascript_include_tag 'application'
 = yield :javascript if content_for? :javascript

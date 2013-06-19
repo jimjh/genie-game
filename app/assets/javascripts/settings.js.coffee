@@ -67,8 +67,6 @@ class RepoSwitch
       ul.addClass('hide')
     modal.foundation('reveal', 'open')
 
-@genie.update_errors = (errors) ->
-
 @genie.init_settings = (options) ->
   for form in options.switches
     s = new RepoSwitch form
