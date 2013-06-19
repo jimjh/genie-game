@@ -24,6 +24,7 @@ module ApplicationHelper
   def cdn_js
     %w[
       //cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js
+      //ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js
       http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML
     ]
   end

@@ -4,13 +4,13 @@
 module FayeHelper
 
   # @return [String] absolute path to faye server.
-  def faye
+  def faye_url
     Rails.application.config.faye[:url]
   end
 
   # @return [String] absolute path to faye client.
   def faye_js
-    faye + '/client.js'
+    faye_url + '/client.js'
   end
 
 end

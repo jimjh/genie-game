@@ -23,6 +23,7 @@ Genie::Application.routes.draw do
   end
 
   resources :answers
+  resources :terminals
 
   # Settings Controller ------------------------------------------------------
   scope path: 'settings', controller: :settings, as: 'settings' do
