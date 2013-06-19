@@ -3,10 +3,22 @@
  * Adapted from
  * Copyright (c) 2012-2013, Christopher Jeffrey (MIT License)
  */
+/* global jQuery:true, Terminal:true, Faye:true, console:true */
 
-(function($) {
-
+(function($, Terminal, Faye) {
   'use strict';
+
+  if (typeof $ === 'undefined') {
+    throw new ReferenceError('jQuery is undefined');
+  }
+
+  if (typeof Terminal === 'undefined') {
+    throw new ReferenceError('Terminal is undefined');
+  }
+
+  if (typeof Faye === 'undefined') {
+    throw new ReferenceError('Faye is undefined');
+  }
 
   /**
    * Elements
@@ -23,7 +35,6 @@
   var EventEmitter = Terminal.EventEmitter,
     inherits = Terminal.inherits,
     on = Terminal.on,
-    off = Terminal.off,
     cancel = Terminal.cancel;
 
   /**
@@ -36,10 +47,10 @@
    * Shared
    */
 
-  tty.socket;
-  tty.windows;
-  tty.terms;
-  tty.elements;
+  tty.socket   = null;
+  tty.windows  = null;
+  tty.terms    = null;
+  tty.elements = null;
 
   /**
    * Open
@@ -47,9 +58,12 @@
 
   tty.open = function(userID) {
 
-    tty.socket = new Faye.Client(window.fayeServer);
+    if (tty.opened) { return; }
+    tty.opened = true;
+
+    tty.socket  = new Faye.Client(window.fayeServer);
     tty.windows = [];
-    tty.terms = {};
+    tty.terms   = {};
 
     // register emit callbacks
     tty.socket.fayep = (function() {
@@ -73,17 +87,25 @@
       tty.socket.subscribe('/'+userID+'/' + event, callback);
     };
 
+    tty.socket.on('callback', tty.socket.fayec);
+
     // wrapper for faye publish
     tty.socket.emit = function() {
-      var args  = $.makeArray(arguments);
-      var event = args.shift();
-      var data  = { args: args };
+      var args  = $.makeArray(arguments),
+          event = args.shift(),
+          id    = args.shift(),
+          data  = { id: id, args: args };
       // register callback if given
       if ($.isFunction(args.slice(-1)[0])) {
         var callback = args.pop();
         data.callback = tty.socket.fayep(callback);
       }
-      tty.socket.publish('/'+userID+'/' + event, data);
+      tty.socket.
+        publish('/'+userID+'/' + event, data).
+        errback(function(error) {
+          if (console && console.error) { console.error(error); }
+          tty.terms[id].emit('disconnected');
+        });
     };
 
     tty.elements = {
@@ -93,7 +115,11 @@
     root = tty.elements.root;
 
     tty.socket.bind('transport:up', function() {
-      tty.socket.on('callback', tty.socket.fayec);
+      $.each(tty.terms, function(_, term) { term.emit('connected'); });
+    });
+
+    tty.socket.bind('transport:down', function() {
+      $.each(tty.terms, function(_, term) { term.emit('disconnected'); });
     });
 
     tty.socket.on('data', function(msg) {
@@ -101,9 +127,10 @@
       tty.terms[msg.id].write(msg.data);
     });
 
-    tty.socket.on('kill', function(id) {
-      if (!tty.terms[id]) { return; }
-      tty.terms[id]._destroy();
+    tty.socket.on('kill', function(msg) {
+      if (!tty.terms[msg.id]) { return; }
+      // tty.terms[msg.id]._destroy();
+      tty.terms[msg.id].emit('disconnected');
     });
 
     // Keep windows maximized.
@@ -120,24 +147,8 @@
       }
     });
 
-    tty.emit('load');
     tty.emit('open');
-  };
 
-  /**
-   * Reset
-   */
-
-  tty.reset = function() {
-    var i = tty.windows.length;
-    while (i--) {
-      tty.windows[i].destroy();
-    }
-
-    tty.windows = [];
-    tty.terms = {};
-
-    tty.emit('reset');
   };
 
   /**
@@ -178,7 +189,6 @@
 
     this.createTab();
     this.focus();
-    this.bind();
 
     this.tabs[0].once('open', function() {
       tty.emit('open window', self);
@@ -187,33 +197,6 @@
   }
 
   inherits(Window, EventEmitter);
-
-  Window.prototype.bind = function() {
-    var self = this,
-        el = this.element,
-        bar = this.bar,
-        last = 0;
-
-    on(el, 'mousedown', function(ev) {
-
-      // FIXME this is broken because the click always hits the tab div, which
-      // is a child of the bar
-      if (ev.target !== el && ev.target !== bar) { return; }
-
-      self.focus();
-
-      cancel(ev);
-
-      if (new Date() - last < 600) {
-        return self.maximize();
-      }
-      last = new Date();
-
-      self.drag(ev);
-
-      return cancel(ev);
-    });
-  };
 
   Window.prototype.focus = function() {
     // Focus Foreground Tab
@@ -239,52 +222,6 @@
 
     tty.emit('close window', this);
     this.emit('close');
-  };
-
-  Window.prototype.drag = function(ev) {
-
-    var self = this,
-        el = this.element;
-
-    if (this.minimize) { return; }
-
-    var drag = {
-      left: el.offsetLeft,
-      top: el.offsetTop,
-      pageX: ev.pageX,
-      pageY: ev.pageY
-    };
-
-    el.style.opacity = '0.60';
-    el.style.cursor = 'move';
-    root.style.cursor = 'move';
-
-    function move(ev) {
-      el.style.left =
-        (drag.left + ev.pageX - drag.pageX) + 'px';
-      el.style.top =
-        (drag.top + ev.pageY - drag.pageY) + 'px';
-    }
-
-    function up() {
-      el.style.opacity = '';
-      el.style.cursor = '';
-      root.style.cursor = '';
-
-      off(document, 'mousemove', move);
-      off(document, 'mouseup', up);
-
-      var ev = {
-        left: el.style.left.replace(/\w+/g, ''),
-        top: el.style.top.replace(/\w+/g, '')
-      };
-
-      tty.emit('drag window', self, ev);
-      self.emit('drag', ev);
-    }
-
-    on(document, 'mousemove', move);
-    on(document, 'mouseup', up);
   };
 
   Window.prototype.maximize = function() {
@@ -358,9 +295,7 @@
 
   Window.prototype.each = function(func) {
     var i = this.tabs.length;
-    while (i--) {
-      func(this.tabs[i], i);
-    }
+    while (i--) { func(this.tabs[i], i); }
   };
 
   Window.prototype.createTab = function() {
@@ -435,22 +370,34 @@
     this.element = null;
     this.process = '';
     this.open();
-    this.hookKeys();
+    // this.hookKeys();
 
+    this.setProcessName('Connecting ...');
+    this.on('connected', function() {
+      if (this.pty) { this.setProcessName('Connected'); }
+    });
+    this.on('disconnected', function() {
+      this.setProcessName('Disconnected');
+    });
     win.tabs.push(this);
 
   }
 
   inherits(Tab, Terminal);
 
-  // Invoke this when the ID is assigned and the tab is ready to be opened.
+  // Invoke this when connection is broken.
+  Tab.prototype.disconnected = function() {
+    this.emit('disconnected');
+  };
+
+  // Invoke this when the ID is assigned and the tab is ready to be connected.
   Tab.prototype.ready = function(id) {
     this.pty = id;
     this.id = id;
     tty.terms[this.id] = this;
-    this.setProcessName('bash');
     tty.emit('open tab', this);
     this.emit('open');
+    this.emit('connected');
   };
 
   // We could just hook in `tab.on('data', ...)`
@@ -551,7 +498,7 @@
 
   Tab.prototype.destroy = function() {
     if (this.destroyed) { return; }
-    this.socket.emit('kill', this.id);
+    this.socket.emit('kill', { id: this.id });
     this._destroy();
     tty.emit('close tab', this);
     this.emit('close');
@@ -759,4 +706,4 @@
    */
   Terminal.programFeatures = true;
 
-}).call(window, jQuery);
+}).call(window, jQuery, Terminal, Faye);
