@@ -676,7 +676,8 @@
     top: true,
     w3m: true,
     lynx: true,
-    mocp: true
+    mocp: true,
+    vim: true
   };
 
   Tab.prototype._bindMouse = Tab.prototype.bindMouse;
@@ -691,7 +692,6 @@
     on(self.element, wheelEvent, function(ev) {
       if (self.mouseEvents) { return; }
       if (!Tab.scrollable[self.process]) { return; }
-
       if ((ev.type === 'mousewheel' && ev.wheelDeltaY > 0) || (ev.type === 'DOMMouseScroll' && ev.detail < 0)) {
         // page up
         self.keyDown({keyCode: 33});
@@ -699,7 +699,6 @@
         // page down
         self.keyDown({keyCode: 34});
       }
-
       return cancel(ev);
     });
 
@@ -764,5 +763,10 @@
   tty.Terminal = Terminal;
 
   this.tty = tty;
+
+  /**
+   * Configuration
+   */
+  Terminal.programFeatures = true;
 
 }).call(window, jQuery);
