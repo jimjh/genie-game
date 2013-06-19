@@ -73,7 +73,7 @@ Genie::Application.configure do
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   # Configuration for Faye (port chosen by foreman)
-  config.faye = { url: "http://#{HOST}:3300/socket" }
+  config.faye = { url: "http://#{HOST}:3400/socket" }
 
   # Configuration for Lamp
   config.lamp = {
