@@ -2,6 +2,11 @@
 //= require jquery.jqpagination
 //= require foundation
 //= require term
-//= require_tree .
+//= require ./tty
+//= require ./utils
+//= require ./lesson
+//= require ./settings
+//= require_tree ./angular
 
+// FIXME simplify above after moving everything to AngularJS.
 $(function(){ $(document).foundation(); });

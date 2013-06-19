@@ -20,7 +20,7 @@
   = csrf_meta_tags
   = render partial: 'layouts/mathjax'
 
-%body
+%body{'data-ng-app' => 'App'}
 
   = render partial: 'layouts/nav_bar'
   = yield :body if content_for? :body

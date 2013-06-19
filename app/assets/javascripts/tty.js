@@ -1,9 +1,10 @@
 /**
  * tty.js
+ * Adapted from
  * Copyright (c) 2012-2013, Christopher Jeffrey (MIT License)
  */
 
-(function() {
+(function($) {
 
   'use strict';
 
@@ -13,14 +14,7 @@
 
   var document = this.document,
     window = this,
-    root,
-    body;
-
-  /**
-   * Initial Document Title
-   */
-
-  var initialTitle = document.title;
+    root;
 
   /**
    * Helpers
@@ -94,15 +88,11 @@
 
     tty.elements = {
       root: document.documentElement,
-      body: document.body
     };
 
     root = tty.elements.root;
-    body = tty.elements.body;
 
     tty.socket.bind('transport:up', function() {
-      tty.reset();
-      tty.emit('connect');
       tty.socket.on('callback', tty.socket.fayec);
     });
 
@@ -154,21 +144,14 @@
    * Window
    */
 
-  function Window(socket) {
-    var self = this;
+  function Window(el) {
 
+    var self = this;
     EventEmitter.call(this);
 
-    var el,
-        grip,
-        bar,
-        title;
+    var bar, title;
 
-    el = document.createElement('div');
-    el.className = 'window';
-
-    grip = document.createElement('div');
-    grip.className = 'grip';
+    el.className = 'tty';
 
     bar = document.createElement('div');
     bar.className = 'bar';
@@ -177,9 +160,8 @@
     title.className = 'title';
     title.innerHTML = '';
 
-    this.socket = socket || tty.socket;
+    this.socket = tty.socket;
     this.element = el;
-    this.grip = grip;
     this.bar = bar;
     this.title = title;
 
@@ -189,10 +171,8 @@
     this.cols = Terminal.geometry[0];
     this.rows = Terminal.geometry[1];
 
-    el.appendChild(grip);
     el.appendChild(bar);
     bar.appendChild(title);
-    body.appendChild(el);
 
     tty.windows.push(this);
 
@@ -212,14 +192,7 @@
     var self = this,
         el = this.element,
         bar = this.bar,
-        grip = this.grip,
         last = 0;
-
-    on(grip, 'mousedown', function(ev) {
-      self.focus();
-      self.resizing(ev);
-      return cancel(ev);
-    });
 
     on(el, 'mousedown', function(ev) {
 
@@ -243,16 +216,8 @@
   };
 
   Window.prototype.focus = function() {
-    // Restack
-    var parent = this.element.parentNode;
-    if (parent) {
-      parent.removeChild(this.element);
-      parent.appendChild(this.element);
-    }
-
     // Focus Foreground Tab
     this.focused.focus();
-
     tty.emit('focus window', this);
     this.emit('focus');
   };
@@ -322,60 +287,6 @@
     on(document, 'mouseup', up);
   };
 
-  Window.prototype.resizing = function() {
-    var self = this,
-        el = this.element,
-        term = this.focused;
-
-    if (this.minimize) { delete this.minimize; }
-
-    var resize = {
-      w: el.clientWidth,
-      h: el.clientHeight
-    };
-
-    el.style.overflow = 'hidden';
-    el.style.opacity = '0.70';
-    el.style.cursor = 'se-resize';
-    root.style.cursor = 'se-resize';
-    term.element.style.height = '100%';
-
-    function move(ev) {
-      var x, y;
-      y = el.offsetHeight - term.element.clientHeight;
-      x = ev.pageX - el.offsetLeft;
-      y = (ev.pageY - el.offsetTop) - y;
-      el.style.width = x + 'px';
-      el.style.height = y + 'px';
-    }
-
-    function up() {
-      var x, y;
-
-      x = el.clientWidth / resize.w;
-      y = el.clientHeight / resize.h;
-      x = (x * term.cols) | 0;
-      y = (y * term.rows) | 0;
-
-      self.resize(x, y);
-
-      el.style.width = '';
-      el.style.height = '';
-
-      el.style.overflow = '';
-      el.style.opacity = '';
-      el.style.cursor = '';
-      root.style.cursor = '';
-      term.element.style.height = '';
-
-      off(document, 'mousemove', move);
-      off(document, 'mouseup', up);
-    }
-
-    on(document, 'mousemove', move);
-    on(document, 'mouseup', up);
-  };
-
   Window.prototype.maximize = function() {
     if (this.minimize) { return this.minimize(); }
 
@@ -403,7 +314,6 @@
       term.element.style.width = '';
       term.element.style.height = '';
       el.style.boxSizing = '';
-      self.grip.style.display = '';
       root.className = m.root;
 
       self.resize(m.cols, m.rows);
@@ -426,7 +336,6 @@
     term.element.style.width = '100%';
     term.element.style.height = '100%';
     el.style.boxSizing = 'border-box';
-    this.grip.style.display = 'none';
     root.className = 'maximized';
 
     this.resize(x, y);
@@ -530,23 +439,12 @@
 
     win.tabs.push(this);
 
-    // this.socket.emit('create', cols, rows, function(err, data) {
-    //   if (err) return self._destroy();
-    //   self.pty = 6;
-    //   self.id = 6;
-    //   tty.terms[self.id] = self;
-    //   self.setProcessName('bash');
-    //   tty.emit('open tab', self);
-    //   self.emit('open');
-    // });
-
   }
 
   inherits(Tab, Terminal);
 
   // Invoke this when the ID is assigned and the tab is ready to be opened.
-  Tab.prototype.ready = function(err, id) {
-    if (err) { return this._destroy(); }
+  Tab.prototype.ready = function(id) {
     this.pty = id;
     this.id = id;
     tty.terms[this.id] = this;
@@ -568,10 +466,6 @@
 
     title = sanitize(title);
     this.title = title;
-
-    if (Terminal.focus === this) {
-      document.title = title;
-    }
 
     if (this.window.focused === this) {
       this.window.bar.title = title;
@@ -606,7 +500,6 @@
       win.focused = this;
 
       win.title.innerHTML = this.process;
-      document.title = this.title || initialTitle;
       this.button.style.fontWeight = 'bold';
       this.button.style.color = '';
     }
@@ -872,4 +765,4 @@
 
   this.tty = tty;
 
-}).call(window);
+}).call(window, jQuery);

@@ -7,7 +7,7 @@
     $httpProvider.defaults.headers.common['X-CSRF-Token'] = token;
   }
 
-  window.app = angular.module('App', []).
+  window.app = angular.module('App', ['App.directives']).
     config(['$httpProvider', function($httpProvider) {
       setCSRFToken($httpProvider);
     }]);
