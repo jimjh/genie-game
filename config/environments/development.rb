@@ -56,7 +56,7 @@ Genie::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
-  config.faye   = { url: "http://#{HOST}:3300/socket" }
+  config.faye   = { url: "http://#{HOST}:3400/socket" }
 
   # Output paths for Lamp.
   config.lamp = {
