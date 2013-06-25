@@ -26,7 +26,7 @@ GIT
 
 GIT
   remote: git@github.com:jimjh/genie-tangle.git
-  revision: b21a5eee21995f40c0f0ab62fae1066ead4ef047
+  revision: e7548adbc3f77338862d00f1d3a836eb312722f8
   branch: master
   specs:
     tangle (0.5)

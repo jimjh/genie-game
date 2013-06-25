@@ -48,8 +48,8 @@
    */
 
   tty.socket   = null;
-  tty.windows  = null;
-  tty.terms    = null;
+  tty.windows  = [];
+  tty.terms    = {};
   tty.elements = null;
 
   /**
@@ -62,8 +62,6 @@
     tty.opened = true;
 
     tty.socket  = new Faye.Client(window.fayeServer);
-    tty.windows = [];
-    tty.terms   = {};
 
     // register emit callbacks
     tty.socket.fayep = (function() {
@@ -73,7 +71,7 @@
         window[name] = callback;
         return name;
       };
-    }());
+    })();
 
     tty.socket.fayec = function(reply) {
       reply = $.parseJSON(reply);

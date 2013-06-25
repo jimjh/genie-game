@@ -3,6 +3,5 @@
 %script{src: faye_js}
 :javascript
   var fayeServer = "#{faye_url}";
-  var Faye = { Client: {} }; /* FIXME remove */
 = javascript_include_tag 'application'
 = yield :javascript if content_for? :javascript

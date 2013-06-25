@@ -7,4 +7,8 @@ class HomeController < ApplicationController
     end
   end
 
+  before_filter :authenticate_user!, only: [:tty]
+  def tty
+  end
+
 end

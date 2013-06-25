@@ -34,6 +34,7 @@ Genie::Application.routes.draw do
 
   # Home
   root :to => 'home#index'
+  match '/tty' => 'home#tty'
 
   # Pretty URLs --------------------------------------------------------------
   scope path: ':user/:lesson', controller: :lessons, as: 'user_lesson' do
