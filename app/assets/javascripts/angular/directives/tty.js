@@ -1,3 +1,4 @@
+/* global angular:true, tty:true */
 (function(angular, tty) {
   'use strict';
 
@@ -21,7 +22,7 @@
     function httpError(win) {
       return function() {
         win.tabs[0].disconnected();
-      }
+      };
     }
 
     function httpSuccess(win) {
@@ -47,6 +48,6 @@
   }
 
   angular.module('App.directives').
-    directive('tty', TTYDirective);
+    directive('tty', ['$http', TTYDirective]);
 
 })(angular, tty);
