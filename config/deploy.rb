@@ -37,7 +37,7 @@ namespace :deploy do
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
   end
-  task :load_schema do
+  task :load_schema, :roles => :db do
     run "cd #{current_path}; bundle exec rake RAILS_ENV=production db:schema:load"
   end
   task :secrets do

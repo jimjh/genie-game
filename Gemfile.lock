@@ -397,7 +397,7 @@ DEPENDENCIES
   jquery-rails (~> 2.2)
   lamp!
   mocha (~> 0.10)
-  mysql2 (~> 0.3)
+  mysql2 (~> 0.3.11)
   no_peeping_toms (~> 2.1)
   omniauth (~> 1.1)
   omniauth-github (~> 1.0)
