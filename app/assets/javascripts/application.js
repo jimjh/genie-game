@@ -1,6 +1,7 @@
 //= require jquery_ujs
 //= require jquery.jqpagination
 //= require foundation
+//= require faye_client
 //= require term
 //= require ./tty
 //= require ./utils

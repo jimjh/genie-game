@@ -8,9 +8,4 @@ module FayeHelper
     Rails.application.config.faye[:url]
   end
 
-  # @return [String] absolute path to faye client.
-  def faye_js
-    faye_url + '/client.js'
-  end
-
 end
