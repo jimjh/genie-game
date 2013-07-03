@@ -28,6 +28,8 @@ before 'deploy:restart',   'deploy:migrate'
 after  'deploy:restart',   'deploy:cleanup'
 after  'deploy:restart',   'deploy:web:enable'
 
+after  'deploy:setup',     'deploy:setup_secrets'
+
 before 'deploy:assets:precompile', 'deploy:secrets'
 after  'deploy:assets:precompile', 'deploy:clean_expired' # for turbo-sprockets
 
@@ -42,10 +44,14 @@ namespace :deploy do
     run "cd #{current_path}; bundle exec rake RAILS_ENV=production db:schema:load"
   end
   task :secrets do
-    top.upload 'config/application.yml', "#{shared_path}/config/application.yml"
     run "ln -fs -- #{shared_path}/config/application.yml #{release_path}/config"
+    run "ln -fs -- #{shared_path}/config/mysql-ssl-ca-cert.pem #{release_path}/config"
   end
   task :clean_expired do
     run "cd #{release_path}; bundle exec rake RAILS_ENV=production RAILS_GROUPS=assets assets:clean_expired"
+  end
+  task :setup_secrets do
+    top.upload 'config/application.yml', "#{shared_path}/config/application.yml"
+    run "cd #{shared_path}/config; wget https://rds.amazonaws.com/doc/mysql-ssl-ca-cert.pem"
   end
 end
