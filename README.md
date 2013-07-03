@@ -157,7 +157,7 @@ remote> sudo aptitude install redis-server
 ### 8. MySQL
 
 ```sh
-remote> sudo aptitude install mysql-client libmysqlclient-dev
+remote> sudo aptitude install mysql-client libmysqlclient-dev libmysql-ruby
 ```
 
 ## Misc.

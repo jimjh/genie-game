@@ -24,6 +24,7 @@ role :db,  Genie::SharedConstants::HOST, primary: true
 
 before 'deploy:update',    'deploy:web:disable'
 before 'deploy:restart',   'deploy:migrate'
+
 after  'deploy:restart',   'deploy:cleanup'
 after  'deploy:restart',   'deploy:web:enable'
 
@@ -41,6 +42,7 @@ namespace :deploy do
     run "cd #{current_path}; bundle exec rake RAILS_ENV=production db:schema:load"
   end
   task :secrets do
+    top.upload 'config/application.yml', "#{shared_path}/config/application.yml"
     run "ln -fs -- #{shared_path}/config/application.yml #{release_path}/config"
   end
   task :clean_expired do
