@@ -1,0 +1,15 @@
+.noscript-padding {
+  padding-top: 1.5em;
+};
+
+.noscript-warning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 5px 0;
+  background: $alert-color;
+  color: #fff;
+  z-index: 1;
+}

@@ -19,6 +19,7 @@ en:
         sent_requests: My Sent Requests
         received_requests: My Received Requests
   messages:
+    noscript: For an awesome experience, enable JavaScript.
     settings:
       failures:
         github_service: We are unable to reach the Github at this time.
