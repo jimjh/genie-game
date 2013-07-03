@@ -11,29 +11,6 @@ genie = @genie
 class Lesson
   SELECTOR: 'section[role="lesson"]'
 
-class NavigationBar
-
-  SELECTOR: Lesson::SELECTOR + ' .lesson-nav'
-  ANCHOR:   Lesson::SELECTOR
-
-  constructor: (opts) ->
-    @ele = opts.bar
-    @top = opts.anchor.offset().top - @ele.outerHeight()
-
-  stick: ->
-    $(window).scroll =>
-      if window.scrollY >= @top
-        @ele.css 'top', 0
-      else
-        @ele.css 'top', ''
-    this
-
-  @prepare: ->
-    bar = $ NavigationBar::SELECTOR
-    anc = $ NavigationBar::ANCHOR
-    nav = new NavigationBar bar: bar, anchor: anc
-    nav.stick()
-
 class Problem
 
   SELECTOR:  Lesson::SELECTOR + ' form.problem'
@@ -154,5 +131,4 @@ class Viewer
   answers = []
   answers[a.position] = a.content for a in options.answers
   Problem.prepare answers: answers, lesson: options.lesson
-  NavigationBar.prepare()
   Viewer.prepare()
