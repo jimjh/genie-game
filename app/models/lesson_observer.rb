@@ -16,12 +16,6 @@ class LessonObserver < ActiveRecord::Observer
   include HookConcern
   include Rails.application.routes.url_helpers
 
-  # Parameters sent to GitHub when creating the hook.
-  HOOK_PARAMS = {
-    name: 'web',
-    config: { content_type: 'json' }
-  }
-
   def after_rollback(lesson)
     if :create == lesson.action
       delete_hook  lesson
@@ -81,6 +75,8 @@ class LessonObserver < ActiveRecord::Observer
     return if lesson.hook.blank?
     client = github lesson
     client.repos.hooks.delete lesson.owner, lesson.name, lesson.hook
+  rescue Github::Error::ServiceError => e
+    Rails.logger.error 'Unable to delete hook. Error was %s' % e
   end
 
   # Tells compiler to delete lesson files.
@@ -105,8 +101,10 @@ class LessonObserver < ActiveRecord::Observer
   # @return [void]
   def create_hook(lesson)
     client = github lesson
-    resp = client.repos.hooks.create lesson.owner, lesson.name, hook_params(lesson)
+    resp = client.repos.hooks.create(*hook_params(lesson.owner, lesson.name))
     lesson.hook = resp.id
+  rescue Github::Error::ServiceError => e
+    Rails.logger.error 'Unable to create hook. Error was %s' % e
   end
 
   # Tells compiler to clone and compile the lesson. If the operation fails,
@@ -125,16 +123,6 @@ class LessonObserver < ActiveRecord::Observer
     raise e
   ensure
     lamp_client.transport.close
-  end
-
-  # Lazily adds {#push_lessons_url} to {HOOK_PARAMS}.
-  # @return [Hash] parameters suitable for +github_api+.
-  def hook_params(lesson)
-    user     = Rails.application.config.github[:username]
-    password = create_hook_access_token lesson.owner, lesson.name
-    params   = HOOK_PARAMS.clone
-    params[:config].merge! url: push_lessons_url(user: user, password: password)
-    params
   end
 
 end
