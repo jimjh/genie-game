@@ -26,7 +26,7 @@ GIT
 
 GIT
   remote: git@github.com:jimjh/genie-tangle.git
-  revision: e7548adbc3f77338862d00f1d3a836eb312722f8
+  revision: f53bf0dd2fd4cf1d100ae27c2a90d1d5397583c1
   branch: master
   specs:
     tangle (0.5)
@@ -222,6 +222,7 @@ GEM
       metaclass (~> 0.0.1)
     multi_json (1.7.7)
     multipart-post (1.2.0)
+    mysql2 (0.3.11)
     net-scp (1.1.1)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
@@ -249,7 +250,6 @@ GEM
       oauth2 (~> 0.8.0)
       omniauth (~> 1.0)
     orm_adapter (0.4.0)
-    pg (0.14.1)
     polyglot (0.3.3)
     posix-spawn (0.3.6)
     pry (0.9.12.2)
@@ -397,10 +397,10 @@ DEPENDENCIES
   jquery-rails (~> 2.2)
   lamp!
   mocha (~> 0.10)
+  mysql2 (~> 0.3)
   no_peeping_toms (~> 2.1)
   omniauth (~> 1.1)
   omniauth-github (~> 1.0)
-  pg (~> 0.14.1)
   pry (~> 0.9)
   rails (~> 3.2.13)
   redis-rails (~> 3.2)

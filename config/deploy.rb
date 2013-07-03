@@ -20,7 +20,7 @@ set :maintenance_config_warning, false
 
 role :web, Genie::SharedConstants::HOST
 role :app, Genie::SharedConstants::HOST
-role :db,  Genie::SharedConstants::DB_HOST, primary: true
+role :db,  Genie::SharedConstants::HOST, primary: true
 
 before 'deploy:update',    'deploy:web:disable'
 before 'deploy:restart',   'deploy:migrate'

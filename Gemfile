@@ -44,7 +44,7 @@ group :test, :development do
 end
 
 group :production do
-  gem 'pg',   '~> 0.14.1'
+  gem 'mysql2',   '~> 0.3'
 end
 
 gem 'jquery-rails', '~> 2.2'
