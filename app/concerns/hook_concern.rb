@@ -1,10 +1,16 @@
 # Creates and verifies git hooks.
 #
-# Use #create_hook_access_token to generate a deterministic signature that can
-# be added to the hook URL (e.g. as a HTTP Auth password). When the hook is
-# invoked, verify the signature using #verify_hook_access_token.
+# Use {#create_hook_access_token} to generate a deterministic signature that
+# can be added to the hook URL (e.g. as a HTTP Auth password). When the hook is
+# invoked, verify the signature using {#verify_hook_access_token}.
 module HookConcern
   extend self
+
+  # Parameters sent to GitHub when creating the hook.
+  HOOK_PARAMS = {
+    name: 'web',
+    config: { content_type: 'json' }
+  }
 
   # @return [Boolean] true if signature is valid and matches expected params
   def verify_hook_access_token(token, github_login, repo_name)
@@ -25,6 +31,16 @@ module HookConcern
   def hook_access_verifier
     @hook_access_verifier ||=
       ActiveSupport::MessageVerifier.new Rails.application.config.github[:password]
+  end
+
+  # Lazily adds {#push_lessons_url} to {HOOK_PARAMS}.
+  # @return [Array] parameters suitable for +github_api+.
+  def hook_params(github_login, repo_name)
+    user     = Rails.application.config.github[:username]
+    password = create_hook_access_token github_login, repo_name
+    params   = HOOK_PARAMS.clone
+    params[:config].merge! url: push_lessons_url(user: user, password: password)
+    return github_login, repo_name, params
   end
 
 end
