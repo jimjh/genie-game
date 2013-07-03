@@ -18,9 +18,9 @@ set :keep_releases, 5
 
 set :maintenance_config_warning, false
 
-role :web, Genie::SharedConstants::HOST          # Your HTTP server, Apache/etc
-role :app, Genie::SharedConstants::HOST          # This may be the same as your `Web` server
-role :db,  Genie::SharedConstants::HOST, primary: true # This is where Rails migrations will run
+role :web, Genie::SharedConstants::HOST
+role :app, Genie::SharedConstants::HOST
+role :db,  Genie::SharedConstants::DB_HOST, primary: true
 
 before 'deploy:update',    'deploy:web:disable'
 before 'deploy:restart',   'deploy:migrate'

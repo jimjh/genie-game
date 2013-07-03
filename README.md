@@ -8,6 +8,19 @@ $> cap deploy
 
 `cap deploy` will clone the repository to `/u/apps/genie-game/releases/current`, execute `rake db:migrate`, and `rake assets:precompile`. The assets compilation step will take a while, but I am waiting on progress at [Pull Request #21][pull-21].
 
+## DNS Setup
+Jim owns the `geniehub.org` domain, registered on Namecheap.com.
+`beta.geniehub.org` is a CNAME alias for
+`ec2-54-225-113-114.compute-1.amazonaws.com`, which is AWS's elastic IP that
+maps to the actual EC2 instance. When switching instances, use AWS's console to
+map the elastic IP to the new EC2 instance.
+
+## RDS Instance
+Genie uses a MySQL database running on Amazon's RDS. It's configured to allow
+access from the `web` EC2 security group. Connections are encrypted with SSL.
+The security credentials for accessing the database are kept in Figaro. If the
+host is changed, please update `config/shared.rb` and `config/application.yml`.
+
 ## EC2 Instance
 The current deployment server is `beta.geniehub.org`, running Ubuntu 13.
 For the rest of this README, `genie.ec2` refers to the above host. If the host
@@ -49,16 +62,6 @@ $> cap deploy:stop
 $> cap deploy:restart
 ```
 
-## Postgresql
-The root user is `postgres`. I don't remember the password, but you can login using
-
-```sh
-$> sudo -u postgres psql
-```
-
-from an appropriate sudoer. The confidential authentication details should be
-kept in Figaro.
-
 ## Redis
 Configuration files are at `/etc/redis/redis.conf`. For more information, refer
 to [redis documentation](http://redis.io/topics/config).
@@ -67,11 +70,6 @@ If the port is changed, please update `config/shared.rb`.
 
 ## Lamp
 Lamp is also deployed using `cap:deploy` with monitoring by Upstart.
-
-## SSL
-The SSL cert was issued by startssl.com. I don't have a password for the
-account (?), but have a enrollment certificate (?) installed on my Chrome
-browser (?).
 
 ## Installation
 These are the steps I took to set up the Ubuntu server.
@@ -147,26 +145,6 @@ remote> chmod o-rx /mnt/genie
 local>  cap deploy
 ```
 
-### 5. Postgres
-
-Follow [instructions][postgres] from Ubuntu. Create `genie` user and `genie` database.
-
-```sh
-remote> sudo su postgres
-remote> createuser genie
-remote> createdb genie
-remote> psql genie
-psql>   ALTER DATABASE genie OWNER TO genie;
-```
-
-Configure `/etc/postgresql/9.1/main/pg_hba.conf` and changed the following line:
-
-  local all   all   peer
-
-to
-
-  local all   all   md5
-
 ### 6. Capistrano
 
 Follow the fresh deploy instructions given below.
@@ -175,6 +153,11 @@ Follow the fresh deploy instructions given below.
 
 ```sh
 remote> sudo aptitude install redis-server
+```
+### 8. MySQL
+
+```sh
+remote> sudo aptitude install mysql-client libmysqlclient-dev
 ```
 
 ## Misc.
@@ -196,7 +179,7 @@ $> cap deploy
 ```
 
 ### Process Monitoring
-nginx, postgresql, and redis are installed with System V scripts in `/etc/init.d`.
+nginx and redis are installed with System V scripts in `/etc/init.d`.
 and are monitored with Upstart. Passenger monitors all rails processes.
 
 ### Security
@@ -206,4 +189,3 @@ Need to restrict permissions on locals.d. Need to restrict permissions on
 
   [capistrano-guide]: https://github.com/capistrano/capistrano/wiki/2.x-from-the-beginning
   [pull-21]: https://github.com/rails/sprockets-rails/pull/21
-  [postgres]: https://help.ubuntu.com/community/PostgreSQL
