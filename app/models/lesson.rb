@@ -49,6 +49,7 @@ class Lesson < ActiveRecord::Base
   validate                :url_must_be_valid
 
   # scopes -------------------------------------------------------------------
+  default_scope order('title')
   scope :published, where(status: 'published')
   scope :for_user, lambda { |user| joins(:user).where('users.slug=?', user) }
 

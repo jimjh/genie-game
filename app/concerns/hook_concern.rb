@@ -1,3 +1,8 @@
+# Creates and verifies git hooks.
+#
+# Use #create_hook_access_token to generate a deterministic signature that can
+# be added to the hook URL (e.g. as a HTTP Auth password). When the hook is
+# invoked, verify the signature using #verify_hook_access_token.
 module HookConcern
   extend self
 
