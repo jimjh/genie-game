@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(:version => 20130704142945) do
     t.datetime "updated_at",                                           :null => false
     t.string   "results",                              :default => "", :null => false
     t.integer  "score",                                :default => 0,  :null => false
-    t.integer  "attempts",                             :default => 1
+    t.integer  "attempts",                             :default => 0
     t.integer  "first_correct_attempt"
   end
 
