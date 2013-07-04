@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130604022847) do
+ActiveRecord::Schema.define(:version => 20130704142945) do
 
   create_table "access_requests", :force => true do |t|
     t.integer  "requester_id"
@@ -27,11 +27,13 @@ ActiveRecord::Schema.define(:version => 20130604022847) do
   create_table "answers", :force => true do |t|
     t.integer  "problem_id"
     t.integer  "user_id"
-    t.binary   "content",    :limit => 255
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
-    t.string   "results",                   :default => "", :null => false
-    t.integer  "score",                     :default => 0,  :null => false
+    t.binary   "content",               :limit => 255
+    t.datetime "created_at",                                           :null => false
+    t.datetime "updated_at",                                           :null => false
+    t.string   "results",                              :default => "", :null => false
+    t.integer  "score",                                :default => 0,  :null => false
+    t.integer  "attempts",                             :default => 0
+    t.integer  "first_correct_attempt"
   end
 
   add_index "answers", ["problem_id"], :name => "index_answers_on_problem_id"
