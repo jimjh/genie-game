@@ -15,6 +15,7 @@ describe User do
   it { should have_many(:authorizations).dependent(:destroy) }
   it { should have_many(:lessons).dependent(:destroy) }
   it { should have_many(:answers).dependent(:destroy) }
+  it { should have_many(:usages).dependent(:destroy) }
   it {
     should have_many(:sent_access_requests)
       .class_name(AccessRequest)
