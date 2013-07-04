@@ -15,7 +15,7 @@ describe Answer do
     it { should respond_to attr }
   end
 
-  %i[problem problem_id user user_id results score].each do |attr|
+  %i[problem problem_id user user_id results score attempts first_correct_attempt].each do |attr|
     it { should_not allow_mass_assignment_of attr }
   end
 
@@ -74,57 +74,83 @@ end
 
 describe Answer, '::upsert' do
 
-  before(:each) { @first = FactoryGirl.create :answer }
-  after(:each)  { @first.destroy }
+  def new_answer(opts)
+    ans    = FactoryGirl.build :answer, opts
+    answer = Answer.upsert ans.user.id, ans.problem.id, ans.attributes.slice('content')
+    answer.save!
+    answer
+  end
+
+  let(:user)    { FactoryGirl.create :user }
+  let(:problem) { FactoryGirl.create :problem }
+
+  before :each do
+    @first = new_answer user: user, problem: problem
+  end
 
   it 'has a first answer' do
-    @first.should_not be_nil
-    Answer.count.should be 1
+    @first.reload.attempts.should eq 1
+    user.answers.count.should eq 1
   end
 
   context 'with a different problem but same user' do
 
-    before(:each) do
-      second  = FactoryGirl.build :answer, user: @first.user
-      @second = Answer.upsert second.user.id, second.problem.id,
-        second.attributes.slice('content')
-      @second.save!
-    end
-
-    after(:each)  { @second.destroy if @second.persisted? }
-
-    it 'upserts successfully' do
-      @second.should be_persisted
-    end
+    let(:second) { new_answer user: user }
+    subject      { second }
+    it { should be_persisted }
 
     it 'inserts a new answer' do
-      Answer.count.should be 2
+      second.reload.attempts.should eq 1
+      user.answers.count.should eq 2
     end
 
   end
 
   context 'with the same problem and user' do
 
-    before(:each) do
-      second  = FactoryGirl.build :answer, user: @first.user,
-        problem: @first.problem
-      @second = Answer.upsert second.user.id, second.problem.id,
-        second.attributes.slice('content')
-      @second.save!
-    end
-
-    after(:each)  { @second.destroy if @second.persisted? }
-
-    it 'upserts successfully' do
-      @second.should be_persisted
-    end
+    let(:second) { new_answer user: user, problem: problem }
+    subject      { second }
+    it { should be_persisted }
 
     it 'does not insert a new answer' do
-      Answer.count.should be 1
+      user.answers.count.should eq 1
     end
 
     it 'updates the existing answer' do
-      @first.reload.content.should eq(@second.content)
+      second
+      @first.reload.content.should eq second.content
+    end
+
+    it 'increases the attempt count' do
+      second
+      @first.reload.attempts.should eq 2
+    end
+
+
+
+    context 'and with a correct answer' do
+
+      let(:content) { Marshal.load problem.solution }
+      let(:second)  { new_answer user: user, problem: problem, content: content }
+      it { should be_persisted  }
+      its(:score) { should eq 1 }
+      its(:first_correct_attempt) { should eq 2 }
+      its(:attempts) { should eq 2 }
+
+      it 'subsequent incorrect attempts do not change the first_correct_attempt counter' do
+        second
+        new_answer user: user, problem: problem
+        second.reload.attempts.should eq 3
+        second.first_correct_attempt.should eq 2
+      end
+
+      it 'subsequent correct attempts do not change the first_correct_attempt counter' do
+        second
+        new_answer user: user, problem: problem, content: content
+        second.reload.attempts.should eq 3
+        second.first_correct_attempt.should eq 2
+      end
+
     end
 
   end

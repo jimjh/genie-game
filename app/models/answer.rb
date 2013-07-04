@@ -1,6 +1,10 @@
 require 'csv'
 # == Answer
 # An answer is a student's attempt at a problem.
+# - +results+: a boolean or a hash of booleans indicating comparison results
+# - +content+: user's submission
+# - +score+:   =1 iff everything in +results+ is +true+
+# - +attempts+: number of attempts
 class Answer < ActiveRecord::Base
   include WeakComparator
 
@@ -8,7 +12,7 @@ class Answer < ActiveRecord::Base
 
   # relationships ------------------------------------------------------------
   belongs_to :problem, inverse_of: :answers
-  belongs_to :user, inverse_of: :answers
+  belongs_to :user,    inverse_of: :answers
 
   # attributes ---------------------------------------------------------------
   attr_accessible :content
@@ -24,9 +28,11 @@ class Answer < ActiveRecord::Base
   # callbacks ----------------------------------------------------------------
   before_save :verify_attempt
 
+  # Find existing answer object or create one.
   def self.upsert(user_id, problem_id, attributes)
     ans = Answer.where(user_id: user_id, problem_id: problem_id).first_or_initialize
     ans.attributes = attributes
+    ans.attempts  += 1
     ans
   end
 
@@ -51,6 +57,7 @@ class Answer < ActiveRecord::Base
   def verify_attempt
     self.results = same? content, Marshal.load(problem.solution)
     self.score   = score_attempt results
+    self.first_correct_attempt = attempts if score == 1 and first_correct_attempt.nil?
   end
 
   # Sets score to 1 iff everything is correct.
