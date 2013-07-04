@@ -35,13 +35,12 @@ class Lesson < ActiveRecord::Base
 
   # relationships ------------------------------------------------------------
   belongs_to :user, inverse_of: :lessons
-  has_many   :problems,
-    order: 'digest',
-    dependent: :destroy,
-    autosave: true,
-    extend: UpdateProblemsExtension,
-    inverse_of: :lesson
   has_many   :answers, through: :problems
+  with_options dependent: :destroy, inverse_of: :lesson do |assoc|
+    assoc.has_many :problems, order: 'digest', autosave: true,
+      extend: UpdateProblemsExtension
+    assoc.has_many :usages
+  end
 
   # validations --------------------------------------------------------------
   validates_presence_of   :name, :url, :owner, :user

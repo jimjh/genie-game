@@ -24,9 +24,12 @@ class User < ActiveRecord::Base
   attr_accessor   :nickname
 
   # relationships ------------------------------------------------------------
-  has_many :authorizations, dependent: :destroy, inverse_of: :user
-  has_many :lessons, dependent: :destroy, inverse_of: :user
-  has_many :answers, dependent: :destroy, inverse_of: :user
+  with_options dependent: :destroy, inverse_of: :user do |assoc|
+    assoc.has_many :authorizations
+    assoc.has_many :lessons
+    assoc.has_many :answers
+    assoc.has_many :usages
+  end
   has_many :sent_access_requests,
     class_name: AccessRequest,
     foreign_key: :requester_id,

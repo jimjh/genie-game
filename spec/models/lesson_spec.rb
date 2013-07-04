@@ -3,20 +3,6 @@ require 'spec_helper'
 
 describe Lesson do
 
-  # specs to write
-  # create
-  #   - tells faye
-  # published
-  #   - tells faye
-  # pushed
-  #   - tells faye
-  # failed
-  #   - tells faye
-  # destroy
-  #   - tells faye
-  # update
-  #   - tells faye
-
   %i[name url path slug compiled_path status action
      title description last_error owner].each do |s|
     it { should respond_to s }
@@ -24,6 +10,7 @@ describe Lesson do
 
   it { should belong_to(:user) }
   it { should have_many(:problems).order('digest').dependent(:destroy) }
+  it { should have_many(:usages).dependent(:destroy) }
   it { should have_many(:answers).through(:problems) }
 
   %i[name url title description owner].each do |s|
@@ -56,7 +43,7 @@ describe Lesson do
 
   context 'created with default values' do
     subject { lesson }
-    let(:lesson) { lesson = FactoryGirl.create(:lesson, name: nil) }
+    let(:lesson) { FactoryGirl.create(:lesson, name: nil) }
     its(:status) { should eq 'publishing' }
     its(:name)   { should eq File.basename lesson.url, '.git' }
   end
