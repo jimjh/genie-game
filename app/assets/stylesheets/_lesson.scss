@@ -1,18 +1,6 @@
 /* Styling within lesson */
 section[role='lesson'] {
 
-  .lesson-nav {
-    max-width: 100%;
-    top: -56px;
-    left: 0;
-    position: fixed;
-    padding-top: 15px;
-    padding-bottom: 5px;
-    margin-bottom: 0;
-    transition: top 0.15s;
-    background-color: rgba(0, 0, 0, 0.8);
-  }
-
   .lesson-problems {
     &.sticky {
       @media #{$small} { position: fixed; top: 56px; }
@@ -22,4 +10,16 @@ section[role='lesson'] {
 
   .block-image { text-align: center; }
 
+}
+
+[data-sticky-nav] {
+  max-width: 100%;
+  top: -56px;
+  left: 0;
+  position: fixed;
+  padding-top: 15px;
+  padding-bottom: 5px;
+  margin-bottom: 0;
+  transition: top 0.15s;
+  background-color: rgba(0, 0, 0, 0.8);
 }

@@ -14,11 +14,10 @@ Genie::Application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
-  # Redis for caching (port chosen by foreman)
-  config.cache_store = :redis_store, "redis://localhost:3000/0/cache"
+  config.cache_store = :memory_store
 
   # Used to construct a web hook for GitHub
-  PORT = 3100
+  PORT = 3000
   HOST = 'localhost'
   Rails.application.routes.default_url_options[:host] = "#{HOST}:#{PORT}"
 
