@@ -22,15 +22,14 @@ class LessonsController < ApplicationController
 
     fields  = %w[lessons.id lessons.updated_at lessons.slug
                  user_id title description compiled_path status]
-    @lesson = Lesson.select(fields)
-                    .for_user(params[:user])
-                    .find(params[:lesson])
+    @lesson = Lesson.select(fields).for_user(params[:user]).find(params[:lesson])
     not_found unless @lesson.published?
 
     path = @lesson.path_to params[:path], params[:format]
 
     # html_safe iff it's at the root - everything else is dangerous static asset
     if path.parent.to_s == @lesson.compiled_path
+      Usage.track current_user, @lesson
       @contents = File.read path
       @answers  = @lesson.answers_for current_user
     else send_file path, disposition: 'attachment'
