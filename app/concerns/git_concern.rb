@@ -4,6 +4,8 @@ module GitConcern
   GIT_SCHEMES = %w(ssh git http https ftp ftps rsync)
   GIT_SUFFIX  = '.git'
 
+  GIT_SCHEMES << 'file' unless Rails.env.production?
+
   # A weak test for remote URI.
   def url_is_remote?
     !(url =~ /localhost/ || url =~ /127\.0\.0\.1/ || url =~ /0\.0\.0\.0/)
