@@ -87,29 +87,12 @@ class Problem
 
 class Viewer
 
-  WINDOW_SELECTOR:    Lesson::SELECTOR + ' .lesson-problems'
-  PAGINATOR_SELECTOR: Viewer::WINDOW_SELECTOR + ' .jqpagination'
-  PROBLEM_PREFIX:     '#problem_'
-  PROBLEM_WRAPPER:    '.problem-wrapper'
+  WINDOW_SELECTOR: Lesson::SELECTOR + ' .lesson-problems'
 
   constructor: (opts) ->
     @window    = opts.window
-    @paginator = opts.paginator
     @top   = @window.offset().top
     @width = @window.outerWidth()
-
-  spy: ->
-    $(window).scroll =>
-      return unless $('[name=locked_to_text]').prop('checked')
-      scrollTop = $(window).scrollTop()
-      maxPage   = 1
-      $('[data-pagination-destination]').each ->
-        destination = $ this
-        destPage    = Number destination.data 'pagination-destination'
-        topOffset   = destination.offset().top - scrollTop
-        maxPage     = destPage if topOffset < 0 and destPage > maxPage
-      @paginator.data('jqPagination').setPage maxPage
-    this
 
   stick: ->
     $(window).scroll =>
@@ -123,22 +106,10 @@ class Viewer
         @width = @window.outerWidth()
     this
 
-  paginate: ->
-    @paginator.jqPagination
-      page_string: 'Problem {current_page} of {max_page}'
-      paged: (page) =>
-        @window.find("#{Viewer::PROBLEM_WRAPPER}:not(.hide)")
-          .addClass('hide')
-        @window.find(Viewer::PROBLEM_PREFIX + (page - 1))
-          .parent()
-          .removeClass('hide')
-    this
-
   @prepare: ->
-    window    = $ Viewer::WINDOW_SELECTOR
-    paginator = $ Viewer::PAGINATOR_SELECTOR
-    viewer = new Viewer window: window, paginator: paginator
-    viewer.stick().paginate().spy()
+    window = $ Viewer::WINDOW_SELECTOR
+    viewer = new Viewer window: window
+    viewer.stick()
 
 @genie.init_lesson = (options) ->
   answers = []
