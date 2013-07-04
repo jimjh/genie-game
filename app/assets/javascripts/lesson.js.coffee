@@ -98,9 +98,23 @@ class Viewer
     @top   = @window.offset().top
     @width = @window.outerWidth()
 
-  scroll: ->
+  spy: ->
     $(window).scroll =>
-      if window.scrollY >= @top - 56
+      return unless $('[name=locked_to_text]').prop('checked')
+      scrollTop = $(window).scrollTop()
+      maxPage   = 1
+      $('[data-pagination-destination]').each ->
+        destination = $ this
+        destPage    = Number destination.data 'pagination-destination'
+        topOffset   = destination.offset().top - scrollTop
+        maxPage     = destPage if topOffset < 0 and destPage > maxPage
+      @paginator.data('jqPagination').setPage maxPage
+    this
+
+  stick: ->
+    $(window).scroll =>
+      scrollTop = $(window).scrollTop()
+      if scrollTop >= @top - 56
         @window.addClass 'sticky'
         @window.css 'width', @width
       else
@@ -124,10 +138,9 @@ class Viewer
     window    = $ Viewer::WINDOW_SELECTOR
     paginator = $ Viewer::PAGINATOR_SELECTOR
     viewer = new Viewer window: window, paginator: paginator
-    viewer.scroll().paginate()
+    viewer.stick().paginate().spy()
 
 @genie.init_lesson = (options) ->
-
   answers = []
   answers[a.position] = a.content for a in options.answers
   Problem.prepare answers: answers, lesson: options.lesson
