@@ -81,5 +81,7 @@ module Genie
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
 
+    Jbuilder.key_format :camelize => :lower
+
   end
 end

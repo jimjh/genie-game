@@ -17,7 +17,6 @@ class LessonsController < ApplicationController
   #   it and execute malicious code.
   # @todo TODO Cache static assets, so that they don't have to pass through
   #   here and the database.
-  # @todo TODO Configure X-SendFile with nginx for performance.
   def show
 
     fields  = %w[lessons.id lessons.updated_at lessons.slug
@@ -63,6 +62,12 @@ class LessonsController < ApplicationController
     end
     status = status ? :accepted : :unprocessable_entity
     respond_with lesson, only: [:slug, :url, :status], status: status
+  end
+
+  # Retrieves statistics.
+  def stats
+    @lesson = Lesson.for_user(params[:user]).find(params[:lesson])
+    authorize! :stat, @lesson
   end
 
   # Webhook that is registered with GitHub.

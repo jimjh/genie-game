@@ -51,11 +51,13 @@ gem 'jquery-rails', '~> 2.2'
 gem 'redis-rails',  '~> 3.2'
 gem 'thin', '~> 1.5'
 gem 'haml', '~> 4.0'
+gem 'jbuilder', '~> 1.4'
 
 # Authentication
 gem 'devise',           '~> 2.2'
 gem 'omniauth',         '~> 1.1'
 gem 'omniauth-github',  '~> 1.0'
+gem 'cancan',           '~> 1.6'
 
 gem 'simple_form',      '~> 2.0'
 gem 'friendly_id',      '~> 4.0'
