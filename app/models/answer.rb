@@ -26,6 +26,7 @@ class Answer < ActiveRecord::Base
 
   # scope --------------------------------------------------------------------
   scope :for_users, lambda { |ids| where(user_id: ids) }
+  scope :correct, where('score >= ?', 1)
 
   # callbacks ----------------------------------------------------------------
   before_save :verify_attempt
@@ -44,6 +45,14 @@ class Answer < ActiveRecord::Base
       all.each do |a|
         csv << [a.id, a.problem.lesson.name, a.problem.position, a.user.slug, a.score]
       end
+    end
+  end
+
+  def incorrect_attempts
+    if first_correct_attempt
+      self.first_correct_attempt - 1
+    else
+      self.attempts
     end
   end
 

@@ -25,6 +25,12 @@ class Problem < ActiveRecord::Base
   # callbacks ----------------------------------------------------------------
   before_create :decode_solution
 
+  def avg_incorrect_attempts
+    answers = self.answers
+    sum     = answers.map(&:incorrect_attempts).reduce(0, :+)
+    sum.zero? ? 0 : sum/answers.count
+  end
+
   private
 
   def decode_solution
