@@ -8,12 +8,14 @@ Genie::Application.routes.draw do
 
   # Lessons Controller -------------------------------------------------------
   resources :lessons, only: [:create, :destroy] do
-    post :toggle, on: :member
+    member do
+      post :toggle
+      post :ready,  # Lamp Hook
+        constraints: lambda { |r| Rails.configuration.lamp[:ips].include? r.remote_ip }
+      post :gone,   # Lamp Hook
+        constraints: lambda { |r| Rails.configuration.lamp[:ips].include? r.remote_ip }
+    end
     post :push, on: :collection # GitHub Hook
-    post :ready, on: :member, # Lamp Hook
-      constraints: lambda { |r| Rails.configuration.lamp[:ips].include? r.remote_ip }
-    post :gone,  on: :member, # Lamp Hook
-      constraints: lambda { |r| Rails.configuration.lamp[:ips].include? r.remote_ip }
   end
 
   resources :access_requests do
@@ -44,6 +46,7 @@ Genie::Application.routes.draw do
       constraints: lambda { |r| !r.original_fullpath.ends_with? '/' }
     match '/settings(/*path)' => :settings, as: 'settings', via: :get,
       defaults: { path: 'default' }
+    match '/stats' => :stats,  via: :get
     match '(/*path)' => :show, via: :get,
       defaults: { path: LessonsController::INDEX_FILE }
   end
