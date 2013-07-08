@@ -39,4 +39,17 @@ describe Problem do
 
   end
 
+  describe '#for_users' do
+
+    subject { problem.answers.for_users user_ids }
+    let(:problem)  { FactoryGirl.create :problem }
+    let(:answers)  { (0..10).map { FactoryGirl.create :answer, problem: problem } }
+    let(:user_ids) { answers.take(5).map(&:user_id) }
+
+    it 'only includes IDs in the set' do
+      subject.map { |a| a.user_id }.should eq user_ids
+    end
+
+  end
+
 end

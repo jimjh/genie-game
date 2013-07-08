@@ -64,4 +64,8 @@ class User < ActiveRecord::Base
     authorizations.find_by_provider! 'github'
   end
 
+  def has_granted_requests?
+    sent_access_requests.granted.any?
+  end
+
 end
