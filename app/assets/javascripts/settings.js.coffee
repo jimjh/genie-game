@@ -28,9 +28,11 @@ class RepoSwitch
       this.update_id data.id if xhr.status == 201
 
     @form.bind 'ajax:error', (event, xhr) =>
+      this.toggle_switch false
       errors = null
       try
         errors = $.parseJSON(xhr.responseText).errors
+      catch SyntaxError
       finally
         this.update_errors errors
 
@@ -38,6 +40,10 @@ class RepoSwitch
     @form.find('input[type="radio"]').click =>
       @form.submit()
     this
+
+  toggle_switch: (state) ->
+    @form.find('input[value=off]').prop('checked', !state)
+    @form.find('input[value=on]').prop('checked', state)
 
   toggle_colors: (status) ->
     lights = @form.closest('tr').find('.lesson-status')
@@ -57,7 +63,6 @@ class RepoSwitch
   update_errors: (errors) ->
     modal = $('#errors')
     ul    = modal.find('ul')
-    console.log errors
     if errors?
       messages = (field + ' ' + msg for msg in list for field, list of errors)
       messages = [].concat.apply [], messages
