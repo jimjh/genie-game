@@ -40,6 +40,7 @@ class LessonsController < ApplicationController
   def settings
     @user, @lesson, @path = params[:user], params[:lesson], params[:path]
     @lesson = Lesson.for_user(@user).find(@lesson)
+    authorize! :stat, @lesson
     # security check to prevent directory traversal attacks
     not_found unless File.expand_path(@path, SETTINGS_PATH).starts_with?(SETTINGS_PATH)
   end
@@ -68,6 +69,7 @@ class LessonsController < ApplicationController
   def stats
     @lesson = Lesson.for_user(params[:user]).find(params[:lesson])
     authorize! :stat, @lesson
+    @subset = (@lesson.user_id == current_user.id) ? nil : current_user.sent_access_requests.granted.pluck(:id)
   end
 
   # Webhook that is registered with GitHub.

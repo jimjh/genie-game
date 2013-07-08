@@ -5,6 +5,6 @@
     %h5
       %small
         Updated by #{lesson.user} #{time_ago_or_format lesson.updated_at}.
-      - if lesson.user_id == current_user.id
-        %small= link_to '[  Settings  ]',  user_lesson_settings_path(current_user, lesson)
+      - if lesson.user_id == current_user.id || current_user.has_granted_requests?
+        %small= link_to '[  Settings  ]',  user_lesson_settings_path(lesson.user, lesson)
     %hr
