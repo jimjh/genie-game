@@ -1,6 +1,6 @@
 class LessonsController < ApplicationController
 
-  include HookConcern
+  include GithubConcern
 
   protect_from_forgery except: [:push, :ready, :gone]
   before_filter :authenticate_user!, except: [:push, :ready, :gone]

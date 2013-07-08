@@ -60,4 +60,8 @@ class User < ActiveRecord::Base
     auth.try(:name) || auth.try(:nickname) || 'Account'
   end
 
+  def github_oauth!
+    authorizations.find_by_provider! 'github'
+  end
+
 end

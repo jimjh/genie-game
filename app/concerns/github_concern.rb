@@ -3,14 +3,28 @@
 # Use {#create_hook_access_token} to generate a deterministic signature that
 # can be added to the hook URL (e.g. as a HTTP Auth password). When the hook is
 # invoked, verify the signature using {#verify_hook_access_token}.
-module HookConcern
+#
+# Use {#github_client} to create and cache a github client.
+module GithubConcern
   extend self
 
   # Parameters sent to GitHub when creating the hook.
   HOOK_PARAMS = {
     name: 'web',
     config: { content_type: 'json' }
-  }
+  }.freeze
+
+  API_CONFIG = {
+    auto_pagination: true
+  }.freeze
+
+  # @return [Github::Client] client
+  def github_client(user = current_user)
+    oauth = user.github_oauth!
+    @github_client ||= begin
+      Github.new API_CONFIG.merge(oauth_token: oauth.token)
+    end
+  end
 
   # @return [Boolean] true if signature is valid and matches expected params
   def verify_hook_access_token(token, github_login, repo_name)

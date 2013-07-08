@@ -13,7 +13,7 @@ class LessonObserver < ActiveRecord::Observer
 
   include LampConcern
   include FayeConcern
-  include HookConcern
+  include GithubConcern
   include Rails.application.routes.url_helpers
 
   def after_rollback(lesson)
@@ -59,21 +59,13 @@ class LessonObserver < ActiveRecord::Observer
 
   private
 
-  # Reads the user's authorization (from omniauth) and creates a Github client.
-  # @param [Lesson] lesson
-  # @return [Github::Client] github client
-  def github(lesson)
-    auth = lesson.user.authorizations.find_by_provider! 'github'
-    Github.new(oauth_token: auth.token)
-  end
-
   # Deletes a webhook from the GitHub repository. If the operation failed, the
   # exception is ignored by {after_rollback} or {after_destroy}.
   # @param [Lesson] lesson
   # @return [void]
   def delete_hook(lesson)
     return if lesson.hook.blank?
-    client = github lesson
+    client = github_client lesson.user
     client.repos.hooks.delete lesson.owner, lesson.name, lesson.hook
   rescue Github::Error::ServiceError => e
     Rails.logger.error 'Unable to delete hook. Error was %s' % e
@@ -100,7 +92,7 @@ class LessonObserver < ActiveRecord::Observer
   # @todo FIXME make this work with organizations
   # @return [void]
   def create_hook(lesson)
-    client = github lesson
+    client = github_client lesson.user
     resp = client.repos.hooks.create(*hook_params(lesson.owner, lesson.name))
     lesson.hook = resp.id
   rescue Github::Error::ServiceError => e
