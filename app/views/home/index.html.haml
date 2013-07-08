@@ -9,11 +9,12 @@
           .large-3.columns
             .card-wrapper
               .card
-                %h6
+                %h4
                   = link_to lesson.title, user_lesson_path(lesson.user, lesson)
                 %h6.subheader
-                  by #{lesson.user}
+                  #{lesson.user}
                   %small
+                    Updated
                     = time_ago_in_words(lesson.updated_at)
                     ago
                 %hr

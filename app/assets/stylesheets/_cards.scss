@@ -14,4 +14,6 @@ $card-radius: 9px;
   height: 343px;
   padding: 10px;
   font-size: emCalc(13px);
+  h4 { text-transform: uppercase; }
+  p { color: $subheader-font-color; }
 }
