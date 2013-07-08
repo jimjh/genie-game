@@ -15,7 +15,7 @@ describe LessonObserver, :truncate do
   before(:each)  do
     Rails.application.routes.default_url_options[:host] = 'test.host'
     observer.stubs(:lamp_client).returns(lamp_client)
-    observer.stubs(:github).returns(github_client)
+    observer.stubs(:github_client).returns(github_client)
     ActiveRecord::Observer.enable_observers
   end
 

@@ -15,7 +15,7 @@ module Test
 
     def github_http_login(login, repo)
       user = Rails.application.config.github[:username]
-      pass = HookConcern.create_hook_access_token login, repo
+      pass = GithubConcern.create_hook_access_token login, repo
       request.env['HTTP_AUTHORIZATION'] = \
         ActionController::HttpAuthentication::Basic.encode_credentials(user, pass)
     end

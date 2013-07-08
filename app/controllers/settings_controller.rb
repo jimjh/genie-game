@@ -1,9 +1,8 @@
 # This entire controller operates under the +current_user+ context.
 class SettingsController < ApplicationController
+  include GithubConcern
 
   before_filter :authenticate_user!
-
-  # TODO [github] make this work with private repos.
 
   # GET /settings/profile
   def profile
@@ -34,19 +33,29 @@ class SettingsController < ApplicationController
     opts = { expires_in: 2.days, force: params[:sync].present? }
     Rails.cache.fetch github_repos_key, opts do
       Rails.cache.write "#{github_repos_key}_last_mod", Time.now
-      auth = current_user.authorizations.find_by_provider('github') || not_found
-      @client = Github.new auto_pagination: true, oauth_token: auth.token
       github_user_repos + github_org_repos
     end
   end
 
+  def github_missing_manifest?(repo)
+    begin
+      github_client.repos.contents.get repo.owner.login, repo.name, 'manifest.yml'
+    rescue Github::Error::ServiceError
+      true
+    else
+      false
+    end
+  end
+
   def github_user_repos
-    @client.repos.list.body
+    github_client.repos.list.body.reject(&method(:github_missing_manifest?))
   end
 
   def github_org_repos
-    @client.orgs.list.body.reduce([]) do |memo, org|
-      memo + @client.repos.list(type: 'member', org: org.login).body
+    filter = method(:github_missing_manifest?)
+    github_client.orgs.list.body.reduce([]) do |memo, org|
+      repos = github_client.repos.list(type: 'member', org: org.login).body
+      memo + repos.reject(&filter)
     end
   end
 
