@@ -60,6 +60,16 @@ class User < ActiveRecord::Base
     auth.try(:name) || auth.try(:nickname) || 'Account'
   end
 
+  def email
+    authorizations.first.try(:email)
+  end
+
+  def avatar(size=120)
+    return nil unless email
+    hash = OpenSSL::Digest.hexdigest('md5', email.strip.downcase)
+    "https://secure.gravatar.com/avatar/#{hash}?d=identicon&s=#{size}"
+  end
+
   def github_oauth!
     authorizations.find_by_provider! 'github'
   end

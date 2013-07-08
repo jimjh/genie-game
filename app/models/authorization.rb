@@ -11,7 +11,7 @@
 class Authorization < ActiveRecord::Base
 
   # attributes ---------------------------------------------------------------
-  attr_accessible :link, :name, :nickname, :provider, :secret, :token, :uid
+  attr_accessible :link, :name, :nickname, :provider, :secret, :token, :uid, :email
   attr_readonly :user_id
 
   # relationships ------------------------------------------------------------

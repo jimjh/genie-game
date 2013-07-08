@@ -1,5 +1,6 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans);
 @import url(http://fonts.googleapis.com/css?family=Roboto);
+@import url(http://fonts.googleapis.com/css?family=Francois+One);
 
 @import "foundation_and_overrides";
 
@@ -17,7 +18,21 @@
 @import "jqpagination";
 
 @import "welcome";
+@import "avatar";
 @import "cards";
 @import "lesson";
 
 ul { list-style-position: inside; }
+
+.top-bar { margin-bottom: 0; }
+
+.hero-title {
+  background-image: url('/assets/abstract.png');
+  background-attachment: fixed;
+  margin-bottom: 1.875em;
+  h1 {
+    color: #fff;
+    text-transform: uppercase;
+    font-family: 'Francois One';
+  }
+}

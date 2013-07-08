@@ -44,7 +44,7 @@ $body-font-family: 'Open Sans', arial, sans-serif;
 
 // Colors
 
-// $primary-color: #2ba6cb;
+$primary-color: #abdb25;
 // $secondary-color: #e9e9e9;
 // $alert-color: #c60f13;
 // $success-color: #5da423;
@@ -1202,7 +1202,7 @@ $header-font-family: Roboto, arial, sans-serif;
 
 // Background color for the top bar
 
-// $topbar-bg:                            #111 !default;
+$topbar-bg:                            #505050 !default;
 
 // Height and margin
 
@@ -1220,7 +1220,7 @@ $header-font-family: Roboto, arial, sans-serif;
 
 // Style the top bar dropdown elements
 
-// $topbar-dropdown-bg:                   #222;
+$topbar-dropdown-bg:                    lighten($topbar-bg, 5%);
 // $topbar-dropdown-link-color:           #fff;
 // $topbar-dropdown-link-bg:              lighten($topbar-bg, 5%);
 // $topbar-dropdown-toggle-size:          5px;
@@ -1238,7 +1238,7 @@ $header-font-family: Roboto, arial, sans-serif;
 // $topbar-link-bg-hover:                 darken($topbar-bg, 3%);
 // $topbar-link-bg-active:                darken($topbar-bg, 3%);
 
-// $topbar-dropdown-label-color:          #555;
+$topbar-dropdown-label-color:          darken($topbar-bg, 10%);
 // $topbar-dropdown-label-text-transform: uppercase;
 // $topbar-dropdown-label-font-weight:    bold;
 // $topbar-dropdown-label-font-size:      emCalc(10px);
@@ -1261,8 +1261,8 @@ $header-font-family: Roboto, arial, sans-serif;
 
 // Divider Styles
 
-// $topbar-divider-border-bottom:         solid 1px lighten($topbar-bg, 10%);
-// $topbar-divider-border-top:            solid 1px darken($topbar-bg, 10%);
+$topbar-divider-border-bottom:         solid 1px lighten($topbar-bg, 10%);
+$topbar-divider-border-top:            solid 1px darken($topbar-bg, 5%);
 
 // Sticky Class
 

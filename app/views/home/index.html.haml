@@ -1,7 +1,8 @@
-.row
+.row.hero-title.full-width
   .large-12.columns
     %h1.text-center Lessons
-    %hr
+.row
+  .large-12.columns
     - @lessons.each_slice(4) do |row|
       .row
         - row.each do |lesson|
@@ -12,7 +13,9 @@
                   = link_to lesson.title, user_lesson_path(lesson.user, lesson)
                 %h6.subheader
                   by #{lesson.user}
-                  %small= l lesson.updated_at.to_date, format: :long
+                  %small
+                    = time_ago_in_words(lesson.updated_at)
+                    ago
                 %hr
                 %p= truncate lesson.description, length: 200, separator: '', omission: '…'
         - (row.count % 4).times do

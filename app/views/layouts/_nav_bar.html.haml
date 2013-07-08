@@ -9,7 +9,9 @@
     %ul.right
       - if user_signed_in?
         %li.has-dropdown
-          %a{href: '#'}= current_user
+          %a{href: '#'}
+            %img.tiny-avatar{src: current_user.avatar(25)}
+            = current_user
           %ul.dropdown
             %li
               %label
@@ -20,7 +22,6 @@
               =link_to settings_path, class: 'icon' do
                 %i.icon-cog
                 Settings
-            %li.divider
             %li
               =link_to destroy_session_path, method: :delete, class: 'icon' do
                 %i.icon-signout

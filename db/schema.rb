@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130704155847) do
+ActiveRecord::Schema.define(:version => 20130708214553) do
 
   create_table "access_requests", :force => true do |t|
     t.integer  "requester_id"
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(:version => 20130704155847) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.string   "nickname"
+    t.string   "email"
   end
 
   add_index "authorizations", ["user_id"], :name => "index_authorizations_on_user_id"

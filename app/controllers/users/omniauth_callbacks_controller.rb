@@ -31,12 +31,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     uid, auth_attr = auth.uid, { provider: provider }
     name, nickname = auth.info.name, auth.info.nickname
-    token          = auth.credentials.token
+    token, email   = auth.credentials.token, auth.info.email
 
     case provider
     when 'github'
       auth_attr.merge! uid: uid, token: token, name: name, nickname: nickname,
-        link: auth.extra.raw_info.html_url
+        link: auth.extra.raw_info.html_url, email: email
     else raise "Provider #{provider} not handled."
     end
 
