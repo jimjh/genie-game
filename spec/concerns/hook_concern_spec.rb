@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe HookConcern do
+describe GithubConcern do
 
-  class HookConcernedDummyClass; end
+  class GithubConcernedDummyClass; end
 
   before :each do
-    @dummy = HookConcernedDummyClass.new
-    @dummy.extend HookConcern
+    @dummy = GithubConcernedDummyClass.new
+    @dummy.extend GithubConcern
   end
 
   subject { @dummy }
