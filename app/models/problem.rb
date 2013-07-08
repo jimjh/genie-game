@@ -12,7 +12,11 @@ class Problem < ActiveRecord::Base
 
   # relationships ------------------------------------------------------------
   belongs_to :lesson, inverse_of: :problems
-  has_many   :answers, dependent: :destroy, inverse_of: :problem
+  has_many   :answers, dependent: :destroy, inverse_of: :problem do
+    def for_users(subset)
+      where(user_id: subset)
+    end
+  end
 
   # attributes ---------------------------------------------------------------
   attr_accessible :solution, :digest, :position, :active
@@ -25,8 +29,8 @@ class Problem < ActiveRecord::Base
   # callbacks ----------------------------------------------------------------
   before_create :decode_solution
 
-  def avg_incorrect_attempts
-    answers = self.answers
+  def avg_incorrect_attempts(subset = nil)
+    answers = subset ? self.answers.for_users(subset) : self.answers
     sum     = answers.map(&:incorrect_attempts).reduce(0, :+)
     sum.zero? ? 0 : sum/answers.count
   end

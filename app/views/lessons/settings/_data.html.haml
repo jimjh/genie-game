@@ -1,3 +1,6 @@
-.stats{'data-ng-controller' => 'StatsCtrl',
-  'data-ng-init' => "init('#{user_lesson_stats_path(@user, @lesson)}')"}
-    %bar-chart
+- if current_user.id != @lesson.user_id
+  .alert-box
+    Since you are not the author, you are only able to view statistics of the subset of users who have granted your access requests.
+
+.stats{'data-ng-controller' => 'StatsCtrl', 'data-ng-init' => "init('#{user_lesson_stats_path(@user, @lesson)}')"}
+  %bar-chart
