@@ -5,7 +5,7 @@ feature 'Creating new access request' do
   background do
     sign_in
     visit settings_authorizations_path
-    @users = (1..5).map { FactoryGirl.create(:user) }
+    @users = (1..5).map { FactoryGirl.create(:user).reload }
   end
 
   scenario 'with non-existent requestees'
@@ -86,7 +86,7 @@ end
 
 feature 'Exporting' do
 
-  let(:user)     { FactoryGirl.create :user }
+  let(:user)     { FactoryGirl.create(:user).reload }
   let(:requests) { (1..10).to_a.map { FactoryGirl.create :access_request, :granted, requester: user } }
   let(:answers)  { requests.map(&:requestee).map { |user| FactoryGirl.create :answer, user: user } }
 

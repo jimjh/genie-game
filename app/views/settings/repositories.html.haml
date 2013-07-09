@@ -1,11 +1,21 @@
-%h2= t 'headings.settings.repositories'
-%hr
-%h6.subheader
-  = link_to url_for(sync: true), class: 'button tiny' do
-    %i.icon-refresh
-    Sync
-  %span{style: 'margin-left: 5px'}
-    Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
+= link_to url_for(sync: true), class: 'button radius' do
+  %i.icon-refresh
+  Sync
+%span{style: 'margin-left: 5px'}
+  Last sync'ed #{distance_of_time_in_words_to_now @last_sync} ago.
+.panel.overview
+  %h3 Overview
+  %hr
+  .row
+    .large-4.columns
+      %span#publish_count.count #{@publish_count}
+      Published
+    .large-4.columns
+      %span#unpublish_count.count #{@repos.count - @lessons.count}
+      Unpublished
+    .large-4.columns
+      %span#inactive_count.count #{@lessons.count - @publish_count}
+      Inactive
 %table
   %thead
     %tr

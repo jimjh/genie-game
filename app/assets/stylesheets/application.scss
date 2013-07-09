@@ -30,9 +30,64 @@ ul { list-style-position: inside; }
   background-image: url('/assets/abstract.png');
   background-attachment: fixed;
   margin-bottom: 1.875em;
-  h1 {
+  #{headings(all)} {
     color: #fff;
+  }
+  h1 {
     text-transform: uppercase;
     font-family: 'Francois One';
+    &:before, &:after { content: " ⋅⋅⋅⋅⋅⋅ "; }
+    a { color: #fff; }
+    a:hover { color: $primary-color; }
   }
 }
+
+.settings {
+
+  background-image: url('/assets/abstract.png');
+
+  aside {
+    height: 100%;
+    padding-left: emCalc(40px);
+    padding-right: 0;
+  }
+
+  main {
+    padding-top: 2em;
+    background: #fff;
+  }
+
+  .avatar {
+    margin-top: 2em;
+    margin-bottom: 2em;
+    h4 {
+      display: inline-block;
+      text-transform: uppercase;
+      color: #fff;
+      vertical-align: top;
+      margin-top: 0;
+    }
+  }
+
+  .section-container.vertical-nav section > p.title {
+    border: none;
+    background: none;
+    font-size: $h4-font-size;
+    text-transform: uppercase;
+  }
+
+  .section-container.vertical-nav section.active > p.title {
+    background: #fff;
+  }
+
+  .overview {
+    text-transform: uppercase;
+    .count { font-size: 2em; }
+    #publish_count  { color: #369435; }
+    #inactive_count { color: #C83D37; }
+  }
+
+  table { width: 100%; }
+
+}
+

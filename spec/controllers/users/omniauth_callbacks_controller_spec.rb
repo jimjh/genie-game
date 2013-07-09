@@ -45,7 +45,7 @@ describe Users::OmniauthCallbacksController do
     context 'with existing provider-uid pair' do
 
       before :each  do
-        @user = FactoryGirl.create :user
+        @user = FactoryGirl.create(:user).reload
         auth  = @user.authorizations.first
         OmniAuth.config.add_mock :github, FactoryGirl.build(:auth_hash, provider: auth.provider, uid: auth.uid)
         @count = User.count

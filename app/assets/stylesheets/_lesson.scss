@@ -1,14 +1,24 @@
 /* Styling within lesson */
 section[role='lesson'] {
 
+  max-width: 90%;
+
   .lesson-problems {
-    &.sticky {
-      @media #{$small} { position: fixed; top: 56px; }
+    @include radius(2 * $global-radius);
+    &.sticky { @media #{$small} { position: fixed; top: 56px; } }
+    fieldset {
+      border: none;
+      legend {
+        background: none;
+        font-size: $h3-font-size;
+        text-transform: uppercase;
+      }
     }
-    fieldset legend { background: none; }
   }
 
   .block-image { text-align: center; }
+  h2 { border-bottom: 1px solid #ccc; }
+  #{headings(all)} { text-transform: uppercase; }
 
 }
 

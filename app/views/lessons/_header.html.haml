@@ -1,10 +1,8 @@
-%section.row{role: 'title'}
+%section.row.hero-title.full-width{role: 'title'}
   .large-12.columns
-    %h1= link_to lesson, user_lesson_path(lesson.user, lesson)
-    %h4.subheader= lesson.description
-    %h5
-      %small
-        Updated by #{lesson.user} #{time_ago_or_format lesson.updated_at}.
+    %h1.text-center= link_to lesson, user_lesson_path(lesson.user, lesson)
+    -# %h4.subheader= lesson.description
+    %h5.text-center
+      Updated by #{lesson.user} #{time_ago_or_format lesson.updated_at}.
       - if lesson.user_id == current_user.id || current_user.has_granted_requests?
         %small= link_to '[  Settings  ]',  user_lesson_settings_path(lesson.user, lesson)
-    %hr

@@ -93,7 +93,7 @@ describe LessonsController do
     after(:each)  { @lesson.destroy }
 
     let(:user) { @lesson.user }
-    let(:auth) { @lesson.user.authorizations.first }
+    let(:auth) { @lesson.user.reload.authorizations.first }
 
     it 're-compiles the lesson'
     it 'ignores deactivated lessons'

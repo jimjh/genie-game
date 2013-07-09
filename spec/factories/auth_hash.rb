@@ -16,6 +16,7 @@ FactoryGirl.define do
     nickname        { Faker::Internet.user_name }
     initialize_with { attributes }
     to_create       {}
+    email           { Faker::Internet.email }
   end
 
   factory :auth_hash_credentials, class: Hash do

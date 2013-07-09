@@ -29,8 +29,7 @@ Genie::Application.routes.draw do
 
   # Settings Controller ------------------------------------------------------
   scope path: 'settings', controller: :settings, as: 'settings' do
-    match '/'             => :profile
-    match '/repositories' => :repositories, as: 'repositories'
+    match '/'               => :repositories
     match '/authorizations' => :authorizations, as: 'authorizations'
   end
 

@@ -1,17 +1,23 @@
 - content_for :content do
-  .row
-    .large-9.push-3.columns
-      = content_for?(:settings_content) ? yield(:settings_content) : yield
-    .large-3.pull-9.columns
+  .row.full-width.settings
+    %aside.large-3.columns
+      .avatar
+        %img{src: current_user.avatar(60), alt: current_user, title: current_user}
+        %h4= current_user
       .section-container.vertical-nav
         %section.section{class: active_class(settings_path)}
           %p.title
-            = link_to 'Profile', settings_path
-        %section.section{class: active_class(settings_repositories_path)}
-          %p.title
-            = link_to 'Repositories', settings_repositories_path
+            = link_to settings_path do
+              %i.icon-book
+              Repositories
         %section.section{class: active_class(settings_authorizations_path)}
           %p.title
-            = link_to 'Authorizations', settings_authorizations_path
+            = link_to settings_authorizations_path do
+              %i.icon-lock
+              Authorizations
+    %main.large-9.columns
+      .row
+        .large-10.large-centered.columns
+          = content_for?(:settings_content) ? yield(:settings_content) : yield
 
 = render template: 'layouts/application'

@@ -4,15 +4,12 @@ class SettingsController < ApplicationController
 
   before_filter :authenticate_user!
 
-  # GET /settings/profile
-  def profile
-  end
-
   # GET /settings/repositories
   def repositories
     @repos, @lessons = github_repos, {}
     @last_sync = Rails.cache.read "#{github_repos_key}_last_mod"
     lessons = current_user.lessons.select([:url, :status, :id, :slug])
+    @publish_count = lessons.inject(0) { |memo, v| v.published? ? memo + 1 : memo }
     lessons.each { |lesson| @lessons[lesson.url] = lesson }
   rescue Github::Error::ServiceError
     @repos = []
