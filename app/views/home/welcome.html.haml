@@ -1,31 +1,17 @@
 - def arrow; image_tag 'arrow.jpg', size: '80x41'; end
 
-%header#welcome
+#welcome
   .row
-    .large-11.large-centered.columns.text-center
-      %h1 Teach, Learn & <br> Share With the <br> World
+    .large-6.columns
+      %header Genie
+      %h2.subheader What is Genie?
 
-  .row
-    .large-10.large-centered.columns
-      .row
-        .large-4.columns.text-center.rotate-left= arrow
-        .large-4.columns.text-center.rotate-center= arrow
-        .large-4.columns.text-center.rotate-right= arrow
+      %dl
+        %dt Create and collaborate on lessons with GitHub.
+        %dt Learn by participating in autograded lessons.
+        %dt Browse and curate lessons from all over the world.
 
-  .row#welcome_image
-    .large-12.large-centered.columns.text-center
-      = image_tag 'welcome_image.png', size: '800x140'
+      = link_to 'Sign in with GitHub', user_omniauth_authorize_path(:github), class: 'button'
 
-  .row
-    .large-10.large-centered.columns
-      .row
-        .large-4.columns.text-center
-          Create and manage lessons on an online platform
-        .large-4.columns.text-center
-          Intuitive way of learning by doing on an actual terminal - no setup needed!
-        .large-4.columns.text-center
-          Browse lessons from all over the world
-
-  .row#welcome_button
-    .large-12.large-centered.columns.text-center
-      = link_to 'Sign in with GitHub', user_omniauth_authorize_path(:github), class: 'button round'
+    .large-6.columns#venn
+      =image_tag 'venn.png'
