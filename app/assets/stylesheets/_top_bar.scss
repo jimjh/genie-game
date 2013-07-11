@@ -1,0 +1,6 @@
+.top-bar {
+  margin-bottom: 0;
+  .top-bar-section ul li:hover > a.button {
+    background: darken($primary-color, 10%);
+  }
+}

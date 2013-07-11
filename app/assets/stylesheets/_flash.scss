@@ -1,0 +1,6 @@
+.flash {
+  position: absolute;
+  z-index: 1;
+  .close { line-height: 0.5; }
+  &.alert-box { padding-right: 1.75em; }
+}

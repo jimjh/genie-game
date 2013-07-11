@@ -21,10 +21,10 @@
 @import "avatar";
 @import "cards";
 @import "lesson";
+@import "top_bar";
+@import "flash";
 
 ul { list-style-position: inside; }
-
-.top-bar { margin-bottom: 0; }
 
 .hero-title {
   background-image: url('/assets/abstract.png');
@@ -90,4 +90,3 @@ ul { list-style-position: inside; }
   table { width: 100%; }
 
 }
-
