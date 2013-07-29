@@ -195,10 +195,5 @@ $> cap deploy
 nginx and redis are installed with System V scripts in `/etc/init.d`.
 and are monitored with Upstart. Passenger monitors all rails processes.
 
-### Security
-Need to restrict permissions on locals.d. Need to restrict permissions on
-/u/apps/genie-game and genie-compiler. Need to restrict privileges for
-`passenger`. Permissions for `/mnt/genie/*`?
-
   [capistrano-guide]: https://github.com/capistrano/capistrano/wiki/2.x-from-the-beginning
   [pull-21]: https://github.com/rails/sprockets-rails/pull/21
